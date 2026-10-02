@@ -1,0 +1,953 @@
+refYear,reporterISO,reporterDesc,partnerISO,partnerDesc,flowCode,flowDesc,cmdCode,cmdDesc,primaryValue,isReported,isAggregate,legacyEstimationFlag
+2018,IND,India,USA,USA,M,Import,30,Pharmaceutical products,314953124.442,False,True,4
+2018,IND,India,USA,USA,M,Import,84,Machinery and mechanical appliances,3933449269.963,False,True,4
+2018,IND,India,USA,USA,M,Import,85,Electrical machinery and equipment,1800168472.649,False,True,4
+2018,IND,India,USA,USA,M,Import,87,Vehicles and parts thereof,357064746.161,False,True,4
+2018,IND,India,USA,USA,X,Export,30,Pharmaceutical products,5033451310.864,False,True,4
+2018,IND,India,USA,USA,X,Export,84,Machinery and mechanical appliances,3732051700.045,False,True,4
+2018,IND,India,USA,USA,X,Export,85,Electrical machinery and equipment,1671844823.24,False,True,4
+2018,IND,India,USA,USA,X,Export,87,Vehicles and parts thereof,2852222273.086,False,True,4
+2019,IND,India,USA,USA,M,Import,30,Pharmaceutical products,318086358.943,False,True,4
+2019,IND,India,USA,USA,M,Import,84,Machinery and mechanical appliances,4383558817.812,False,True,4
+2019,IND,India,USA,USA,M,Import,85,Electrical machinery and equipment,2208288733.529,False,True,4
+2019,IND,India,USA,USA,M,Import,87,Vehicles and parts thereof,327683972.698,False,True,4
+2019,IND,India,USA,USA,X,Export,30,Pharmaceutical products,6354114289.038,False,True,4
+2019,IND,India,USA,USA,X,Export,84,Machinery and mechanical appliances,4475265168.582,False,True,4
+2019,IND,India,USA,USA,X,Export,85,Electrical machinery and equipment,2244702070.896,False,True,4
+2019,IND,India,USA,USA,X,Export,87,Vehicles and parts thereof,2691803569.78,False,True,4
+2020,IND,India,USA,USA,M,Import,30,Pharmaceutical products,300752897.6,False,True,4
+2020,IND,India,USA,USA,M,Import,84,Machinery and mechanical appliances,2801651042.403,False,True,4
+2020,IND,India,USA,USA,M,Import,85,Electrical machinery and equipment,1552534253.513,False,True,4
+2020,IND,India,USA,USA,M,Import,87,Vehicles and parts thereof,321808622.942,False,True,4
+2020,IND,India,USA,USA,X,Export,30,Pharmaceutical products,6991639471.958,False,True,4
+2020,IND,India,USA,USA,X,Export,84,Machinery and mechanical appliances,3948281654.183,False,True,4
+2020,IND,India,USA,USA,X,Export,85,Electrical machinery and equipment,2738306174.34,False,True,4
+2020,IND,India,USA,USA,X,Export,87,Vehicles and parts thereof,2132415317.784,False,True,4
+2021,IND,India,USA,USA,M,Import,30,Pharmaceutical products,536988911.577,False,True,4
+2021,IND,India,USA,USA,M,Import,84,Machinery and mechanical appliances,3230933797.376,False,True,4
+2021,IND,India,USA,USA,M,Import,85,Electrical machinery and equipment,1711124122.203,False,True,4
+2021,IND,India,USA,USA,M,Import,87,Vehicles and parts thereof,412991151.998,False,True,4
+2021,IND,India,USA,USA,X,Export,30,Pharmaceutical products,6617245679.159,False,True,4
+2021,IND,India,USA,USA,X,Export,84,Machinery and mechanical appliances,5246239121.947,False,True,4
+2021,IND,India,USA,USA,X,Export,85,Electrical machinery and equipment,3373482100.608,False,True,4
+2021,IND,India,USA,USA,X,Export,87,Vehicles and parts thereof,2715369067.047,False,True,4
+2022,IND,India,USA,USA,M,Import,30,Pharmaceutical products,432845755.241,False,True,4
+2022,IND,India,USA,USA,M,Import,84,Machinery and mechanical appliances,3847994063.301,False,True,4
+2022,IND,India,USA,USA,M,Import,85,Electrical machinery and equipment,2271993787.313,False,True,4
+2022,IND,India,USA,USA,M,Import,87,Vehicles and parts thereof,467910925.321,False,True,4
+2022,IND,India,USA,USA,X,Export,30,Pharmaceutical products,6705766331.557,False,True,4
+2022,IND,India,USA,USA,X,Export,84,Machinery and mechanical appliances,6323582611.654,False,True,4
+2022,IND,India,USA,USA,X,Export,85,Electrical machinery and equipment,5396643030.756,False,True,4
+2022,IND,India,USA,USA,X,Export,87,Vehicles and parts thereof,3040335380.653,False,True,4
+2023,IND,India,USA,USA,M,Import,30,Pharmaceutical products,503557256.264,False,True,4
+2023,IND,India,USA,USA,M,Import,84,Machinery and mechanical appliances,5473151587.03,False,True,4
+2023,IND,India,USA,USA,M,Import,85,Electrical machinery and equipment,1759764748.09,False,True,4
+2023,IND,India,USA,USA,M,Import,87,Vehicles and parts thereof,569038294.671,False,True,4
+2023,IND,India,USA,USA,X,Export,30,Pharmaceutical products,7551012559.83,False,True,4
+2023,IND,India,USA,USA,X,Export,84,Machinery and mechanical appliances,5989013804.325,False,True,4
+2023,IND,India,USA,USA,X,Export,85,Electrical machinery and equipment,9892128179.498,False,True,4
+2023,IND,India,USA,USA,X,Export,87,Vehicles and parts thereof,2580720280.633,False,True,4
+2024,IND,India,USA,USA,M,Import,30,Pharmaceutical products,562959217.922,False,True,4
+2024,IND,India,USA,USA,M,Import,84,Machinery and mechanical appliances,5779928965.402,False,True,4
+2024,IND,India,USA,USA,M,Import,85,Electrical machinery and equipment,2004027456.544,False,True,4
+2024,IND,India,USA,USA,M,Import,87,Vehicles and parts thereof,575394361.331,False,True,4
+2024,IND,India,USA,USA,X,Export,30,Pharmaceutical products,8723207972.645,False,True,4
+2024,IND,India,USA,USA,X,Export,84,Machinery and mechanical appliances,6475351199.253,False,True,4
+2024,IND,India,USA,USA,X,Export,85,Electrical machinery and equipment,12333760309.423,False,True,4
+2024,IND,India,USA,USA,X,Export,87,Vehicles and parts thereof,2623232850.931,False,True,4
+2018,IND,India,CHN,China,M,Import,30,Pharmaceutical products,143018020.074,False,True,4
+2018,IND,India,CHN,China,M,Import,84,Machinery and mechanical appliances,13621572639.484,False,True,4
+2018,IND,India,CHN,China,M,Import,85,Electrical machinery and equipment,23241783011.877,False,True,4
+2018,IND,India,CHN,China,M,Import,87,Vehicles and parts thereof,1570371037.843,False,True,4
+2018,IND,India,CHN,China,X,Export,30,Pharmaceutical products,46671476.612,False,True,4
+2018,IND,India,CHN,China,X,Export,84,Machinery and mechanical appliances,827309805.919,False,True,4
+2018,IND,India,CHN,China,X,Export,85,Electrical machinery and equipment,537325665.382,False,True,4
+2018,IND,India,CHN,China,X,Export,87,Vehicles and parts thereof,104015788.911,False,True,4
+2019,IND,India,CHN,China,M,Import,30,Pharmaceutical products,185994184.934,False,True,4
+2019,IND,India,CHN,China,M,Import,84,Machinery and mechanical appliances,13873013150.17,False,True,4
+2019,IND,India,CHN,China,M,Import,85,Electrical machinery and equipment,19966000613.973,False,True,4
+2019,IND,India,CHN,China,M,Import,87,Vehicles and parts thereof,1282598681.296,False,True,4
+2019,IND,India,CHN,China,X,Export,30,Pharmaceutical products,44324465.351,False,True,4
+2019,IND,India,CHN,China,X,Export,84,Machinery and mechanical appliances,840502157.133,False,True,4
+2019,IND,India,CHN,China,X,Export,85,Electrical machinery and equipment,827318029.442,False,True,4
+2019,IND,India,CHN,China,X,Export,87,Vehicles and parts thereof,85094438.884,False,True,4
+2020,IND,India,CHN,China,M,Import,30,Pharmaceutical products,184860833.045,False,True,4
+2020,IND,India,CHN,China,M,Import,84,Machinery and mechanical appliances,12371502343.92,False,True,4
+2020,IND,India,CHN,China,M,Import,85,Electrical machinery and equipment,17842378313.626,False,True,4
+2020,IND,India,CHN,China,M,Import,87,Vehicles and parts thereof,1202998894.012,False,True,4
+2020,IND,India,CHN,China,X,Export,30,Pharmaceutical products,51191256.93,False,True,4
+2020,IND,India,CHN,China,X,Export,84,Machinery and mechanical appliances,718921918.398,False,True,4
+2020,IND,India,CHN,China,X,Export,85,Electrical machinery and equipment,638699940.112,False,True,4
+2020,IND,India,CHN,China,X,Export,87,Vehicles and parts thereof,96593829.38,False,True,4
+2021,IND,India,CHN,China,M,Import,30,Pharmaceutical products,215756158.014,False,True,4
+2021,IND,India,CHN,China,M,Import,84,Machinery and mechanical appliances,18796332083.664,False,True,4
+2021,IND,India,CHN,China,M,Import,85,Electrical machinery and equipment,26391476139.552,False,True,4
+2021,IND,India,CHN,China,M,Import,87,Vehicles and parts thereof,1725000848.672,False,True,4
+2021,IND,India,CHN,China,X,Export,30,Pharmaceutical products,55415340.739,False,True,4
+2021,IND,India,CHN,China,X,Export,84,Machinery and mechanical appliances,1036462624.039,False,True,4
+2021,IND,India,CHN,China,X,Export,85,Electrical machinery and equipment,986890150.858,False,True,4
+2021,IND,India,CHN,China,X,Export,87,Vehicles and parts thereof,168388867.599,False,True,4
+2022,IND,India,CHN,China,M,Import,30,Pharmaceutical products,179554834.57,False,True,4
+2022,IND,India,CHN,China,M,Import,84,Machinery and mechanical appliances,21715812533.693,False,True,4
+2022,IND,India,CHN,China,M,Import,85,Electrical machinery and equipment,30631676223.099,False,True,4
+2022,IND,India,CHN,China,M,Import,87,Vehicles and parts thereof,1802855961.616,False,True,4
+2022,IND,India,CHN,China,X,Export,30,Pharmaceutical products,52226545.183,False,True,4
+2022,IND,India,CHN,China,X,Export,84,Machinery and mechanical appliances,993682477.973,False,True,4
+2022,IND,India,CHN,China,X,Export,85,Electrical machinery and equipment,633774439.889,False,True,4
+2022,IND,India,CHN,China,X,Export,87,Vehicles and parts thereof,142943572.295,False,True,4
+2023,IND,India,CHN,China,M,Import,30,Pharmaceutical products,172814144.884,False,True,4
+2023,IND,India,CHN,China,M,Import,84,Machinery and mechanical appliances,24700595480.856,False,True,4
+2023,IND,India,CHN,China,M,Import,85,Electrical machinery and equipment,44151363869.282,False,True,4
+2023,IND,India,CHN,China,M,Import,87,Vehicles and parts thereof,1883979317.045,False,True,4
+2023,IND,India,CHN,China,X,Export,30,Pharmaceutical products,74038661.156,False,True,4
+2023,IND,India,CHN,China,X,Export,84,Machinery and mechanical appliances,942681987.47,False,True,4
+2023,IND,India,CHN,China,X,Export,85,Electrical machinery and equipment,677664364.896,False,True,4
+2023,IND,India,CHN,China,X,Export,87,Vehicles and parts thereof,119435400.983,False,True,4
+2024,IND,India,CHN,China,M,Import,30,Pharmaceutical products,196233881.42,False,True,4
+2024,IND,India,CHN,China,M,Import,84,Machinery and mechanical appliances,26997703294.047,False,True,4
+2024,IND,India,CHN,China,M,Import,85,Electrical machinery and equipment,47669497356.356,False,True,4
+2024,IND,India,CHN,China,M,Import,87,Vehicles and parts thereof,2071827232.209,False,True,4
+2024,IND,India,CHN,China,X,Export,30,Pharmaceutical products,83987340.081,False,True,4
+2024,IND,India,CHN,China,X,Export,84,Machinery and mechanical appliances,1118963368.75,False,True,4
+2024,IND,India,CHN,China,X,Export,85,Electrical machinery and equipment,798218597.138,False,True,4
+2024,IND,India,CHN,China,X,Export,87,Vehicles and parts thereof,135237597.24,False,True,4
+2018,IND,India,DEU,Germany,M,Import,30,Pharmaceutical products,220320229.219,False,True,4
+2018,IND,India,DEU,Germany,M,Import,84,Machinery and mechanical appliances,4471882730.486,False,True,4
+2018,IND,India,DEU,Germany,M,Import,85,Electrical machinery and equipment,1728285325.359,False,True,4
+2018,IND,India,DEU,Germany,M,Import,87,Vehicles and parts thereof,1062272554.36,False,True,4
+2018,IND,India,DEU,Germany,X,Export,30,Pharmaceutical products,215530916.337,False,True,4
+2018,IND,India,DEU,Germany,X,Export,84,Machinery and mechanical appliances,1537871988.397,False,True,4
+2018,IND,India,DEU,Germany,X,Export,85,Electrical machinery and equipment,588061893.066,False,True,4
+2018,IND,India,DEU,Germany,X,Export,87,Vehicles and parts thereof,452658781.354,False,True,4
+2019,IND,India,DEU,Germany,M,Import,30,Pharmaceutical products,227470267.983,False,True,4
+2019,IND,India,DEU,Germany,M,Import,84,Machinery and mechanical appliances,4071707959.209,False,True,4
+2019,IND,India,DEU,Germany,M,Import,85,Electrical machinery and equipment,1605163398.175,False,True,4
+2019,IND,India,DEU,Germany,M,Import,87,Vehicles and parts thereof,713843585.943,False,True,4
+2019,IND,India,DEU,Germany,X,Export,30,Pharmaceutical products,281871881.741,False,True,4
+2019,IND,India,DEU,Germany,X,Export,84,Machinery and mechanical appliances,1350840566.582,False,True,4
+2019,IND,India,DEU,Germany,X,Export,85,Electrical machinery and equipment,649393590.638,False,True,4
+2019,IND,India,DEU,Germany,X,Export,87,Vehicles and parts thereof,433684907.015,False,True,4
+2020,IND,India,DEU,Germany,M,Import,30,Pharmaceutical products,171834719.138,False,True,4
+2020,IND,India,DEU,Germany,M,Import,84,Machinery and mechanical appliances,2941920018.446,False,True,4
+2020,IND,India,DEU,Germany,M,Import,85,Electrical machinery and equipment,1193225018.367,False,True,4
+2020,IND,India,DEU,Germany,M,Import,87,Vehicles and parts thereof,476722687.994,False,True,4
+2020,IND,India,DEU,Germany,X,Export,30,Pharmaceutical products,315234257.135,False,True,4
+2020,IND,India,DEU,Germany,X,Export,84,Machinery and mechanical appliances,1160459287.025,False,True,4
+2020,IND,India,DEU,Germany,X,Export,85,Electrical machinery and equipment,709873010.453,False,True,4
+2020,IND,India,DEU,Germany,X,Export,87,Vehicles and parts thereof,327979200.446,False,True,4
+2021,IND,India,DEU,Germany,M,Import,30,Pharmaceutical products,257195048.593,False,True,4
+2021,IND,India,DEU,Germany,M,Import,84,Machinery and mechanical appliances,3862502054.984,False,True,4
+2021,IND,India,DEU,Germany,M,Import,85,Electrical machinery and equipment,1510037715.077,False,True,4
+2021,IND,India,DEU,Germany,M,Import,87,Vehicles and parts thereof,728979871.684,False,True,4
+2021,IND,India,DEU,Germany,X,Export,30,Pharmaceutical products,316046610.4,False,True,4
+2021,IND,India,DEU,Germany,X,Export,84,Machinery and mechanical appliances,1314346194.949,False,True,4
+2021,IND,India,DEU,Germany,X,Export,85,Electrical machinery and equipment,913606108.7,False,True,4
+2021,IND,India,DEU,Germany,X,Export,87,Vehicles and parts thereof,498973499.702,False,True,4
+2022,IND,India,DEU,Germany,M,Import,30,Pharmaceutical products,195935030.378,False,True,4
+2022,IND,India,DEU,Germany,M,Import,84,Machinery and mechanical appliances,4224295897.523,False,True,4
+2022,IND,India,DEU,Germany,M,Import,85,Electrical machinery and equipment,1746003791.745,False,True,4
+2022,IND,India,DEU,Germany,M,Import,87,Vehicles and parts thereof,929089076.625,False,True,4
+2022,IND,India,DEU,Germany,X,Export,30,Pharmaceutical products,293424676.263,False,True,4
+2022,IND,India,DEU,Germany,X,Export,84,Machinery and mechanical appliances,1479523744.292,False,True,4
+2022,IND,India,DEU,Germany,X,Export,85,Electrical machinery and equipment,1238836977.321,False,True,4
+2022,IND,India,DEU,Germany,X,Export,87,Vehicles and parts thereof,500682045.058,False,True,4
+2023,IND,India,DEU,Germany,M,Import,30,Pharmaceutical products,459272872.325,False,True,4
+2023,IND,India,DEU,Germany,M,Import,84,Machinery and mechanical appliances,5167540826.103,False,True,4
+2023,IND,India,DEU,Germany,M,Import,85,Electrical machinery and equipment,1941338154.224,False,True,4
+2023,IND,India,DEU,Germany,M,Import,87,Vehicles and parts thereof,1147935232.846,False,True,4
+2023,IND,India,DEU,Germany,X,Export,30,Pharmaceutical products,356175336.592,False,True,4
+2023,IND,India,DEU,Germany,X,Export,84,Machinery and mechanical appliances,1530667377.108,False,True,4
+2023,IND,India,DEU,Germany,X,Export,85,Electrical machinery and equipment,1173546419.159,False,True,4
+2023,IND,India,DEU,Germany,X,Export,87,Vehicles and parts thereof,598825092.834,False,True,4
+2024,IND,India,DEU,Germany,M,Import,30,Pharmaceutical products,414734497.434,False,True,4
+2024,IND,India,DEU,Germany,M,Import,84,Machinery and mechanical appliances,5287870252.964,False,True,4
+2024,IND,India,DEU,Germany,M,Import,85,Electrical machinery and equipment,1784047688.38,False,True,4
+2024,IND,India,DEU,Germany,M,Import,87,Vehicles and parts thereof,1093570031.468,False,True,4
+2024,IND,India,DEU,Germany,X,Export,30,Pharmaceutical products,374544011.256,False,True,4
+2024,IND,India,DEU,Germany,X,Export,84,Machinery and mechanical appliances,1407490063.532,False,True,4
+2024,IND,India,DEU,Germany,X,Export,85,Electrical machinery and equipment,1518243491.85,False,True,4
+2024,IND,India,DEU,Germany,X,Export,87,Vehicles and parts thereof,584736091.421,False,True,4
+2018,IND,India,GBR,United Kingdom,M,Import,30,Pharmaceutical products,78938034.977,False,True,4
+2018,IND,India,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,1119111324.514,False,True,4
+2018,IND,India,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,418123629.252,False,True,4
+2018,IND,India,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,171103807.007,False,True,4
+2018,IND,India,GBR,United Kingdom,X,Export,30,Pharmaceutical products,550395503.408,False,True,4
+2018,IND,India,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,1057145118.304,False,True,4
+2018,IND,India,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,372879673.088,False,True,4
+2018,IND,India,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,446502947.383,False,True,4
+2019,IND,India,GBR,United Kingdom,M,Import,30,Pharmaceutical products,82236121.148,False,True,4
+2019,IND,India,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,1187790805.642,False,True,4
+2019,IND,India,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,339132879.115,False,True,4
+2019,IND,India,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,112475478.584,False,True,4
+2019,IND,India,GBR,United Kingdom,X,Export,30,Pharmaceutical products,457636933.52,False,True,4
+2019,IND,India,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,1086443682.783,False,True,4
+2019,IND,India,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,365022111.269,False,True,4
+2019,IND,India,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,342438123.202,False,True,4
+2020,IND,India,GBR,United Kingdom,M,Import,30,Pharmaceutical products,70712234.9,False,True,4
+2020,IND,India,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,809902177.283,False,True,4
+2020,IND,India,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,391166670.671,False,True,4
+2020,IND,India,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,64202788.057,False,True,4
+2020,IND,India,GBR,United Kingdom,X,Export,30,Pharmaceutical products,563606026.141,False,True,4
+2020,IND,India,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,653280218.206,False,True,4
+2020,IND,India,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,453308421.382,False,True,4
+2020,IND,India,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,232025721.52,False,True,4
+2021,IND,India,GBR,United Kingdom,M,Import,30,Pharmaceutical products,223805399.136,False,True,4
+2021,IND,India,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,1009497995.322,False,True,4
+2021,IND,India,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,451142840.565,False,True,4
+2021,IND,India,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,108054134.517,False,True,4
+2021,IND,India,GBR,United Kingdom,X,Export,30,Pharmaceutical products,638570017.984,False,True,4
+2021,IND,India,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,1062684668.877,False,True,4
+2021,IND,India,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,885592025.855,False,True,4
+2021,IND,India,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,239577297.939,False,True,4
+2022,IND,India,GBR,United Kingdom,M,Import,30,Pharmaceutical products,82550986.175,False,True,4
+2022,IND,India,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,1138986186.31,False,True,4
+2022,IND,India,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,476233529.695,False,True,4
+2022,IND,India,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,109486769.747,False,True,4
+2022,IND,India,GBR,United Kingdom,X,Export,30,Pharmaceutical products,534359031.386,False,True,4
+2022,IND,India,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,1191639840.536,False,True,4
+2022,IND,India,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,1303309173.206,False,True,4
+2022,IND,India,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,212460090.321,False,True,4
+2023,IND,India,GBR,United Kingdom,M,Import,30,Pharmaceutical products,57361111.304,False,True,4
+2023,IND,India,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,835153890.342,False,True,4
+2023,IND,India,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,349971208.637,False,True,4
+2023,IND,India,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,203520986.594,False,True,4
+2023,IND,India,GBR,United Kingdom,X,Export,30,Pharmaceutical products,636426970.774,False,True,4
+2023,IND,India,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,1373875488.221,False,True,4
+2023,IND,India,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,1711922438.925,False,True,4
+2023,IND,India,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,268995212.674,False,True,4
+2024,IND,India,GBR,United Kingdom,M,Import,30,Pharmaceutical products,59147642.309,False,True,4
+2024,IND,India,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,821457496.84,False,True,4
+2024,IND,India,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,384239011.056,False,True,4
+2024,IND,India,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,207123514.575,False,True,4
+2024,IND,India,GBR,United Kingdom,X,Export,30,Pharmaceutical products,760172702.748,False,True,4
+2024,IND,India,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,1581448575.632,False,True,4
+2024,IND,India,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,2100411401.126,False,True,4
+2024,IND,India,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,281031050.703,False,True,4
+2018,IND,India,JPN,Japan,M,Import,30,Pharmaceutical products,19630719.849,False,True,4
+2018,IND,India,JPN,Japan,M,Import,84,Machinery and mechanical appliances,3305649597.693,False,True,4
+2018,IND,India,JPN,Japan,M,Import,85,Electrical machinery and equipment,1401657307.695,False,True,4
+2018,IND,India,JPN,Japan,M,Import,87,Vehicles and parts thereof,538517483.461,False,True,4
+2018,IND,India,JPN,Japan,X,Export,30,Pharmaceutical products,49881800.857,False,True,4
+2018,IND,India,JPN,Japan,X,Export,84,Machinery and mechanical appliances,424238851.759,False,True,4
+2018,IND,India,JPN,Japan,X,Export,85,Electrical machinery and equipment,120056124.907,False,True,4
+2018,IND,India,JPN,Japan,X,Export,87,Vehicles and parts thereof,234018344.66,False,True,4
+2019,IND,India,JPN,Japan,M,Import,30,Pharmaceutical products,25873487.708,False,True,4
+2019,IND,India,JPN,Japan,M,Import,84,Machinery and mechanical appliances,3306824713.278,False,True,4
+2019,IND,India,JPN,Japan,M,Import,85,Electrical machinery and equipment,1408513087.717,False,True,4
+2019,IND,India,JPN,Japan,M,Import,87,Vehicles and parts thereof,453956059.707,False,True,4
+2019,IND,India,JPN,Japan,X,Export,30,Pharmaceutical products,64175032.471,False,True,4
+2019,IND,India,JPN,Japan,X,Export,84,Machinery and mechanical appliances,303016804.631,False,True,4
+2019,IND,India,JPN,Japan,X,Export,85,Electrical machinery and equipment,112774607.695,False,True,4
+2019,IND,India,JPN,Japan,X,Export,87,Vehicles and parts thereof,235613606.652,False,True,4
+2020,IND,India,JPN,Japan,M,Import,30,Pharmaceutical products,18230150.119,False,True,4
+2020,IND,India,JPN,Japan,M,Import,84,Machinery and mechanical appliances,2092267180.886,False,True,4
+2020,IND,India,JPN,Japan,M,Import,85,Electrical machinery and equipment,985801838.424,False,True,4
+2020,IND,India,JPN,Japan,M,Import,87,Vehicles and parts thereof,355061972.283,False,True,4
+2020,IND,India,JPN,Japan,X,Export,30,Pharmaceutical products,81712117.771,False,True,4
+2020,IND,India,JPN,Japan,X,Export,84,Machinery and mechanical appliances,283644516.865,False,True,4
+2020,IND,India,JPN,Japan,X,Export,85,Electrical machinery and equipment,101633774.788,False,True,4
+2020,IND,India,JPN,Japan,X,Export,87,Vehicles and parts thereof,171843185.146,False,True,4
+2021,IND,India,JPN,Japan,M,Import,30,Pharmaceutical products,22535136.842,False,True,4
+2021,IND,India,JPN,Japan,M,Import,84,Machinery and mechanical appliances,2738913054.589,False,True,4
+2021,IND,India,JPN,Japan,M,Import,85,Electrical machinery and equipment,1337907541.317,False,True,4
+2021,IND,India,JPN,Japan,M,Import,87,Vehicles and parts thereof,755682528.26,False,True,4
+2021,IND,India,JPN,Japan,X,Export,30,Pharmaceutical products,83459191.292,False,True,4
+2021,IND,India,JPN,Japan,X,Export,84,Machinery and mechanical appliances,535258830.023,False,True,4
+2021,IND,India,JPN,Japan,X,Export,85,Electrical machinery and equipment,336890212.928,False,True,4
+2021,IND,India,JPN,Japan,X,Export,87,Vehicles and parts thereof,312244648.064,False,True,4
+2022,IND,India,JPN,Japan,M,Import,30,Pharmaceutical products,19406923.756,False,True,4
+2022,IND,India,JPN,Japan,M,Import,84,Machinery and mechanical appliances,2707989742.253,False,True,4
+2022,IND,India,JPN,Japan,M,Import,85,Electrical machinery and equipment,1639291368.786,False,True,4
+2022,IND,India,JPN,Japan,M,Import,87,Vehicles and parts thereof,752824440.537,False,True,4
+2022,IND,India,JPN,Japan,X,Export,30,Pharmaceutical products,93848970.809,False,True,4
+2022,IND,India,JPN,Japan,X,Export,84,Machinery and mechanical appliances,424884812.297,False,True,4
+2022,IND,India,JPN,Japan,X,Export,85,Electrical machinery and equipment,452533755.626,False,True,4
+2022,IND,India,JPN,Japan,X,Export,87,Vehicles and parts thereof,366766527.287,False,True,4
+2023,IND,India,JPN,Japan,M,Import,30,Pharmaceutical products,28915196.158,False,True,4
+2023,IND,India,JPN,Japan,M,Import,84,Machinery and mechanical appliances,3457260082.632,False,True,4
+2023,IND,India,JPN,Japan,M,Import,85,Electrical machinery and equipment,2682208606.024,False,True,4
+2023,IND,India,JPN,Japan,M,Import,87,Vehicles and parts thereof,960898739.474,False,True,4
+2023,IND,India,JPN,Japan,X,Export,30,Pharmaceutical products,107322291.743,False,True,4
+2023,IND,India,JPN,Japan,X,Export,84,Machinery and mechanical appliances,464909531.565,False,True,4
+2023,IND,India,JPN,Japan,X,Export,85,Electrical machinery and equipment,317389511.724,False,True,4
+2023,IND,India,JPN,Japan,X,Export,87,Vehicles and parts thereof,431170819.599,False,True,4
+2024,IND,India,JPN,Japan,M,Import,30,Pharmaceutical products,38288925.495,False,True,4
+2024,IND,India,JPN,Japan,M,Import,84,Machinery and mechanical appliances,3367247631.237,False,True,4
+2024,IND,India,JPN,Japan,M,Import,85,Electrical machinery and equipment,2690964862.795,False,True,4
+2024,IND,India,JPN,Japan,M,Import,87,Vehicles and parts thereof,1197287710.999,False,True,4
+2024,IND,India,JPN,Japan,X,Export,30,Pharmaceutical products,95800835.903,False,True,4
+2024,IND,India,JPN,Japan,X,Export,84,Machinery and mechanical appliances,506380892.12,False,True,4
+2024,IND,India,JPN,Japan,X,Export,85,Electrical machinery and equipment,488607143.234,False,True,4
+2024,IND,India,JPN,Japan,X,Export,87,Vehicles and parts thereof,899735341.27,False,True,4
+2018,USA,USA,CHN,China,M,Import,30,Pharmaceutical products,1588092921.0,False,True,0
+2018,USA,USA,CHN,China,M,Import,84,Machinery and mechanical appliances,119566688800.0,False,True,0
+2018,USA,USA,CHN,China,M,Import,85,Electrical machinery and equipment,155951060194.0,False,True,0
+2018,USA,USA,CHN,China,M,Import,87,Vehicles and parts thereof,18726225533.0,False,True,0
+2018,USA,USA,CHN,China,X,Export,30,Pharmaceutical products,2779122226.0,False,True,0
+2018,USA,USA,CHN,China,X,Export,84,Machinery and mechanical appliances,14199748222.0,False,True,0
+2018,USA,USA,CHN,China,X,Export,85,Electrical machinery and equipment,12879899567.0,False,True,0
+2018,USA,USA,CHN,China,X,Export,87,Vehicles and parts thereof,9381113574.0,False,True,0
+2019,USA,USA,CHN,China,M,Import,30,Pharmaceutical products,1605449500.0,False,True,0
+2019,USA,USA,CHN,China,M,Import,84,Machinery and mechanical appliances,94616690227.0,False,True,0
+2019,USA,USA,CHN,China,M,Import,85,Electrical machinery and equipment,128714774073.0,False,True,0
+2019,USA,USA,CHN,China,M,Import,87,Vehicles and parts thereof,14907330216.0,False,True,0
+2019,USA,USA,CHN,China,X,Export,30,Pharmaceutical products,4143622191.0,False,True,0
+2019,USA,USA,CHN,China,X,Export,84,Machinery and mechanical appliances,12771946385.0,False,True,0
+2019,USA,USA,CHN,China,X,Export,85,Electrical machinery and equipment,14428079687.0,False,True,0
+2019,USA,USA,CHN,China,X,Export,87,Vehicles and parts thereof,9134514793.0,False,True,0
+2020,USA,USA,CHN,China,M,Import,30,Pharmaceutical products,2189500146.0,False,True,0
+2020,USA,USA,CHN,China,M,Import,84,Machinery and mechanical appliances,100437549028.0,False,True,0
+2020,USA,USA,CHN,China,M,Import,85,Electrical machinery and equipment,114462936371.0,False,True,0
+2020,USA,USA,CHN,China,M,Import,87,Vehicles and parts thereof,13633280428.0,False,True,0
+2020,USA,USA,CHN,China,X,Export,30,Pharmaceutical products,4643190794.0,False,True,0
+2020,USA,USA,CHN,China,X,Export,84,Machinery and mechanical appliances,13809286565.0,False,True,0
+2020,USA,USA,CHN,China,X,Export,85,Electrical machinery and equipment,17043664603.0,False,True,0
+2020,USA,USA,CHN,China,X,Export,87,Vehicles and parts thereof,8191461497.0,False,True,0
+2021,USA,USA,CHN,China,M,Import,30,Pharmaceutical products,3468768526.0,False,True,0
+2021,USA,USA,CHN,China,M,Import,84,Machinery and mechanical appliances,115635822543.0,False,True,0
+2021,USA,USA,CHN,China,M,Import,85,Electrical machinery and equipment,135123701673.0,False,True,0
+2021,USA,USA,CHN,China,M,Import,87,Vehicles and parts thereof,17348304284.0,False,True,0
+2021,USA,USA,CHN,China,X,Export,30,Pharmaceutical products,6667096692.0,False,True,0
+2021,USA,USA,CHN,China,X,Export,84,Machinery and mechanical appliances,16728715438.0,False,True,0
+2021,USA,USA,CHN,China,X,Export,85,Electrical machinery and equipment,19356989300.0,False,True,0
+2021,USA,USA,CHN,China,X,Export,87,Vehicles and parts thereof,8481690005.0,False,True,0
+2022,USA,USA,CHN,China,M,Import,30,Pharmaceutical products,10394244066.0,False,True,0
+2022,USA,USA,CHN,China,M,Import,84,Machinery and mechanical appliances,112770281180.0,False,True,0
+2022,USA,USA,CHN,China,M,Import,85,Electrical machinery and equipment,145807695770.0,False,True,0
+2022,USA,USA,CHN,China,M,Import,87,Vehicles and parts thereof,19596487864.0,False,True,0
+2022,USA,USA,CHN,China,X,Export,30,Pharmaceutical products,9297152510.0,False,True,0
+2022,USA,USA,CHN,China,X,Export,84,Machinery and mechanical appliances,14915568181.0,False,True,0
+2022,USA,USA,CHN,China,X,Export,85,Electrical machinery and equipment,16005135584.0,False,True,0
+2022,USA,USA,CHN,China,X,Export,87,Vehicles and parts thereof,7299604266.0,False,True,0
+2023,USA,USA,CHN,China,M,Import,30,Pharmaceutical products,6000148730.0,False,True,0
+2023,USA,USA,CHN,China,M,Import,84,Machinery and mechanical appliances,85889376499.0,False,True,0
+2023,USA,USA,CHN,China,M,Import,85,Electrical machinery and equipment,126679090396.0,False,True,0
+2023,USA,USA,CHN,China,M,Import,87,Vehicles and parts thereof,16413985103.0,False,True,0
+2023,USA,USA,CHN,China,X,Export,30,Pharmaceutical products,9896649576.0,False,True,0
+2023,USA,USA,CHN,China,X,Export,84,Machinery and mechanical appliances,13722884942.0,False,True,0
+2023,USA,USA,CHN,China,X,Export,85,Electrical machinery and equipment,11644243579.0,False,True,0
+2023,USA,USA,CHN,China,X,Export,87,Vehicles and parts thereof,8138550170.0,False,True,0
+2024,USA,USA,CHN,China,M,Import,30,Pharmaceutical products,7842888723.0,False,True,0
+2024,USA,USA,CHN,China,M,Import,84,Machinery and mechanical appliances,85129763877.0,False,True,0
+2024,USA,USA,CHN,China,M,Import,85,Electrical machinery and equipment,127057532501.0,False,True,0
+2024,USA,USA,CHN,China,M,Import,87,Vehicles and parts thereof,17989320024.0,False,True,0
+2024,USA,USA,CHN,China,X,Export,30,Pharmaceutical products,9495088888.0,False,True,0
+2024,USA,USA,CHN,China,X,Export,84,Machinery and mechanical appliances,12858594797.0,False,True,0
+2024,USA,USA,CHN,China,X,Export,85,Electrical machinery and equipment,15279780707.0,False,True,0
+2024,USA,USA,CHN,China,X,Export,87,Vehicles and parts thereof,6394726026.0,False,True,0
+2018,USA,USA,DEU,Germany,M,Import,30,Pharmaceutical products,15436079032.0,False,True,0
+2018,USA,USA,DEU,Germany,M,Import,84,Machinery and mechanical appliances,27753790127.0,False,True,0
+2018,USA,USA,DEU,Germany,M,Import,85,Electrical machinery and equipment,8943841398.0,False,True,0
+2018,USA,USA,DEU,Germany,M,Import,87,Vehicles and parts thereof,25753798341.0,False,True,0
+2018,USA,USA,DEU,Germany,X,Export,30,Pharmaceutical products,3416955132.0,False,True,0
+2018,USA,USA,DEU,Germany,X,Export,84,Machinery and mechanical appliances,6850825390.0,False,True,0
+2018,USA,USA,DEU,Germany,X,Export,85,Electrical machinery and equipment,5469546525.0,False,True,0
+2018,USA,USA,DEU,Germany,X,Export,87,Vehicles and parts thereof,7182369406.0,False,True,0
+2019,USA,USA,DEU,Germany,M,Import,30,Pharmaceutical products,17257313497.0,False,True,0
+2019,USA,USA,DEU,Germany,M,Import,84,Machinery and mechanical appliances,27773733807.0,False,True,0
+2019,USA,USA,DEU,Germany,M,Import,85,Electrical machinery and equipment,8824620529.0,False,True,0
+2019,USA,USA,DEU,Germany,M,Import,87,Vehicles and parts thereof,24918323359.0,False,True,0
+2019,USA,USA,DEU,Germany,X,Export,30,Pharmaceutical products,4882805878.0,False,True,0
+2019,USA,USA,DEU,Germany,X,Export,84,Machinery and mechanical appliances,6284190664.0,False,True,0
+2019,USA,USA,DEU,Germany,X,Export,85,Electrical machinery and equipment,5468483804.0,False,True,0
+2019,USA,USA,DEU,Germany,X,Export,87,Vehicles and parts thereof,8188921354.0,False,True,0
+2020,USA,USA,DEU,Germany,M,Import,30,Pharmaceutical products,20213001473.0,False,True,0
+2020,USA,USA,DEU,Germany,M,Import,84,Machinery and mechanical appliances,24528897826.0,False,True,0
+2020,USA,USA,DEU,Germany,M,Import,85,Electrical machinery and equipment,8244819370.0,False,True,0
+2020,USA,USA,DEU,Germany,M,Import,87,Vehicles and parts thereof,18550039933.0,False,True,0
+2020,USA,USA,DEU,Germany,X,Export,30,Pharmaceutical products,5565312440.0,False,True,0
+2020,USA,USA,DEU,Germany,X,Export,84,Machinery and mechanical appliances,5591487389.0,False,True,0
+2020,USA,USA,DEU,Germany,X,Export,85,Electrical machinery and equipment,4928588180.0,False,True,0
+2020,USA,USA,DEU,Germany,X,Export,87,Vehicles and parts thereof,7806727033.0,False,True,0
+2021,USA,USA,DEU,Germany,M,Import,30,Pharmaceutical products,22116002060.0,False,True,0
+2021,USA,USA,DEU,Germany,M,Import,84,Machinery and mechanical appliances,27550021640.0,False,True,0
+2021,USA,USA,DEU,Germany,M,Import,85,Electrical machinery and equipment,9714886593.0,False,True,0
+2021,USA,USA,DEU,Germany,M,Import,87,Vehicles and parts thereof,22975071306.0,False,True,0
+2021,USA,USA,DEU,Germany,X,Export,30,Pharmaceutical products,5932656181.0,False,True,0
+2021,USA,USA,DEU,Germany,X,Export,84,Machinery and mechanical appliances,6475427509.0,False,True,0
+2021,USA,USA,DEU,Germany,X,Export,85,Electrical machinery and equipment,5604367420.0,False,True,0
+2021,USA,USA,DEU,Germany,X,Export,87,Vehicles and parts thereof,8738450220.0,False,True,0
+2022,USA,USA,DEU,Germany,M,Import,30,Pharmaceutical products,17860698942.0,False,True,0
+2022,USA,USA,DEU,Germany,M,Import,84,Machinery and mechanical appliances,30049633910.0,False,True,0
+2022,USA,USA,DEU,Germany,M,Import,85,Electrical machinery and equipment,11144521705.0,False,True,0
+2022,USA,USA,DEU,Germany,M,Import,87,Vehicles and parts thereof,28253234361.0,False,True,0
+2022,USA,USA,DEU,Germany,X,Export,30,Pharmaceutical products,6546131536.0,False,True,0
+2022,USA,USA,DEU,Germany,X,Export,84,Machinery and mechanical appliances,7258454936.0,False,True,0
+2022,USA,USA,DEU,Germany,X,Export,85,Electrical machinery and equipment,6499858856.0,False,True,0
+2022,USA,USA,DEU,Germany,X,Export,87,Vehicles and parts thereof,8816229310.0,False,True,0
+2023,USA,USA,DEU,Germany,M,Import,30,Pharmaceutical products,19118889945.0,False,True,0
+2023,USA,USA,DEU,Germany,M,Import,84,Machinery and mechanical appliances,34597909802.0,False,True,0
+2023,USA,USA,DEU,Germany,M,Import,85,Electrical machinery and equipment,12426567610.0,False,True,0
+2023,USA,USA,DEU,Germany,M,Import,87,Vehicles and parts thereof,34535313641.0,False,True,0
+2023,USA,USA,DEU,Germany,X,Export,30,Pharmaceutical products,6553882807.0,False,True,0
+2023,USA,USA,DEU,Germany,X,Export,84,Machinery and mechanical appliances,7499008330.0,False,True,0
+2023,USA,USA,DEU,Germany,X,Export,85,Electrical machinery and equipment,6640793517.0,False,True,0
+2023,USA,USA,DEU,Germany,X,Export,87,Vehicles and parts thereof,10418989643.0,False,True,0
+2024,USA,USA,DEU,Germany,M,Import,30,Pharmaceutical products,17219266686.0,False,True,0
+2024,USA,USA,DEU,Germany,M,Import,84,Machinery and mechanical appliances,34345079121.0,False,True,0
+2024,USA,USA,DEU,Germany,M,Import,85,Electrical machinery and equipment,11987072195.0,False,True,0
+2024,USA,USA,DEU,Germany,M,Import,87,Vehicles and parts thereof,34871538937.0,False,True,0
+2024,USA,USA,DEU,Germany,X,Export,30,Pharmaceutical products,7674910116.0,False,True,0
+2024,USA,USA,DEU,Germany,X,Export,84,Machinery and mechanical appliances,7566449327.0,False,True,0
+2024,USA,USA,DEU,Germany,X,Export,85,Electrical machinery and equipment,6175140725.0,False,True,0
+2024,USA,USA,DEU,Germany,X,Export,87,Vehicles and parts thereof,9191373420.0,False,True,0
+2018,USA,USA,GBR,United Kingdom,M,Import,30,Pharmaceutical products,4994939342.0,False,True,0
+2018,USA,USA,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,9482703985.0,False,True,0
+2018,USA,USA,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,2951948402.0,False,True,0
+2018,USA,USA,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,11021340076.0,False,True,0
+2018,USA,USA,GBR,United Kingdom,X,Export,30,Pharmaceutical products,3462125328.0,False,True,0
+2018,USA,USA,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,6715461497.0,False,True,0
+2018,USA,USA,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,4477388436.0,False,True,0
+2018,USA,USA,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,2651133661.0,False,True,0
+2019,USA,USA,GBR,United Kingdom,M,Import,30,Pharmaceutical products,5108531324.0,False,True,0
+2019,USA,USA,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,10516635050.0,False,True,0
+2019,USA,USA,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,3203432244.0,False,True,0
+2019,USA,USA,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,11218994804.0,False,True,0
+2019,USA,USA,GBR,United Kingdom,X,Export,30,Pharmaceutical products,3151908510.0,False,True,0
+2019,USA,USA,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,6174654115.0,False,True,0
+2019,USA,USA,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,4636007489.0,False,True,0
+2019,USA,USA,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,2531020415.0,False,True,0
+2020,USA,USA,GBR,United Kingdom,M,Import,30,Pharmaceutical products,6158712145.0,False,True,0
+2020,USA,USA,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,8141867539.0,False,True,0
+2020,USA,USA,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,2792222055.0,False,True,0
+2020,USA,USA,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,7124512140.0,False,True,0
+2020,USA,USA,GBR,United Kingdom,X,Export,30,Pharmaceutical products,2880891106.0,False,True,0
+2020,USA,USA,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,4894535496.0,False,True,0
+2020,USA,USA,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,3821357683.0,False,True,0
+2020,USA,USA,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,2091996664.0,False,True,0
+2021,USA,USA,GBR,United Kingdom,M,Import,30,Pharmaceutical products,6105349403.0,False,True,0
+2021,USA,USA,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,9128353639.0,False,True,0
+2021,USA,USA,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,2879006942.0,False,True,0
+2021,USA,USA,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,8119164098.0,False,True,0
+2021,USA,USA,GBR,United Kingdom,X,Export,30,Pharmaceutical products,4157776560.0,False,True,0
+2021,USA,USA,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,5383700299.0,False,True,0
+2021,USA,USA,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,3745525616.0,False,True,0
+2021,USA,USA,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,1430900950.0,False,True,0
+2022,USA,USA,GBR,United Kingdom,M,Import,30,Pharmaceutical products,6351158464.0,False,True,0
+2022,USA,USA,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,10549882967.0,False,True,0
+2022,USA,USA,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,3244210221.0,False,True,0
+2022,USA,USA,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,8171758846.0,False,True,0
+2022,USA,USA,GBR,United Kingdom,X,Export,30,Pharmaceutical products,5629055010.0,False,True,0
+2022,USA,USA,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,5767459978.0,False,True,0
+2022,USA,USA,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,4342958715.0,False,True,0
+2022,USA,USA,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,1308263603.0,False,True,0
+2023,USA,USA,GBR,United Kingdom,M,Import,30,Pharmaceutical products,6840657892.0,False,True,0
+2023,USA,USA,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,12872978938.0,False,True,0
+2023,USA,USA,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,3541806478.0,False,True,0
+2023,USA,USA,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,8700637736.0,False,True,0
+2023,USA,USA,GBR,United Kingdom,X,Export,30,Pharmaceutical products,5503306864.0,False,True,0
+2023,USA,USA,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,6181019488.0,False,True,0
+2023,USA,USA,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,5152834326.0,False,True,0
+2023,USA,USA,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,1266561074.0,False,True,0
+2024,USA,USA,GBR,United Kingdom,M,Import,30,Pharmaceutical products,7292454445.0,False,True,0
+2024,USA,USA,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,13150460120.0,False,True,0
+2024,USA,USA,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,3622862450.0,False,True,0
+2024,USA,USA,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,11676394431.0,False,True,0
+2024,USA,USA,GBR,United Kingdom,X,Export,30,Pharmaceutical products,5618686950.0,False,True,0
+2024,USA,USA,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,6951194550.0,False,True,0
+2024,USA,USA,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,4908863678.0,False,True,0
+2024,USA,USA,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,1374129928.0,False,True,0
+2018,USA,USA,JPN,Japan,M,Import,30,Pharmaceutical products,2739775466.0,False,True,0
+2018,USA,USA,JPN,Japan,M,Import,84,Machinery and mechanical appliances,33002999460.0,False,True,0
+2018,USA,USA,JPN,Japan,M,Import,85,Electrical machinery and equipment,18032220472.0,False,True,0
+2018,USA,USA,JPN,Japan,M,Import,87,Vehicles and parts thereof,52476387745.0,False,True,0
+2018,USA,USA,JPN,Japan,X,Export,30,Pharmaceutical products,3777515995.0,False,True,0
+2018,USA,USA,JPN,Japan,X,Export,84,Machinery and mechanical appliances,8234321083.0,False,True,0
+2018,USA,USA,JPN,Japan,X,Export,85,Electrical machinery and equipment,4837368673.0,False,True,0
+2018,USA,USA,JPN,Japan,X,Export,87,Vehicles and parts thereof,1691954861.0,False,True,0
+2019,USA,USA,JPN,Japan,M,Import,30,Pharmaceutical products,4272121924.0,False,True,0
+2019,USA,USA,JPN,Japan,M,Import,84,Machinery and mechanical appliances,34965314062.0,False,True,0
+2019,USA,USA,JPN,Japan,M,Import,85,Electrical machinery and equipment,16916322636.0,False,True,0
+2019,USA,USA,JPN,Japan,M,Import,87,Vehicles and parts thereof,50174360764.0,False,True,0
+2019,USA,USA,JPN,Japan,X,Export,30,Pharmaceutical products,3870631953.0,False,True,0
+2019,USA,USA,JPN,Japan,X,Export,84,Machinery and mechanical appliances,6974193745.0,False,True,0
+2019,USA,USA,JPN,Japan,X,Export,85,Electrical machinery and equipment,4606478653.0,False,True,0
+2019,USA,USA,JPN,Japan,X,Export,87,Vehicles and parts thereof,1808605355.0,False,True,0
+2020,USA,USA,JPN,Japan,M,Import,30,Pharmaceutical products,4869209484.0,False,True,0
+2020,USA,USA,JPN,Japan,M,Import,84,Machinery and mechanical appliances,27405429276.0,False,True,0
+2020,USA,USA,JPN,Japan,M,Import,85,Electrical machinery and equipment,16421754211.0,False,True,0
+2020,USA,USA,JPN,Japan,M,Import,87,Vehicles and parts thereof,40959818236.0,False,True,0
+2020,USA,USA,JPN,Japan,X,Export,30,Pharmaceutical products,4003087496.0,False,True,0
+2020,USA,USA,JPN,Japan,X,Export,84,Machinery and mechanical appliances,7050926445.0,False,True,0
+2020,USA,USA,JPN,Japan,X,Export,85,Electrical machinery and equipment,4223009794.0,False,True,0
+2020,USA,USA,JPN,Japan,X,Export,87,Vehicles and parts thereof,1352420007.0,False,True,0
+2021,USA,USA,JPN,Japan,M,Import,30,Pharmaceutical products,5987588649.0,False,True,0
+2021,USA,USA,JPN,Japan,M,Import,84,Machinery and mechanical appliances,33361659740.0,False,True,0
+2021,USA,USA,JPN,Japan,M,Import,85,Electrical machinery and equipment,19575581200.0,False,True,0
+2021,USA,USA,JPN,Japan,M,Import,87,Vehicles and parts thereof,43444621862.0,False,True,0
+2021,USA,USA,JPN,Japan,X,Export,30,Pharmaceutical products,5189943505.0,False,True,0
+2021,USA,USA,JPN,Japan,X,Export,84,Machinery and mechanical appliances,6399951027.0,False,True,0
+2021,USA,USA,JPN,Japan,X,Export,85,Electrical machinery and equipment,4393211717.0,False,True,0
+2021,USA,USA,JPN,Japan,X,Export,87,Vehicles and parts thereof,1541353604.0,False,True,0
+2022,USA,USA,JPN,Japan,M,Import,30,Pharmaceutical products,7012151487.0,False,True,0
+2022,USA,USA,JPN,Japan,M,Import,84,Machinery and mechanical appliances,39338338662.0,False,True,0
+2022,USA,USA,JPN,Japan,M,Import,85,Electrical machinery and equipment,20585939174.0,False,True,0
+2022,USA,USA,JPN,Japan,M,Import,87,Vehicles and parts thereof,45174365146.0,False,True,0
+2022,USA,USA,JPN,Japan,X,Export,30,Pharmaceutical products,6607014675.0,False,True,0
+2022,USA,USA,JPN,Japan,X,Export,84,Machinery and mechanical appliances,6497056178.0,False,True,0
+2022,USA,USA,JPN,Japan,X,Export,85,Electrical machinery and equipment,4668032204.0,False,True,0
+2022,USA,USA,JPN,Japan,X,Export,87,Vehicles and parts thereof,1407405591.0,False,True,0
+2023,USA,USA,JPN,Japan,M,Import,30,Pharmaceutical products,6589219265.0,False,True,0
+2023,USA,USA,JPN,Japan,M,Import,84,Machinery and mechanical appliances,36245295759.0,False,True,0
+2023,USA,USA,JPN,Japan,M,Import,85,Electrical machinery and equipment,19420049031.0,False,True,0
+2023,USA,USA,JPN,Japan,M,Import,87,Vehicles and parts thereof,50804974909.0,False,True,0
+2023,USA,USA,JPN,Japan,X,Export,30,Pharmaceutical products,6320128995.0,False,True,0
+2023,USA,USA,JPN,Japan,X,Export,84,Machinery and mechanical appliances,6370763787.0,False,True,0
+2023,USA,USA,JPN,Japan,X,Export,85,Electrical machinery and equipment,4398023176.0,False,True,0
+2023,USA,USA,JPN,Japan,X,Export,87,Vehicles and parts thereof,1757199097.0,False,True,0
+2024,USA,USA,JPN,Japan,M,Import,30,Pharmaceutical products,7423356750.0,False,True,0
+2024,USA,USA,JPN,Japan,M,Import,84,Machinery and mechanical appliances,36051633780.0,False,True,0
+2024,USA,USA,JPN,Japan,M,Import,85,Electrical machinery and equipment,19170633670.0,False,True,0
+2024,USA,USA,JPN,Japan,M,Import,87,Vehicles and parts thereof,51266127202.0,False,True,0
+2024,USA,USA,JPN,Japan,X,Export,30,Pharmaceutical products,8411860252.0,False,True,0
+2024,USA,USA,JPN,Japan,X,Export,84,Machinery and mechanical appliances,8024378876.0,False,True,0
+2024,USA,USA,JPN,Japan,X,Export,85,Electrical machinery and equipment,4488391776.0,False,True,0
+2024,USA,USA,JPN,Japan,X,Export,87,Vehicles and parts thereof,1393555110.0,False,True,0
+2018,CHN,China,USA,USA,M,Import,30,Pharmaceutical products,4667115688.0,False,True,4
+2018,CHN,China,USA,USA,M,Import,84,Machinery and mechanical appliances,18380411798.0,False,True,4
+2018,CHN,China,USA,USA,M,Import,85,Electrical machinery and equipment,19725089764.0,False,True,4
+2018,CHN,China,USA,USA,M,Import,87,Vehicles and parts thereof,12624046952.0,False,True,4
+2018,CHN,China,USA,USA,X,Export,30,Pharmaceutical products,1475887229.0,False,True,4
+2018,CHN,China,USA,USA,X,Export,84,Machinery and mechanical appliances,102990801877.0,False,True,4
+2018,CHN,China,USA,USA,X,Export,85,Electrical machinery and equipment,119471608645.0,False,True,4
+2018,CHN,China,USA,USA,X,Export,87,Vehicles and parts thereof,18079161808.0,False,True,4
+2019,CHN,China,USA,USA,M,Import,30,Pharmaceutical products,4863153256.0,False,True,4
+2019,CHN,China,USA,USA,M,Import,84,Machinery and mechanical appliances,17534314371.0,False,True,4
+2019,CHN,China,USA,USA,M,Import,85,Electrical machinery and equipment,20232325157.0,False,True,4
+2019,CHN,China,USA,USA,M,Import,87,Vehicles and parts thereof,10684021734.0,False,True,4
+2019,CHN,China,USA,USA,X,Export,30,Pharmaceutical products,1827163681.0,False,True,4
+2019,CHN,China,USA,USA,X,Export,84,Machinery and mechanical appliances,86560803717.0,False,True,4
+2019,CHN,China,USA,USA,X,Export,85,Electrical machinery and equipment,106207723562.0,False,True,4
+2019,CHN,China,USA,USA,X,Export,87,Vehicles and parts thereof,14311378862.0,False,True,4
+2020,CHN,China,USA,USA,M,Import,30,Pharmaceutical products,5661405111.0,False,True,4
+2020,CHN,China,USA,USA,M,Import,84,Machinery and mechanical appliances,16978664708.0,False,True,4
+2020,CHN,China,USA,USA,M,Import,85,Electrical machinery and equipment,20929275259.0,False,True,4
+2020,CHN,China,USA,USA,M,Import,87,Vehicles and parts thereof,10887718089.0,False,True,4
+2020,CHN,China,USA,USA,X,Export,30,Pharmaceutical products,2412711361.0,False,True,4
+2020,CHN,China,USA,USA,X,Export,84,Machinery and mechanical appliances,95228640014.0,False,True,4
+2020,CHN,China,USA,USA,X,Export,85,Electrical machinery and equipment,111623599521.0,False,True,4
+2020,CHN,China,USA,USA,X,Export,87,Vehicles and parts thereof,14032265072.0,False,True,4
+2021,CHN,China,USA,USA,M,Import,30,Pharmaceutical products,7045041914.0,False,True,4
+2021,CHN,China,USA,USA,M,Import,84,Machinery and mechanical appliances,19675378280.0,False,True,4
+2021,CHN,China,USA,USA,M,Import,85,Electrical machinery and equipment,22492021688.0,False,True,4
+2021,CHN,China,USA,USA,M,Import,87,Vehicles and parts thereof,13837294162.0,False,True,4
+2021,CHN,China,USA,USA,X,Export,30,Pharmaceutical products,2837816414.0,False,True,4
+2021,CHN,China,USA,USA,X,Export,84,Machinery and mechanical appliances,113448606012.0,False,True,4
+2021,CHN,China,USA,USA,X,Export,85,Electrical machinery and equipment,133080025539.0,False,True,4
+2021,CHN,China,USA,USA,X,Export,87,Vehicles and parts thereof,19048843881.0,False,True,4
+2022,CHN,China,USA,USA,M,Import,30,Pharmaceutical products,6907687325.0,False,True,4
+2022,CHN,China,USA,USA,M,Import,84,Machinery and mechanical appliances,19655401690.0,False,True,4
+2022,CHN,China,USA,USA,M,Import,85,Electrical machinery and equipment,18299801659.0,False,True,4
+2022,CHN,China,USA,USA,M,Import,87,Vehicles and parts thereof,11779792394.0,False,True,4
+2022,CHN,China,USA,USA,X,Export,30,Pharmaceutical products,2375102669.0,False,True,4
+2022,CHN,China,USA,USA,X,Export,84,Machinery and mechanical appliances,109644064389.0,False,True,4
+2022,CHN,China,USA,USA,X,Export,85,Electrical machinery and equipment,142556241189.0,False,True,4
+2022,CHN,China,USA,USA,X,Export,87,Vehicles and parts thereof,19670991001.0,False,True,4
+2023,CHN,China,USA,USA,M,Import,30,Pharmaceutical products,6578317075.0,False,True,4
+2023,CHN,China,USA,USA,M,Import,84,Machinery and mechanical appliances,20058618730.0,False,True,4
+2023,CHN,China,USA,USA,M,Import,85,Electrical machinery and equipment,14080347283.0,False,True,4
+2023,CHN,China,USA,USA,M,Import,87,Vehicles and parts thereof,10550248360.0,False,True,4
+2023,CHN,China,USA,USA,X,Export,30,Pharmaceutical products,2204625572.0,False,True,4
+2023,CHN,China,USA,USA,X,Export,84,Machinery and mechanical appliances,88979681166.0,False,True,4
+2023,CHN,China,USA,USA,X,Export,85,Electrical machinery and equipment,124524521242.0,False,True,4
+2023,CHN,China,USA,USA,X,Export,87,Vehicles and parts thereof,18262816809.0,False,True,4
+2024,CHN,China,USA,USA,M,Import,30,Pharmaceutical products,6188746883.0,False,True,4
+2024,CHN,China,USA,USA,M,Import,84,Machinery and mechanical appliances,19787985877.0,False,True,4
+2024,CHN,China,USA,USA,M,Import,85,Electrical machinery and equipment,18141611817.0,False,True,4
+2024,CHN,China,USA,USA,M,Import,87,Vehicles and parts thereof,8986862021.0,False,True,4
+2024,CHN,China,USA,USA,X,Export,30,Pharmaceutical products,2635285554.0,False,True,4
+2024,CHN,China,USA,USA,X,Export,84,Machinery and mechanical appliances,92530613288.0,False,True,4
+2024,CHN,China,USA,USA,X,Export,85,Electrical machinery and equipment,125984078329.0,False,True,4
+2024,CHN,China,USA,USA,X,Export,87,Vehicles and parts thereof,20368753820.0,False,True,4
+2018,CHN,China,DEU,Germany,M,Import,30,Pharmaceutical products,6867416286.0,False,True,4
+2018,CHN,China,DEU,Germany,M,Import,84,Machinery and mechanical appliances,24024955702.0,False,True,4
+2018,CHN,China,DEU,Germany,M,Import,85,Electrical machinery and equipment,13371789285.0,False,True,4
+2018,CHN,China,DEU,Germany,M,Import,87,Vehicles and parts thereof,23888719622.0,False,True,4
+2018,CHN,China,DEU,Germany,X,Export,30,Pharmaceutical products,389611563.0,False,True,4
+2018,CHN,China,DEU,Germany,X,Export,84,Machinery and mechanical appliances,18378136351.0,False,True,4
+2018,CHN,China,DEU,Germany,X,Export,85,Electrical machinery and equipment,17207976944.0,False,True,4
+2018,CHN,China,DEU,Germany,X,Export,87,Vehicles and parts thereof,2649415837.0,False,True,4
+2019,CHN,China,DEU,Germany,M,Import,30,Pharmaceutical products,8885082286.0,False,True,4
+2019,CHN,China,DEU,Germany,M,Import,84,Machinery and mechanical appliances,23409784941.0,False,True,4
+2019,CHN,China,DEU,Germany,M,Import,85,Electrical machinery and equipment,12708792730.0,False,True,4
+2019,CHN,China,DEU,Germany,M,Import,87,Vehicles and parts thereof,22705426977.0,False,True,4
+2019,CHN,China,DEU,Germany,X,Export,30,Pharmaceutical products,353995874.0,False,True,4
+2019,CHN,China,DEU,Germany,X,Export,84,Machinery and mechanical appliances,17925286745.0,False,True,4
+2019,CHN,China,DEU,Germany,X,Export,85,Electrical machinery and equipment,18400035529.0,False,True,4
+2019,CHN,China,DEU,Germany,X,Export,87,Vehicles and parts thereof,2771274719.0,False,True,4
+2020,CHN,China,DEU,Germany,M,Import,30,Pharmaceutical products,9028688189.0,False,True,4
+2020,CHN,China,DEU,Germany,M,Import,84,Machinery and mechanical appliances,22003585406.0,False,True,4
+2020,CHN,China,DEU,Germany,M,Import,85,Electrical machinery and equipment,13016970427.0,False,True,4
+2020,CHN,China,DEU,Germany,M,Import,87,Vehicles and parts thereof,22643233802.0,False,True,4
+2020,CHN,China,DEU,Germany,X,Export,30,Pharmaceutical products,816417361.0,False,True,4
+2020,CHN,China,DEU,Germany,X,Export,84,Machinery and mechanical appliances,18932556918.0,False,True,4
+2020,CHN,China,DEU,Germany,X,Export,85,Electrical machinery and equipment,20643649761.0,False,True,4
+2020,CHN,China,DEU,Germany,X,Export,87,Vehicles and parts thereof,3045144175.0,False,True,4
+2021,CHN,China,DEU,Germany,M,Import,30,Pharmaceutical products,9475603835.0,False,True,4
+2021,CHN,China,DEU,Germany,M,Import,84,Machinery and mechanical appliances,25515310831.0,False,True,4
+2021,CHN,China,DEU,Germany,M,Import,85,Electrical machinery and equipment,14685509068.0,False,True,4
+2021,CHN,China,DEU,Germany,M,Import,87,Vehicles and parts thereof,26293979717.0,False,True,4
+2021,CHN,China,DEU,Germany,X,Export,30,Pharmaceutical products,3970414753.0,False,True,4
+2021,CHN,China,DEU,Germany,X,Export,84,Machinery and mechanical appliances,25673421336.0,False,True,4
+2021,CHN,China,DEU,Germany,X,Export,85,Electrical machinery and equipment,27242590274.0,False,True,4
+2021,CHN,China,DEU,Germany,X,Export,87,Vehicles and parts thereof,5264911949.0,False,True,4
+2022,CHN,China,DEU,Germany,M,Import,30,Pharmaceutical products,7811357472.0,False,True,4
+2022,CHN,China,DEU,Germany,M,Import,84,Machinery and mechanical appliances,22458952536.0,False,True,4
+2022,CHN,China,DEU,Germany,M,Import,85,Electrical machinery and equipment,14154674988.0,False,True,4
+2022,CHN,China,DEU,Germany,M,Import,87,Vehicles and parts thereof,25909105858.0,False,True,4
+2022,CHN,China,DEU,Germany,X,Export,30,Pharmaceutical products,326710955.0,False,True,4
+2022,CHN,China,DEU,Germany,X,Export,84,Machinery and mechanical appliances,23658609455.0,False,True,4
+2022,CHN,China,DEU,Germany,X,Export,85,Electrical machinery and equipment,33796863551.0,False,True,4
+2022,CHN,China,DEU,Germany,X,Export,87,Vehicles and parts thereof,5304719258.0,False,True,4
+2023,CHN,China,DEU,Germany,M,Import,30,Pharmaceutical products,7909657210.0,False,True,4
+2023,CHN,China,DEU,Germany,M,Import,84,Machinery and mechanical appliances,22788380343.0,False,True,4
+2023,CHN,China,DEU,Germany,M,Import,85,Electrical machinery and equipment,13574766778.0,False,True,4
+2023,CHN,China,DEU,Germany,M,Import,87,Vehicles and parts thereof,23220428331.0,False,True,4
+2023,CHN,China,DEU,Germany,X,Export,30,Pharmaceutical products,312942854.0,False,True,4
+2023,CHN,China,DEU,Germany,X,Export,84,Machinery and mechanical appliances,18967250738.0,False,True,4
+2023,CHN,China,DEU,Germany,X,Export,85,Electrical machinery and equipment,33715131065.0,False,True,4
+2023,CHN,China,DEU,Germany,X,Export,87,Vehicles and parts thereof,5645604519.0,False,True,4
+2024,CHN,China,DEU,Germany,M,Import,30,Pharmaceutical products,6679700380.0,False,True,4
+2024,CHN,China,DEU,Germany,M,Import,84,Machinery and mechanical appliances,20707648618.0,False,True,4
+2024,CHN,China,DEU,Germany,M,Import,85,Electrical machinery and equipment,12446495329.0,False,True,4
+2024,CHN,China,DEU,Germany,M,Import,87,Vehicles and parts thereof,17909666426.0,False,True,4
+2024,CHN,China,DEU,Germany,X,Export,30,Pharmaceutical products,345854244.0,False,True,4
+2024,CHN,China,DEU,Germany,X,Export,84,Machinery and mechanical appliances,20554026191.0,False,True,4
+2024,CHN,China,DEU,Germany,X,Export,85,Electrical machinery and equipment,33282921659.0,False,True,4
+2024,CHN,China,DEU,Germany,X,Export,87,Vehicles and parts thereof,6350826242.0,False,True,4
+2018,CHN,China,GBR,United Kingdom,M,Import,30,Pharmaceutical products,1117048550.0,False,True,4
+2018,CHN,China,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,2539927202.0,False,True,4
+2018,CHN,China,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,949974722.0,False,True,4
+2018,CHN,China,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,6566504357.0,False,True,4
+2018,CHN,China,GBR,United Kingdom,X,Export,30,Pharmaceutical products,279237374.0,False,True,4
+2018,CHN,China,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,8967088673.0,False,True,4
+2018,CHN,China,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,12158715154.0,False,True,4
+2018,CHN,China,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,1392557362.0,False,True,4
+2019,CHN,China,GBR,United Kingdom,M,Import,30,Pharmaceutical products,1146346545.0,False,True,4
+2019,CHN,China,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,2668836535.0,False,True,4
+2019,CHN,China,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,974970126.0,False,True,4
+2019,CHN,China,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,4061425807.0,False,True,4
+2019,CHN,China,GBR,United Kingdom,X,Export,30,Pharmaceutical products,286177060.0,False,True,4
+2019,CHN,China,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,9711864861.0,False,True,4
+2019,CHN,China,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,13180329876.0,False,True,4
+2019,CHN,China,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,1486502930.0,False,True,4
+2020,CHN,China,GBR,United Kingdom,M,Import,30,Pharmaceutical products,1340796737.0,False,True,4
+2020,CHN,China,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,2714471462.0,False,True,4
+2020,CHN,China,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,1115674270.0,False,True,4
+2020,CHN,China,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,3780352990.0,False,True,4
+2020,CHN,China,GBR,United Kingdom,X,Export,30,Pharmaceutical products,1060806915.0,False,True,4
+2020,CHN,China,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,11104015563.0,False,True,4
+2020,CHN,China,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,14737736139.0,False,True,4
+2020,CHN,China,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,1679311883.0,False,True,4
+2021,CHN,China,GBR,United Kingdom,M,Import,30,Pharmaceutical products,1654172685.0,False,True,4
+2021,CHN,China,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,3105921386.0,False,True,4
+2021,CHN,China,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,1182498420.0,False,True,4
+2021,CHN,China,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,5116120553.0,False,True,4
+2021,CHN,China,GBR,United Kingdom,X,Export,30,Pharmaceutical products,3552124367.0,False,True,4
+2021,CHN,China,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,13370514703.0,False,True,4
+2021,CHN,China,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,16894341025.0,False,True,4
+2021,CHN,China,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,3856961411.0,False,True,4
+2022,CHN,China,GBR,United Kingdom,M,Import,30,Pharmaceutical products,1399182063.0,False,True,4
+2022,CHN,China,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,2820641901.0,False,True,4
+2022,CHN,China,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,1083633045.0,False,True,4
+2022,CHN,China,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,4543406563.0,False,True,4
+2022,CHN,China,GBR,United Kingdom,X,Export,30,Pharmaceutical products,284118652.0,False,True,4
+2022,CHN,China,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,11922512020.0,False,True,4
+2022,CHN,China,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,18229042535.0,False,True,4
+2022,CHN,China,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,5824012778.0,False,True,4
+2023,CHN,China,GBR,United Kingdom,M,Import,30,Pharmaceutical products,928852224.0,False,True,4
+2023,CHN,China,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,2625013767.0,False,True,4
+2023,CHN,China,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,1148505163.0,False,True,4
+2023,CHN,China,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,4706394320.0,False,True,4
+2023,CHN,China,GBR,United Kingdom,X,Export,30,Pharmaceutical products,242069468.0,False,True,4
+2023,CHN,China,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,10445802670.0,False,True,4
+2023,CHN,China,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,16873983421.0,False,True,4
+2023,CHN,China,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,7677474873.0,False,True,4
+2024,CHN,China,GBR,United Kingdom,M,Import,30,Pharmaceutical products,1015326732.0,False,True,4
+2024,CHN,China,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,2546121096.0,False,True,4
+2024,CHN,China,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,1087067396.0,False,True,4
+2024,CHN,China,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,4707291451.0,False,True,4
+2024,CHN,China,GBR,United Kingdom,X,Export,30,Pharmaceutical products,325198477.0,False,True,4
+2024,CHN,China,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,11310768888.0,False,True,4
+2024,CHN,China,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,16010375341.0,False,True,4
+2024,CHN,China,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,6734947810.0,False,True,4
+2018,CHN,China,JPN,Japan,M,Import,30,Pharmaceutical products,1209788824.0,False,True,4
+2018,CHN,China,JPN,Japan,M,Import,84,Machinery and mechanical appliances,40829234805.0,False,True,4
+2018,CHN,China,JPN,Japan,M,Import,85,Electrical machinery and equipment,44420396449.0,False,True,4
+2018,CHN,China,JPN,Japan,M,Import,87,Vehicles and parts thereof,18214638883.0,False,True,4
+2018,CHN,China,JPN,Japan,X,Export,30,Pharmaceutical products,265327938.0,False,True,4
+2018,CHN,China,JPN,Japan,X,Export,84,Machinery and mechanical appliances,25171420092.0,False,True,4
+2018,CHN,China,JPN,Japan,X,Export,85,Electrical machinery and equipment,35294399895.0,False,True,4
+2018,CHN,China,JPN,Japan,X,Export,87,Vehicles and parts thereof,4437673112.0,False,True,4
+2019,CHN,China,JPN,Japan,M,Import,30,Pharmaceutical products,1329933247.0,False,True,4
+2019,CHN,China,JPN,Japan,M,Import,84,Machinery and mechanical appliances,36401504103.0,False,True,4
+2019,CHN,China,JPN,Japan,M,Import,85,Electrical machinery and equipment,43606493474.0,False,True,4
+2019,CHN,China,JPN,Japan,M,Import,87,Vehicles and parts thereof,17934960301.0,False,True,4
+2019,CHN,China,JPN,Japan,X,Export,30,Pharmaceutical products,250673870.0,False,True,4
+2019,CHN,China,JPN,Japan,X,Export,84,Machinery and mechanical appliances,26455423521.0,False,True,4
+2019,CHN,China,JPN,Japan,X,Export,85,Electrical machinery and equipment,32215512893.0,False,True,4
+2019,CHN,China,JPN,Japan,X,Export,87,Vehicles and parts thereof,4382548952.0,False,True,4
+2020,CHN,China,JPN,Japan,M,Import,30,Pharmaceutical products,1311334278.0,False,True,4
+2020,CHN,China,JPN,Japan,M,Import,84,Machinery and mechanical appliances,36651788283.0,False,True,4
+2020,CHN,China,JPN,Japan,M,Import,85,Electrical machinery and equipment,46322567691.0,False,True,4
+2020,CHN,China,JPN,Japan,M,Import,87,Vehicles and parts thereof,16539866032.0,False,True,4
+2020,CHN,China,JPN,Japan,X,Export,30,Pharmaceutical products,298260878.0,False,True,4
+2020,CHN,China,JPN,Japan,X,Export,84,Machinery and mechanical appliances,26682119916.0,False,True,4
+2020,CHN,China,JPN,Japan,X,Export,85,Electrical machinery and equipment,32346714413.0,False,True,4
+2020,CHN,China,JPN,Japan,X,Export,87,Vehicles and parts thereof,3928754255.0,False,True,4
+2021,CHN,China,JPN,Japan,M,Import,30,Pharmaceutical products,1729203162.0,False,True,4
+2021,CHN,China,JPN,Japan,M,Import,84,Machinery and mechanical appliances,44141747569.0,False,True,4
+2021,CHN,China,JPN,Japan,M,Import,85,Electrical machinery and equipment,53539101001.0,False,True,4
+2021,CHN,China,JPN,Japan,M,Import,87,Vehicles and parts thereof,16056899584.0,False,True,4
+2021,CHN,China,JPN,Japan,X,Export,30,Pharmaceutical products,318148511.0,False,True,4
+2021,CHN,China,JPN,Japan,X,Export,84,Machinery and mechanical appliances,28947214642.0,False,True,4
+2021,CHN,China,JPN,Japan,X,Export,85,Electrical machinery and equipment,38077153795.0,False,True,4
+2021,CHN,China,JPN,Japan,X,Export,87,Vehicles and parts thereof,5272487016.0,False,True,4
+2022,CHN,China,JPN,Japan,M,Import,30,Pharmaceutical products,1523518453.0,False,True,4
+2022,CHN,China,JPN,Japan,M,Import,84,Machinery and mechanical appliances,36903831015.0,False,True,4
+2022,CHN,China,JPN,Japan,M,Import,85,Electrical machinery and equipment,49886011120.0,False,True,4
+2022,CHN,China,JPN,Japan,M,Import,87,Vehicles and parts thereof,15602053418.0,False,True,4
+2022,CHN,China,JPN,Japan,X,Export,30,Pharmaceutical products,290040216.0,False,True,4
+2022,CHN,China,JPN,Japan,X,Export,84,Machinery and mechanical appliances,28529082338.0,False,True,4
+2022,CHN,China,JPN,Japan,X,Export,85,Electrical machinery and equipment,40444079259.0,False,True,4
+2022,CHN,China,JPN,Japan,X,Export,87,Vehicles and parts thereof,5347744471.0,False,True,4
+2023,CHN,China,JPN,Japan,M,Import,30,Pharmaceutical products,1632186780.0,False,True,4
+2023,CHN,China,JPN,Japan,M,Import,84,Machinery and mechanical appliances,34019165338.0,False,True,4
+2023,CHN,China,JPN,Japan,M,Import,85,Electrical machinery and equipment,43828067489.0,False,True,4
+2023,CHN,China,JPN,Japan,M,Import,87,Vehicles and parts thereof,12116703860.0,False,True,4
+2023,CHN,China,JPN,Japan,X,Export,30,Pharmaceutical products,284599026.0,False,True,4
+2023,CHN,China,JPN,Japan,X,Export,84,Machinery and mechanical appliances,25167301220.0,False,True,4
+2023,CHN,China,JPN,Japan,X,Export,85,Electrical machinery and equipment,39357787447.0,False,True,4
+2023,CHN,China,JPN,Japan,X,Export,87,Vehicles and parts thereof,6132590557.0,False,True,4
+2024,CHN,China,JPN,Japan,M,Import,30,Pharmaceutical products,2055735921.0,False,True,4
+2024,CHN,China,JPN,Japan,M,Import,84,Machinery and mechanical appliances,34701152954.0,False,True,4
+2024,CHN,China,JPN,Japan,M,Import,85,Electrical machinery and equipment,41610725822.0,False,True,4
+2024,CHN,China,JPN,Japan,M,Import,87,Vehicles and parts thereof,11325188720.0,False,True,4
+2024,CHN,China,JPN,Japan,X,Export,30,Pharmaceutical products,285001677.0,False,True,4
+2024,CHN,China,JPN,Japan,X,Export,84,Machinery and mechanical appliances,25617964249.0,False,True,4
+2024,CHN,China,JPN,Japan,X,Export,85,Electrical machinery and equipment,36909987670.0,False,True,4
+2024,CHN,China,JPN,Japan,X,Export,87,Vehicles and parts thereof,6475750213.0,False,True,4
+2018,DEU,Germany,USA,USA,M,Import,30,Pharmaceutical products,7896654569.084,False,True,4
+2018,DEU,Germany,USA,USA,M,Import,84,Machinery and mechanical appliances,16999646525.177,False,True,4
+2018,DEU,Germany,USA,USA,M,Import,85,Electrical machinery and equipment,8377468404.597,False,True,4
+2018,DEU,Germany,USA,USA,M,Import,87,Vehicles and parts thereof,6712195725.619,False,True,4
+2018,DEU,Germany,USA,USA,X,Export,30,Pharmaceutical products,15799616871.252,False,True,4
+2018,DEU,Germany,USA,USA,X,Export,84,Machinery and mechanical appliances,28607320682.93,False,True,4
+2018,DEU,Germany,USA,USA,X,Export,85,Electrical machinery and equipment,11884734452.81,False,True,4
+2018,DEU,Germany,USA,USA,X,Export,87,Vehicles and parts thereof,30120880888.686,False,True,4
+2019,DEU,Germany,USA,USA,M,Import,30,Pharmaceutical products,9670828151.101,False,True,4
+2019,DEU,Germany,USA,USA,M,Import,84,Machinery and mechanical appliances,16821852763.522,False,True,4
+2019,DEU,Germany,USA,USA,M,Import,85,Electrical machinery and equipment,8515062127.777,False,True,4
+2019,DEU,Germany,USA,USA,M,Import,87,Vehicles and parts thereof,7847968767.581,False,True,4
+2019,DEU,Germany,USA,USA,X,Export,30,Pharmaceutical products,15449324851.511,False,True,4
+2019,DEU,Germany,USA,USA,X,Export,84,Machinery and mechanical appliances,28917048609.116,False,True,4
+2019,DEU,Germany,USA,USA,X,Export,85,Electrical machinery and equipment,12175063207.559,False,True,4
+2019,DEU,Germany,USA,USA,X,Export,87,Vehicles and parts thereof,28373485944.608,False,True,4
+2020,DEU,Germany,USA,USA,M,Import,30,Pharmaceutical products,10625671757.673,False,True,4
+2020,DEU,Germany,USA,USA,M,Import,84,Machinery and mechanical appliances,13119865129.14,False,True,4
+2020,DEU,Germany,USA,USA,M,Import,85,Electrical machinery and equipment,6806063152.673,False,True,4
+2020,DEU,Germany,USA,USA,M,Import,87,Vehicles and parts thereof,8437874082.309,False,True,4
+2020,DEU,Germany,USA,USA,X,Export,30,Pharmaceutical products,18146864133.475,False,True,4
+2020,DEU,Germany,USA,USA,X,Export,84,Machinery and mechanical appliances,24820283784.184,False,True,4
+2020,DEU,Germany,USA,USA,X,Export,85,Electrical machinery and equipment,11547954457.702,False,True,4
+2020,DEU,Germany,USA,USA,X,Export,87,Vehicles and parts thereof,22123277577.532,False,True,4
+2021,DEU,Germany,USA,USA,M,Import,30,Pharmaceutical products,10460959427.036,False,True,4
+2021,DEU,Germany,USA,USA,M,Import,84,Machinery and mechanical appliances,14389893562.493,False,True,4
+2021,DEU,Germany,USA,USA,M,Import,85,Electrical machinery and equipment,7290808575.176,False,True,4
+2021,DEU,Germany,USA,USA,M,Import,87,Vehicles and parts thereof,9092422043.905,False,True,4
+2021,DEU,Germany,USA,USA,X,Export,30,Pharmaceutical products,20466119442.816,False,True,4
+2021,DEU,Germany,USA,USA,X,Export,84,Machinery and mechanical appliances,29055692781.586,False,True,4
+2021,DEU,Germany,USA,USA,X,Export,85,Electrical machinery and equipment,13425999442.699,False,True,4
+2021,DEU,Germany,USA,USA,X,Export,87,Vehicles and parts thereof,27848635875.208,False,True,4
+2022,DEU,Germany,USA,USA,M,Import,30,Pharmaceutical products,11119360964.54,False,True,4
+2022,DEU,Germany,USA,USA,M,Import,84,Machinery and mechanical appliances,16238755494.389,False,True,4
+2022,DEU,Germany,USA,USA,M,Import,85,Electrical machinery and equipment,7802084994.93,False,True,4
+2022,DEU,Germany,USA,USA,M,Import,87,Vehicles and parts thereof,10073449220.182,False,True,4
+2022,DEU,Germany,USA,USA,X,Export,30,Pharmaceutical products,26600646690.327,False,True,4
+2022,DEU,Germany,USA,USA,X,Export,84,Machinery and mechanical appliances,31248658469.743,False,True,4
+2022,DEU,Germany,USA,USA,X,Export,85,Electrical machinery and equipment,15455148477.838,False,True,4
+2022,DEU,Germany,USA,USA,X,Export,87,Vehicles and parts thereof,35248180837.242,False,True,4
+2023,DEU,Germany,USA,USA,M,Import,30,Pharmaceutical products,12520851790.437,False,True,4
+2023,DEU,Germany,USA,USA,M,Import,84,Machinery and mechanical appliances,16515148960.285,False,True,4
+2023,DEU,Germany,USA,USA,M,Import,85,Electrical machinery and equipment,8321287688.062,False,True,4
+2023,DEU,Germany,USA,USA,M,Import,87,Vehicles and parts thereof,10796417151.926,False,True,4
+2023,DEU,Germany,USA,USA,X,Export,30,Pharmaceutical products,27779857996.728,False,True,4
+2023,DEU,Germany,USA,USA,X,Export,84,Machinery and mechanical appliances,34747147893.063,False,True,4
+2023,DEU,Germany,USA,USA,X,Export,85,Electrical machinery and equipment,17270130535.558,False,True,4
+2023,DEU,Germany,USA,USA,X,Export,87,Vehicles and parts thereof,37008080765.445,False,True,4
+2024,DEU,Germany,USA,USA,M,Import,30,Pharmaceutical products,13387093243.382,False,True,4
+2024,DEU,Germany,USA,USA,M,Import,84,Machinery and mechanical appliances,15856025379.341,False,True,4
+2024,DEU,Germany,USA,USA,M,Import,85,Electrical machinery and equipment,6855490480.332,False,True,4
+2024,DEU,Germany,USA,USA,M,Import,87,Vehicles and parts thereof,8459116258.901,False,True,4
+2024,DEU,Germany,USA,USA,X,Export,30,Pharmaceutical products,28522360617.259,False,True,4
+2024,DEU,Germany,USA,USA,X,Export,84,Machinery and mechanical appliances,33171856277.166,False,True,4
+2024,DEU,Germany,USA,USA,X,Export,85,Electrical machinery and equipment,15936664246.832,False,True,4
+2024,DEU,Germany,USA,USA,X,Export,87,Vehicles and parts thereof,35642443276.005,False,True,4
+2018,DEU,Germany,CHN,China,M,Import,30,Pharmaceutical products,392965978.718,False,True,4
+2018,DEU,Germany,CHN,China,M,Import,84,Machinery and mechanical appliances,28953392358.23,False,True,4
+2018,DEU,Germany,CHN,China,M,Import,85,Electrical machinery and equipment,38403104405.684,False,True,4
+2018,DEU,Germany,CHN,China,M,Import,87,Vehicles and parts thereof,2779977830.999,False,True,4
+2018,DEU,Germany,CHN,China,X,Export,30,Pharmaceutical products,3330129833.729,False,True,4
+2018,DEU,Germany,CHN,China,X,Export,84,Machinery and mechanical appliances,24147733657.111,False,True,4
+2018,DEU,Germany,CHN,China,X,Export,85,Electrical machinery and equipment,17512817306.887,False,True,4
+2018,DEU,Germany,CHN,China,X,Export,87,Vehicles and parts thereof,28438544962.357,False,True,4
+2019,DEU,Germany,CHN,China,M,Import,30,Pharmaceutical products,375198837.901,False,True,4
+2019,DEU,Germany,CHN,China,M,Import,84,Machinery and mechanical appliances,27579211158.803,False,True,4
+2019,DEU,Germany,CHN,China,M,Import,85,Electrical machinery and equipment,38381516763.591,False,True,4
+2019,DEU,Germany,CHN,China,M,Import,87,Vehicles and parts thereof,2817150225.325,False,True,4
+2019,DEU,Germany,CHN,China,X,Export,30,Pharmaceutical products,4597815866.379,False,True,4
+2019,DEU,Germany,CHN,China,X,Export,84,Machinery and mechanical appliances,22747183696.489,False,True,4
+2019,DEU,Germany,CHN,China,X,Export,85,Electrical machinery and equipment,17353022694.524,False,True,4
+2019,DEU,Germany,CHN,China,X,Export,87,Vehicles and parts thereof,27147776365.783,False,True,4
+2020,DEU,Germany,CHN,China,M,Import,30,Pharmaceutical products,697091851.98,False,True,4
+2020,DEU,Germany,CHN,China,M,Import,84,Machinery and mechanical appliances,30522628120.638,False,True,4
+2020,DEU,Germany,CHN,China,M,Import,85,Electrical machinery and equipment,40283464244.855,False,True,4
+2020,DEU,Germany,CHN,China,M,Import,87,Vehicles and parts thereof,3085527434.666,False,True,4
+2020,DEU,Germany,CHN,China,X,Export,30,Pharmaceutical products,4722009869.996,False,True,4
+2020,DEU,Germany,CHN,China,X,Export,84,Machinery and mechanical appliances,22484335009.693,False,True,4
+2020,DEU,Germany,CHN,China,X,Export,85,Electrical machinery and equipment,18945253099.328,False,True,4
+2020,DEU,Germany,CHN,China,X,Export,87,Vehicles and parts thereof,27948420672.879,False,True,4
+2021,DEU,Germany,CHN,China,M,Import,30,Pharmaceutical products,2958621348.237,False,True,4
+2021,DEU,Germany,CHN,China,M,Import,84,Machinery and mechanical appliances,41022550550.622,False,True,4
+2021,DEU,Germany,CHN,China,M,Import,85,Electrical machinery and equipment,51705144743.283,False,True,4
+2021,DEU,Germany,CHN,China,M,Import,87,Vehicles and parts thereof,5012495407.138,False,True,4
+2021,DEU,Germany,CHN,China,X,Export,30,Pharmaceutical products,5505145589.952,False,True,4
+2021,DEU,Germany,CHN,China,X,Export,84,Machinery and mechanical appliances,24796935029.244,False,True,4
+2021,DEU,Germany,CHN,China,X,Export,85,Electrical machinery and equipment,21106925929.044,False,True,4
+2021,DEU,Germany,CHN,China,X,Export,87,Vehicles and parts thereof,31432641903.253,False,True,4
+2022,DEU,Germany,CHN,China,M,Import,30,Pharmaceutical products,578301052.946,False,True,4
+2022,DEU,Germany,CHN,China,M,Import,84,Machinery and mechanical appliances,39535374677.303,False,True,4
+2022,DEU,Germany,CHN,China,M,Import,85,Electrical machinery and equipment,65289471645.493,False,True,4
+2022,DEU,Germany,CHN,China,M,Import,87,Vehicles and parts thereof,6365300083.041,False,True,4
+2022,DEU,Germany,CHN,China,X,Export,30,Pharmaceutical products,5211677980.513,False,True,4
+2022,DEU,Germany,CHN,China,X,Export,84,Machinery and mechanical appliances,22304008871.083,False,True,4
+2022,DEU,Germany,CHN,China,X,Export,85,Electrical machinery and equipment,20187167579.123,False,True,4
+2022,DEU,Germany,CHN,China,X,Export,87,Vehicles and parts thereof,30854779999.006,False,True,4
+2023,DEU,Germany,CHN,China,M,Import,30,Pharmaceutical products,569577083.656,False,True,4
+2023,DEU,Germany,CHN,China,M,Import,84,Machinery and mechanical appliances,32004764341.198,False,True,4
+2023,DEU,Germany,CHN,China,M,Import,85,Electrical machinery and equipment,70164601118.098,False,True,4
+2023,DEU,Germany,CHN,China,M,Import,87,Vehicles and parts thereof,8764448833.35,False,True,4
+2023,DEU,Germany,CHN,China,X,Export,30,Pharmaceutical products,4418939401.793,False,True,4
+2023,DEU,Germany,CHN,China,X,Export,84,Machinery and mechanical appliances,22161262004.058,False,True,4
+2023,DEU,Germany,CHN,China,X,Export,85,Electrical machinery and equipment,20499356214.114,False,True,4
+2023,DEU,Germany,CHN,China,X,Export,87,Vehicles and parts thereof,25963825677.227,False,True,4
+2024,DEU,Germany,CHN,China,M,Import,30,Pharmaceutical products,761113202.659,False,True,4
+2024,DEU,Germany,CHN,China,M,Import,84,Machinery and mechanical appliances,32875393548.576,False,True,4
+2024,DEU,Germany,CHN,China,M,Import,85,Electrical machinery and equipment,62271184425.652,False,True,4
+2024,DEU,Germany,CHN,China,M,Import,87,Vehicles and parts thereof,8288117710.289,False,True,4
+2024,DEU,Germany,CHN,China,X,Export,30,Pharmaceutical products,4259026260.625,False,True,4
+2024,DEU,Germany,CHN,China,X,Export,84,Machinery and mechanical appliances,20135694229.427,False,True,4
+2024,DEU,Germany,CHN,China,X,Export,85,Electrical machinery and equipment,19589697701.131,False,True,4
+2024,DEU,Germany,CHN,China,X,Export,87,Vehicles and parts thereof,20475922694.933,False,True,4
+2018,DEU,Germany,GBR,United Kingdom,M,Import,30,Pharmaceutical products,2268608776.607,False,True,4
+2018,DEU,Germany,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,5656035766.267,False,True,4
+2018,DEU,Germany,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,4077217118.605,False,True,4
+2018,DEU,Germany,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,5940470330.444,False,True,4
+2018,DEU,Germany,GBR,United Kingdom,X,Export,30,Pharmaceutical products,4897082565.611,False,True,4
+2018,DEU,Germany,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,15500362004.881,False,True,4
+2018,DEU,Germany,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,7283272353.816,False,True,4
+2018,DEU,Germany,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,26631199100.206,False,True,4
+2019,DEU,Germany,GBR,United Kingdom,M,Import,30,Pharmaceutical products,2847558557.929,False,True,4
+2019,DEU,Germany,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,5600523783.233,False,True,4
+2019,DEU,Germany,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,3878099886.413,False,True,4
+2019,DEU,Germany,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,5021211993.059,False,True,4
+2019,DEU,Germany,GBR,United Kingdom,X,Export,30,Pharmaceutical products,4119778893.958,False,True,4
+2019,DEU,Germany,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,13378452007.137,False,True,4
+2019,DEU,Germany,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,6634773524.35,False,True,4
+2019,DEU,Germany,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,24407729278.979,False,True,4
+2020,DEU,Germany,GBR,United Kingdom,M,Import,30,Pharmaceutical products,2912682963.614,False,True,4
+2020,DEU,Germany,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,4647653783.339,False,True,4
+2020,DEU,Germany,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,3353293138.155,False,True,4
+2020,DEU,Germany,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,4345755926.493,False,True,4
+2020,DEU,Germany,GBR,United Kingdom,X,Export,30,Pharmaceutical products,3870252648.889,False,True,4
+2020,DEU,Germany,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,11368459324.181,False,True,4
+2020,DEU,Germany,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,5790452522.394,False,True,4
+2020,DEU,Germany,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,17691706179.453,False,True,4
+2021,DEU,Germany,GBR,United Kingdom,M,Import,30,Pharmaceutical products,2328799293.659,False,True,4
+2021,DEU,Germany,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,4872101259.653,False,True,4
+2021,DEU,Germany,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,2375504341.295,False,True,4
+2021,DEU,Germany,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,4871798701.807,False,True,4
+2021,DEU,Germany,GBR,United Kingdom,X,Export,30,Pharmaceutical products,4144571114.049,False,True,4
+2021,DEU,Germany,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,11971555310.974,False,True,4
+2021,DEU,Germany,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,6496424044.376,False,True,4
+2021,DEU,Germany,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,17922338931.238,False,True,4
+2022,DEU,Germany,GBR,United Kingdom,M,Import,30,Pharmaceutical products,4231081008.725,False,True,4
+2022,DEU,Germany,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,5335813485.026,False,True,4
+2022,DEU,Germany,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,2616919868.617,False,True,4
+2022,DEU,Germany,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,4770173524.544,False,True,4
+2022,DEU,Germany,GBR,United Kingdom,X,Export,30,Pharmaceutical products,4676406666.379,False,True,4
+2022,DEU,Germany,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,11625979955.515,False,True,4
+2022,DEU,Germany,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,6604378280.505,False,True,4
+2022,DEU,Germany,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,18896168134.244,False,True,4
+2023,DEU,Germany,GBR,United Kingdom,M,Import,30,Pharmaceutical products,2325281671.572,False,True,4
+2023,DEU,Germany,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,6061896159.511,False,True,4
+2023,DEU,Germany,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,2731267695.664,False,True,4
+2023,DEU,Germany,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,5946233277.176,False,True,4
+2023,DEU,Germany,GBR,United Kingdom,X,Export,30,Pharmaceutical products,3800234533.635,False,True,4
+2023,DEU,Germany,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,12754579797.428,False,True,4
+2023,DEU,Germany,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,7036768114.032,False,True,4
+2023,DEU,Germany,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,23296812209.855,False,True,4
+2024,DEU,Germany,GBR,United Kingdom,M,Import,30,Pharmaceutical products,2720525563.316,False,True,4
+2024,DEU,Germany,GBR,United Kingdom,M,Import,84,Machinery and mechanical appliances,5929024179.725,False,True,4
+2024,DEU,Germany,GBR,United Kingdom,M,Import,85,Electrical machinery and equipment,2696188816.288,False,True,4
+2024,DEU,Germany,GBR,United Kingdom,M,Import,87,Vehicles and parts thereof,4257576520.323,False,True,4
+2024,DEU,Germany,GBR,United Kingdom,X,Export,30,Pharmaceutical products,4094004736.524,False,True,4
+2024,DEU,Germany,GBR,United Kingdom,X,Export,84,Machinery and mechanical appliances,12006335573.388,False,True,4
+2024,DEU,Germany,GBR,United Kingdom,X,Export,85,Electrical machinery and equipment,6368205956.562,False,True,4
+2024,DEU,Germany,GBR,United Kingdom,X,Export,87,Vehicles and parts thereof,21478986873.509,False,True,4
+2018,DEU,Germany,JPN,Japan,M,Import,30,Pharmaceutical products,556949818.319,False,True,4
+2018,DEU,Germany,JPN,Japan,M,Import,84,Machinery and mechanical appliances,6460694057.386,False,True,4
+2018,DEU,Germany,JPN,Japan,M,Import,85,Electrical machinery and equipment,6928390901.696,False,True,4
+2018,DEU,Germany,JPN,Japan,M,Import,87,Vehicles and parts thereof,4548647165.684,False,True,4
+2018,DEU,Germany,JPN,Japan,X,Export,30,Pharmaceutical products,2914838262.446,False,True,4
+2018,DEU,Germany,JPN,Japan,X,Export,84,Machinery and mechanical appliances,3452383403.447,False,True,4
+2018,DEU,Germany,JPN,Japan,X,Export,85,Electrical machinery and equipment,1952570644.051,False,True,4
+2018,DEU,Germany,JPN,Japan,X,Export,87,Vehicles and parts thereof,6943512006.231,False,True,4
+2019,DEU,Germany,JPN,Japan,M,Import,30,Pharmaceutical products,469260854.41,False,True,4
+2019,DEU,Germany,JPN,Japan,M,Import,84,Machinery and mechanical appliances,5947029776.213,False,True,4
+2019,DEU,Germany,JPN,Japan,M,Import,85,Electrical machinery and equipment,6330968619.249,False,True,4
+2019,DEU,Germany,JPN,Japan,M,Import,87,Vehicles and parts thereof,4361893575.131,False,True,4
+2019,DEU,Germany,JPN,Japan,X,Export,30,Pharmaceutical products,3429830213.354,False,True,4
+2019,DEU,Germany,JPN,Japan,X,Export,84,Machinery and mechanical appliances,3559816886.771,False,True,4
+2019,DEU,Germany,JPN,Japan,X,Export,85,Electrical machinery and equipment,1955062517.848,False,True,4
+2019,DEU,Germany,JPN,Japan,X,Export,87,Vehicles and parts thereof,6119520146.328,False,True,4
+2020,DEU,Germany,JPN,Japan,M,Import,30,Pharmaceutical products,623631811.87,False,True,4
+2020,DEU,Germany,JPN,Japan,M,Import,84,Machinery and mechanical appliances,5161065584.893,False,True,4
+2020,DEU,Germany,JPN,Japan,M,Import,85,Electrical machinery and equipment,5471784367.053,False,True,4
+2020,DEU,Germany,JPN,Japan,M,Import,87,Vehicles and parts thereof,3291977388.473,False,True,4
+2020,DEU,Germany,JPN,Japan,X,Export,30,Pharmaceutical products,2905326025.812,False,True,4
+2020,DEU,Germany,JPN,Japan,X,Export,84,Machinery and mechanical appliances,3205485216.082,False,True,4
+2020,DEU,Germany,JPN,Japan,X,Export,85,Electrical machinery and equipment,1843794753.01,False,True,4
+2020,DEU,Germany,JPN,Japan,X,Export,87,Vehicles and parts thereof,4496833719.884,False,True,4
+2021,DEU,Germany,JPN,Japan,M,Import,30,Pharmaceutical products,734891769.425,False,True,4
+2021,DEU,Germany,JPN,Japan,M,Import,84,Machinery and mechanical appliances,6533029780.793,False,True,4
+2021,DEU,Germany,JPN,Japan,M,Import,85,Electrical machinery and equipment,6349521839.37,False,True,4
+2021,DEU,Germany,JPN,Japan,M,Import,87,Vehicles and parts thereof,3263911429.849,False,True,4
+2021,DEU,Germany,JPN,Japan,X,Export,30,Pharmaceutical products,3150210415.644,False,True,4
+2021,DEU,Germany,JPN,Japan,X,Export,84,Machinery and mechanical appliances,2798653290.986,False,True,4
+2021,DEU,Germany,JPN,Japan,X,Export,85,Electrical machinery and equipment,1943488710.939,False,True,4
+2021,DEU,Germany,JPN,Japan,X,Export,87,Vehicles and parts thereof,4852694916.913,False,True,4
+2022,DEU,Germany,JPN,Japan,M,Import,30,Pharmaceutical products,747399969.6,False,True,4
+2022,DEU,Germany,JPN,Japan,M,Import,84,Machinery and mechanical appliances,6701520455.117,False,True,4
+2022,DEU,Germany,JPN,Japan,M,Import,85,Electrical machinery and equipment,6137045080.493,False,True,4
+2022,DEU,Germany,JPN,Japan,M,Import,87,Vehicles and parts thereof,3372752356.315,False,True,4
+2022,DEU,Germany,JPN,Japan,X,Export,30,Pharmaceutical products,3825399139.094,False,True,4
+2022,DEU,Germany,JPN,Japan,X,Export,84,Machinery and mechanical appliances,2825908586.282,False,True,4
+2022,DEU,Germany,JPN,Japan,X,Export,85,Electrical machinery and equipment,2043219449.035,False,True,4
+2022,DEU,Germany,JPN,Japan,X,Export,87,Vehicles and parts thereof,4553463918.193,False,True,4
+2023,DEU,Germany,JPN,Japan,M,Import,30,Pharmaceutical products,663406200.837,False,True,4
+2023,DEU,Germany,JPN,Japan,M,Import,84,Machinery and mechanical appliances,6548776926.62,False,True,4
+2023,DEU,Germany,JPN,Japan,M,Import,85,Electrical machinery and equipment,6398946231.406,False,True,4
+2023,DEU,Germany,JPN,Japan,M,Import,87,Vehicles and parts thereof,3910371915.728,False,True,4
+2023,DEU,Germany,JPN,Japan,X,Export,30,Pharmaceutical products,3334364996.668,False,True,4
+2023,DEU,Germany,JPN,Japan,X,Export,84,Machinery and mechanical appliances,3066818562.938,False,True,4
+2023,DEU,Germany,JPN,Japan,X,Export,85,Electrical machinery and equipment,2129809713.321,False,True,4
+2023,DEU,Germany,JPN,Japan,X,Export,87,Vehicles and parts thereof,5107628946.435,False,True,4
+2024,DEU,Germany,JPN,Japan,M,Import,30,Pharmaceutical products,510471352.684,False,True,4
+2024,DEU,Germany,JPN,Japan,M,Import,84,Machinery and mechanical appliances,5265237853.317,False,True,4
+2024,DEU,Germany,JPN,Japan,M,Import,85,Electrical machinery and equipment,5099162169.062,False,True,4
+2024,DEU,Germany,JPN,Japan,M,Import,87,Vehicles and parts thereof,3524230930.045,False,True,4
+2024,DEU,Germany,JPN,Japan,X,Export,30,Pharmaceutical products,5782058053.237,False,True,4
+2024,DEU,Germany,JPN,Japan,X,Export,84,Machinery and mechanical appliances,2887418281.997,False,True,4
+2024,DEU,Germany,JPN,Japan,X,Export,85,Electrical machinery and equipment,1927638839.514,False,True,4
+2024,DEU,Germany,JPN,Japan,X,Export,87,Vehicles and parts thereof,4855875986.628,False,True,4
