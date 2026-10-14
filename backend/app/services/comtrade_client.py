@@ -47,8 +47,8 @@ class ComtradeAPIClient:
         self.is_authenticated = bool(self.api_key)
         self.base_url = COMTRADE_AUTH_URL if self.is_authenticated else COMTRADE_PREVIEW_URL
         
-        # Unauthenticated preview endpoint enforces ~1 req/sec rate limit
-        self.min_request_interval = 0.2 if self.is_authenticated else 1.2
+        # Unauthenticated preview endpoint enforces rate limits; 2.5s safe margin prevents 429s
+        self.min_request_interval = 0.2 if self.is_authenticated else 2.5
         self._last_request_time = 0.0
 
         # Cached reference metadata
@@ -151,6 +151,8 @@ class ComtradeAPIClient:
     ) -> List[Dict[str, Any]]:
         """
         Executes a targeted data fetch against the UN Comtrade v1 API.
+        Iterates over requested periods individually to comply with UN Comtrade's
+        preview endpoint restriction ('Maximum number of periods for preview is 1').
         Returns a list of normalized trade records.
         """
         await self.fetch_reference_metadata()
@@ -166,54 +168,65 @@ class ComtradeAPIClient:
         m49_reporters = [str(self.get_code_from_iso(r) or r) for r in reporter_codes]
         m49_partners = [str(self.get_code_from_iso(p) or p) for p in partner_codes]
 
-        params = {
-            "reporterCode": ",".join(m49_reporters),
-            "partnerCode": ",".join(m49_partners),
-            "period": ",".join(str(y) for y in years),
-            "cmdCode": ",".join(cmd_codes),
-            "flowCode": ",".join(flows),
-        }
+        # Iterate year by year to comply with UN Comtrade preview constraints (max 1 period per request)
+        for year in years:
+            params = {
+                "reporterCode": ",".join(m49_reporters),
+                "partnerCode": ",".join(m49_partners),
+                "period": str(year),
+                "cmdCode": ",".join(cmd_codes),
+                "flowCode": ",".join(flows),
+            }
 
-        logger.info(f"Querying UN Comtrade API ({self.base_url}) with params: {params}")
+            logger.info(f"Querying UN Comtrade API ({self.base_url}) for year {year} with params: {params}")
 
-        for attempt in range(1, max_retries + 1):
-            await self._rate_limit_throttle()
-            try:
-                async with httpx.AsyncClient(timeout=45.0) as client:
-                    resp = await client.get(
-                        self.base_url,
-                        params=params,
-                        headers=self._get_headers(),
-                    )
+            year_records: List[Dict[str, Any]] = []
+            year_success = False
 
-                    if resp.status_code == 429:
-                        wait = 2 ** attempt
-                        logger.warning(f"UN Comtrade API Rate limited (429). Backing off for {wait}s...")
-                        await asyncio.sleep(wait)
-                        continue
+            for attempt in range(1, max_retries + 1):
+                await self._rate_limit_throttle()
+                try:
+                    async with httpx.AsyncClient(timeout=45.0) as client:
+                        resp = await client.get(
+                            self.base_url,
+                            params=params,
+                            headers=self._get_headers(),
+                        )
 
-                    resp.raise_for_status()
-                    data = resp.json()
-                    raw_data = data.get("data", [])
+                        if resp.status_code == 429:
+                            wait = 2 ** attempt
+                            logger.warning(f"UN Comtrade API Rate limited (429). Backing off for {wait}s...")
+                            await asyncio.sleep(wait)
+                            continue
 
-                    logger.info(f"Received {len(raw_data)} raw records from UN Comtrade API.")
-                    for item in raw_data:
-                        norm = self.normalize_record(item)
-                        if norm:
-                            all_records.append(norm)
+                        if resp.status_code >= 400:
+                            try:
+                                err_json = resp.json()
+                                err_msg = err_json.get("error") or err_json.get("message") or resp.text
+                            except Exception:
+                                err_msg = resp.text
+                            raise RuntimeError(f"UN Comtrade API error ({resp.status_code}): {err_msg}")
 
-                    return all_records
+                        data = resp.json()
+                        raw_data = data.get("data", [])
 
-            except httpx.HTTPStatusError as e:
-                logger.error(f"HTTP error querying UN Comtrade: {e.response.status_code} - {e.response.text}")
-                if attempt == max_retries:
-                    raise
-                await asyncio.sleep(1.5 * attempt)
-            except Exception as e:
-                logger.error(f"Network error querying UN Comtrade: {e}")
-                if attempt == max_retries:
-                    raise
-                await asyncio.sleep(1.5 * attempt)
+                        logger.info(f"Received {len(raw_data)} raw records for year {year} from UN Comtrade API.")
+                        for item in raw_data:
+                            norm = self.normalize_record(item)
+                            if norm:
+                                year_records.append(norm)
+
+                        year_success = True
+                        break
+
+                except Exception as e:
+                    logger.error(f"Error querying UN Comtrade for year {year} (attempt {attempt}/{max_retries}): {e}")
+                    if attempt == max_retries:
+                        raise
+                    await asyncio.sleep(1.5 * attempt)
+
+            if year_success:
+                all_records.extend(year_records)
 
         return all_records
 
