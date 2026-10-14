@@ -4,7 +4,7 @@ import {
   ShieldCheck, ArrowLeft, RefreshCw, UploadCloud, Database,
   AlertTriangle, CheckCircle2, XCircle, FileText, BarChart2,
   HardDrive, Globe, Package, ArrowRightLeft, Calendar,
-  Users, Info, Layers, Check,
+  Users, Info, Layers, Check, Zap, Clock, Play, FileUp, Activity, X
 } from "lucide-react";
 import api from "../api/client";
 import ScopeNoticeBanner from "../components/ScopeNoticeBanner";
@@ -33,6 +33,9 @@ const StatusBadge = ({ status, label }) => {
     GOOD: { bg: "rgba(16,185,129,0.15)", color: "#10b981", defaultLabel: "HEALTHY" },
     WARNINGS: { bg: "rgba(245,158,11,0.15)", color: "#f59e0b", defaultLabel: "PARTIAL MISSING DATA" },
     ISSUES: { bg: "rgba(239,68,68,0.15)", color: "#ef4444", defaultLabel: "CRITICAL ISSUES" },
+    SUCCESS: { bg: "rgba(16,185,129,0.15)", color: "#10b981", defaultLabel: "SUCCESS" },
+    FAILED: { bg: "rgba(239,68,68,0.15)", color: "#ef4444", defaultLabel: "FAILED" },
+    RUNNING: { bg: "rgba(56,189,248,0.15)", color: "#38bdf8", defaultLabel: "IN PROGRESS" },
   };
   const s = map[status] || map.WARNINGS;
   const text = label ? label.toUpperCase() : s.defaultLabel;
@@ -79,7 +82,14 @@ export const DataManagementPage = () => {
   const [uploadLoading, setUploadLoading] = useState(false);
   const [uploadResult, setUploadResult] = useState(null);
   const [uploadError, setUploadError] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
+
+  // Live UN Comtrade Sync state
+  const [syncStatus, setSyncStatus] = useState(null);
+  const [syncLoading, setSyncLoading] = useState(false);
+  const [syncMessage, setSyncMessage] = useState(null);
+  const [syncError, setSyncError] = useState(null);
 
   const fetchOverview = async () => {
     setOverviewLoading(true);
@@ -94,7 +104,49 @@ export const DataManagementPage = () => {
     }
   };
 
-  useEffect(() => { fetchOverview(); }, []);
+  const fetchSyncStatus = async () => {
+    try {
+      const r = await api.get("/admin/data/sync/status");
+      setSyncStatus(r.data);
+    } catch (err) {
+      console.warn("Could not fetch sync status:", err.message);
+    }
+  };
+
+  const fetchAllData = async () => {
+    await Promise.all([fetchOverview(), fetchSyncStatus()]);
+  };
+
+  useEffect(() => {
+    fetchAllData();
+  }, []);
+
+  const handleTriggerSync = async () => {
+    setSyncLoading(true);
+    setSyncMessage(null);
+    setSyncError(null);
+    try {
+      const res = await api.post("/admin/data/sync/trigger");
+      setSyncMessage(res.data.message || "UN Comtrade API synchronization completed successfully.");
+      await fetchAllData();
+    } catch (err) {
+      setSyncError(err.response?.data?.detail || err.message || "Sync execution failed.");
+    } finally {
+      setSyncLoading(false);
+    }
+  };
+
+  const handleUpdateScheduler = async (enabled, intervalHours) => {
+    try {
+      const res = await api.post("/admin/data/sync/config", {
+        scheduler_enabled: enabled,
+        sync_interval_hours: Number(intervalHours),
+      });
+      setSyncStatus(res.data);
+    } catch (err) {
+      console.error("Scheduler config update error:", err);
+    }
+  };
 
   const handleFileChange = (e) => {
     const f = e.target.files?.[0];
@@ -102,6 +154,38 @@ export const DataManagementPage = () => {
     setSelectedFile(f);
     setUploadResult(null);
     setUploadError(null);
+  };
+
+  const handleClearFile = () => {
+    setSelectedFile(null);
+    setUploadResult(null);
+    setUploadError(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      const f = files[0];
+      setSelectedFile(f);
+      setUploadResult(null);
+      setUploadError(null);
+    }
   };
 
   const handleUpload = async () => {
@@ -128,8 +212,8 @@ export const DataManagementPage = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setUploadResult(r.data);
-      // Refresh the overview so counts update
-      fetchOverview();
+      // Refresh overview and sync audit logs so counts update
+      await fetchAllData();
     } catch (err) {
       setUploadError(err.response?.data?.detail || err.message || "Upload failed.");
     } finally {
@@ -582,26 +666,151 @@ export const DataManagementPage = () => {
           {renderOverview()}
         </div>
 
-        {/* ── CSV Upload ───────────────────────────────────────────────────── */}
-        <div style={styles.card}>
-          <h2 style={styles.sectionTitle}><UploadCloud size={18} color="#10b981" /> Upload New Data (CSV)</h2>
+        {/* ── Live UN Comtrade Sync & Auto-Scheduler ──────────────────────── */}
+        <div style={styles.card} data-testid="live-sync-card">
+          <div style={styles.sectionHeaderRow}>
+            <div>
+              <h2 style={styles.sectionTitle}>
+                <Zap size={18} color="#f59e0b" /> UN Comtrade v1 Live Synchronization
+              </h2>
+              <p style={styles.sectionSubtitle}>
+                Continuous background ingestion from UN Comtrade REST API with automated deduplication
+              </p>
+            </div>
+            <div style={styles.syncHeaderActions}>
+              <span style={syncStatus?.is_running ? styles.syncBadgeRunning : styles.syncBadgeOnline}>
+                <span style={syncStatus?.is_running ? styles.pulseDotBlue : styles.pulseDotGreen}></span>
+                {syncStatus?.is_running ? "API SYNC IN PROGRESS" : "CONNECTED TO UN COMTRADE API"}
+              </span>
+            </div>
+          </div>
+
+          {/* Sync Stats & Controls */}
+          <div style={styles.syncControlGrid}>
+            <div style={styles.syncStatBox}>
+              <div style={styles.syncStatLabel}><Clock size={13} color="#94a3b8" /> Last Execution</div>
+              <div style={styles.syncStatValue}>
+                {syncStatus?.last_sync?.completed_at ? new Date(syncStatus.last_sync.completed_at).toLocaleString() : "Never"}
+              </div>
+              <div style={styles.syncStatSub}>
+                Status: {syncStatus?.last_sync ? <StatusBadge status={syncStatus.last_sync.status} /> : "Idle"}
+              </div>
+            </div>
+
+            <div style={styles.syncStatBox}>
+              <div style={styles.syncStatLabel}><CheckCircle2 size={13} color="#10b981" /> Last Records Ingested</div>
+              <div style={{ ...styles.syncStatValue, color: "#10b981" }}>
+                {fmt(syncStatus?.last_sync?.records_inserted ?? 0)} new
+              </div>
+              <div style={styles.syncStatSub}>
+                {fmt(syncStatus?.last_sync?.records_skipped ?? 0)} duplicate rows skipped
+              </div>
+            </div>
+
+            <div style={styles.syncStatBox}>
+              <div style={styles.syncStatLabel}><Clock size={13} color="#38bdf8" /> Background Scheduler</div>
+              <div style={styles.syncStatValue}>
+                {syncStatus?.scheduler_enabled ? `Every ${syncStatus.sync_interval_hours}h` : "Disabled"}
+              </div>
+              <div style={styles.syncSchedulerToggleRow}>
+                <select
+                  value={syncStatus?.sync_interval_hours || 24}
+                  onChange={(e) => handleUpdateScheduler(true, e.target.value)}
+                  style={styles.schedulerSelect}
+                  disabled={syncLoading}
+                >
+                  <option value={12}>Every 12 Hours</option>
+                  <option value={24}>Every 24 Hours (Daily)</option>
+                  <option value={48}>Every 48 Hours</option>
+                  <option value={168}>Every Week</option>
+                </select>
+                <button
+                  type="button"
+                  onClick={() => handleUpdateScheduler(!syncStatus?.scheduler_enabled, syncStatus?.sync_interval_hours || 24)}
+                  style={syncStatus?.scheduler_enabled ? styles.schedulerToggleOff : styles.schedulerToggleOn}
+                >
+                  {syncStatus?.scheduler_enabled ? "Pause" : "Enable"}
+                </button>
+              </div>
+            </div>
+
+            <div style={styles.syncActionBox}>
+              <div style={styles.syncStatLabel}><Zap size={13} color="#f59e0b" /> Manual Live Fetch</div>
+              <button
+                onClick={handleTriggerSync}
+                disabled={syncLoading || syncStatus?.is_running}
+                style={{
+                  ...styles.triggerSyncBtn,
+                  opacity: (syncLoading || syncStatus?.is_running) ? 0.6 : 1,
+                  cursor: (syncLoading || syncStatus?.is_running) ? "not-allowed" : "pointer",
+                }}
+              >
+                {syncLoading || syncStatus?.is_running ? (
+                  <>
+                    <RefreshCw size={15} className="spin" />
+                    <span>Syncing from UN Comtrade...</span>
+                  </>
+                ) : (
+                  <>
+                    <Zap size={15} />
+                    <span>Sync Latest Data Now</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Sync Notifications */}
+          {syncMessage && (
+            <div style={styles.successBox}>
+              <CheckCircle2 size={16} color="#10b981" />
+              <span>{syncMessage}</span>
+            </div>
+          )}
+          {syncError && (
+            <div style={styles.errorBox}>
+              <XCircle size={16} color="#f87171" />
+              <span>{syncError}</span>
+            </div>
+          )}
+        </div>
+
+        {/* ── CSV Upload (Drag & Drop Portal) ──────────────────────────────── */}
+        <div style={styles.card} data-testid="csv-upload-card">
+          <div style={styles.sectionHeaderRow}>
+            <div>
+              <h2 style={styles.sectionTitle}>
+                <UploadCloud size={18} color="#10b981" /> Ingest Customs Data via CSV
+              </h2>
+              <p style={styles.sectionSubtitle}>
+                Drag &amp; drop Comtrade-formatted CSV files with instant schema checking and duplicate filtering
+              </p>
+            </div>
+          </div>
 
           {/* Rules panel */}
           <div style={styles.rulesPanel}>
-            <h4 style={styles.rulesTitle}><FileText size={13} color="#94a3b8" /> Upload Requirements</h4>
+            <h4 style={styles.rulesTitle}><FileText size={13} color="#94a3b8" /> Ingestion Requirements &amp; Schema</h4>
             <ul style={styles.rulesList}>
-              <li><strong>File type:</strong> .csv only</li>
-              <li><strong>Max size:</strong> 50 MB</li>
-              <li><strong>Required columns:</strong> <code style={styles.code}>{REQUIRED_COLUMNS.join(", ")}</code></li>
-              <li><strong>flowCode:</strong> must be <code style={styles.code}>M</code> or <code style={styles.code}>X</code></li>
-              <li><strong>Years:</strong> 1900–2100 range enforced</li>
-              <li><strong>Duplicate prevention:</strong> rows with an existing composite key (refYear + reporterISO + partnerISO + flowCode + cmdCode) are skipped — existing data is never overwritten</li>
-              <li><strong>Invalid rows</strong> are reported with reasons and not inserted</li>
+              <li><strong>File type:</strong> .csv only (max 50 MB)</li>
+              <li><strong>Core columns:</strong> <code style={styles.code}>{REQUIRED_COLUMNS.slice(0, 10).join(", ")}</code> + optional measurement fields</li>
+              <li><strong>flowCode:</strong> must be <code style={styles.code}>M</code> (Import) or <code style={styles.code}>X</code> (Export)</li>
+              <li><strong>Zero-Duplicate Guarantee:</strong> rows with an existing composite key (refYear + reporterISO + partnerISO + flowCode + cmdCode) are automatically skipped</li>
             </ul>
           </div>
 
-          {/* File picker */}
-          <div style={styles.filePicker}>
+          {/* Drag & Drop Dropzone */}
+          <div
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onClick={() => fileInputRef.current?.click()}
+            style={{
+              ...styles.dropzone,
+              borderColor: isDragging ? "#38bdf8" : "#334155",
+              backgroundColor: isDragging ? "rgba(56, 189, 248, 0.08)" : "#0b1120",
+            }}
+          >
             <input
               ref={fileInputRef}
               type="file"
@@ -610,28 +819,55 @@ export const DataManagementPage = () => {
               style={{ display: "none" }}
               id="csv-upload-input"
             />
-            <label htmlFor="csv-upload-input" style={styles.fileLabel}>
-              <UploadCloud size={18} color="#38bdf8" />
-              {selectedFile ? selectedFile.name : "Choose CSV file…"}
-              {selectedFile && <span style={styles.fileSize}>&nbsp;({fmtBytes(selectedFile.size)})</span>}
-            </label>
-
-            <button
-              onClick={handleUpload}
-              disabled={!selectedFile || uploadLoading}
-              style={{
-                ...styles.uploadBtn,
-                opacity: (!selectedFile || uploadLoading) ? 0.5 : 1,
-                cursor: (!selectedFile || uploadLoading) ? "not-allowed" : "pointer",
-              }}
-            >
-              {uploadLoading
-                ? <><RefreshCw size={14} className="spin" /> Uploading…</>
-                : <><UploadCloud size={14} /> Upload &amp; Validate</>}
-            </button>
+            <div style={styles.dropzoneContent}>
+              <div style={styles.dropzoneIconWrapper}>
+                <FileUp size={32} color={isDragging ? "#38bdf8" : "#64748b"} />
+              </div>
+              <h3 style={styles.dropzoneTitle}>
+                {selectedFile ? selectedFile.name : "Drag & drop UN Comtrade CSV file here"}
+              </h3>
+              <p style={styles.dropzoneSubtitle}>
+                {selectedFile ? `${fmtBytes(selectedFile.size)} • Click or drop another file to replace` : "or click here to browse files from your computer (max 50 MB)"}
+              </p>
+            </div>
           </div>
 
-          {/* Upload error (file-level / server-level failure) */}
+          {/* Staged File Action Bar */}
+          {selectedFile && (
+            <div style={styles.stagedFileBar}>
+              <div style={styles.stagedFileInfo}>
+                <FileText size={18} color="#38bdf8" />
+                <div>
+                  <span style={styles.stagedFileName}>{selectedFile.name}</span>
+                  <span style={styles.stagedFileSize}> ({fmtBytes(selectedFile.size)})</span>
+                </div>
+              </div>
+              <div style={styles.stagedActions}>
+                <button onClick={handleClearFile} style={styles.clearFileBtn} title="Remove staged file">
+                  <X size={16} /> <span>Remove</span>
+                </button>
+                <button
+                  onClick={handleUpload}
+                  disabled={uploadLoading}
+                  style={styles.uploadBtn}
+                >
+                  {uploadLoading ? (
+                    <>
+                      <RefreshCw size={15} className="spin" />
+                      <span>Ingesting &amp; Validating...</span>
+                    </>
+                  ) : (
+                    <>
+                      <UploadCloud size={15} />
+                      <span>Ingest Records to Database</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Upload error */}
           {uploadError && (
             <div style={styles.errorBox}>
               <XCircle size={16} color="#f87171" />
@@ -639,8 +875,69 @@ export const DataManagementPage = () => {
             </div>
           )}
 
-          {/* Upload result (successful request, partial rejection is normal) */}
+          {/* Upload result */}
           {renderUploadResult()}
+        </div>
+
+        {/* ── Synchronization & Ingestion Audit Trail ─────────────────────── */}
+        <div style={styles.card} data-testid="audit-trail-card">
+          <div style={styles.sectionHeaderRow}>
+            <div>
+              <h2 style={styles.sectionTitle}>
+                <Activity size={18} color="#38bdf8" /> Sync &amp; Ingestion Audit Trail
+              </h2>
+              <p style={styles.sectionSubtitle}>
+                Chronological record of automated API pulls, cron schedules, and administrator CSV uploads
+              </p>
+            </div>
+          </div>
+
+          <div style={styles.tableResponsive}>
+            <table style={styles.table}>
+              <thead>
+                <tr>
+                  <th style={styles.th}>ID</th>
+                  <th style={styles.th}>Started (UTC)</th>
+                  <th style={styles.th}>Operation Type</th>
+                  <th style={styles.th}>Source</th>
+                  <th style={styles.th}>Status</th>
+                  <th style={styles.thRight}>Processed</th>
+                  <th style={styles.thRight}>Inserted</th>
+                  <th style={styles.thRight}>Duplicates Skipped</th>
+                  <th style={styles.thRight}>Duration</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(!syncStatus?.recent_logs || syncStatus.recent_logs.length === 0) ? (
+                  <tr>
+                    <td colSpan={9} style={{ ...styles.td, textAlign: "center", color: "#64748b", padding: "24px" }}>
+                      No synchronization events logged yet. Trigger an API sync or upload a CSV to view audit logs.
+                    </td>
+                  </tr>
+                ) : (
+                  syncStatus.recent_logs.map((log, idx) => (
+                    <tr key={log.id} style={{ backgroundColor: idx % 2 === 0 ? "transparent" : "#0f172a" }}>
+                      <td style={styles.td}><code style={styles.code}>#{log.id}</code></td>
+                      <td style={styles.td}>{log.started_at ? new Date(log.started_at).toLocaleString() : "—"}</td>
+                      <td style={styles.td}>
+                        <span style={styles.syncTypeTag}>{log.sync_type}</span>
+                      </td>
+                      <td style={{ ...styles.td, color: "#94a3b8" }}>{log.source_name || "UN Comtrade"}</td>
+                      <td style={styles.td}>
+                        <StatusBadge status={log.status} />
+                      </td>
+                      <td style={{ ...styles.tdRight, fontWeight: "600" }}>{fmt(log.records_processed)}</td>
+                      <td style={{ ...styles.tdRight, color: "#10b981", fontWeight: "700" }}>+{fmt(log.records_inserted)}</td>
+                      <td style={{ ...styles.tdRight, color: "#f59e0b" }}>{fmt(log.records_skipped)}</td>
+                      <td style={{ ...styles.tdRight, color: "#94a3b8" }}>
+                        {log.duration_seconds !== null && log.duration_seconds !== undefined ? `${log.duration_seconds}s` : "—"}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -727,4 +1024,42 @@ const styles = {
   countLabel: { fontSize: "11px", color: "#64748b", textTransform: "uppercase" },
   rejectionTable: { marginTop: "8px" },
   rejectionTitle: { display: "flex", alignItems: "center", gap: "6px", fontSize: "13px", fontWeight: "600", color: "#f87171", margin: "0 0 10px 0" },
+
+  // Live Sync & Drag-and-Drop Dropzone Styles
+  sectionSubtitle: { fontSize: "13px", color: "#94a3b8", margin: "4px 0 0 0" },
+  syncHeaderActions: { display: "flex", alignItems: "center", gap: "10px" },
+  syncBadgeOnline: { display: "inline-flex", alignItems: "center", gap: "8px", backgroundColor: "rgba(16,185,129,0.12)", color: "#10b981", border: "1px solid rgba(16,185,129,0.3)", padding: "4px 12px", borderRadius: "9999px", fontSize: "11px", fontWeight: "700", letterSpacing: "0.04em" },
+  syncBadgeRunning: { display: "inline-flex", alignItems: "center", gap: "8px", backgroundColor: "rgba(56,189,248,0.12)", color: "#38bdf8", border: "1px solid rgba(56,189,248,0.3)", padding: "4px 12px", borderRadius: "9999px", fontSize: "11px", fontWeight: "700", letterSpacing: "0.04em" },
+  pulseDotGreen: { width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "#10b981" },
+  pulseDotBlue: { width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "#38bdf8", animation: "pulse 1.5s infinite" },
+
+  syncControlGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "12px", margin: "16px 0" },
+  syncStatBox: { backgroundColor: "#0b1120", border: "1px solid #1e293b", borderRadius: "10px", padding: "14px" },
+  syncActionBox: { backgroundColor: "#0b1120", border: "1px solid #1e293b", borderRadius: "10px", padding: "14px", display: "flex", flexDirection: "column", justifyContent: "space-between" },
+  syncStatLabel: { display: "flex", alignItems: "center", gap: "6px", fontSize: "11px", fontWeight: "700", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "8px" },
+  syncStatValue: { fontSize: "16px", fontWeight: "700", color: "#f8fafc", marginBottom: "6px" },
+  syncStatSub: { fontSize: "12px", color: "#94a3b8" },
+
+  syncSchedulerToggleRow: { display: "flex", alignItems: "center", gap: "8px", marginTop: "4px" },
+  schedulerSelect: { flex: 1, backgroundColor: "#1e293b", border: "1px solid #334155", borderRadius: "6px", padding: "6px 8px", color: "#e2e8f0", fontSize: "12px", outline: "none", cursor: "pointer" },
+  schedulerToggleOff: { backgroundColor: "rgba(239,68,68,0.15)", border: "1px solid rgba(239,68,68,0.4)", color: "#f87171", borderRadius: "6px", padding: "6px 12px", fontSize: "12px", fontWeight: "600", cursor: "pointer" },
+  schedulerToggleOn: { backgroundColor: "rgba(16,185,129,0.15)", border: "1px solid rgba(16,185,129,0.4)", color: "#10b981", borderRadius: "6px", padding: "6px 12px", fontSize: "12px", fontWeight: "600", cursor: "pointer" },
+
+  triggerSyncBtn: { display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", backgroundColor: "#f59e0b", color: "#090d16", border: "none", borderRadius: "8px", padding: "10px 16px", fontSize: "13px", fontWeight: "700", cursor: "pointer", width: "100%", transition: "all 0.2s" },
+  successBox: { display: "flex", alignItems: "center", gap: "8px", backgroundColor: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.3)", borderRadius: "8px", padding: "12px 16px", color: "#34d399", fontSize: "13px", marginTop: "12px" },
+
+  dropzone: { border: "2px dashed #334155", borderRadius: "12px", padding: "36px 20px", textAlign: "center", cursor: "pointer", transition: "all 0.2s ease", margin: "16px 0" },
+  dropzoneContent: { display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" },
+  dropzoneIconWrapper: { width: "56px", height: "56px", borderRadius: "50%", backgroundColor: "rgba(56,189,248,0.1)", border: "1px solid rgba(56,189,248,0.2)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "6px" },
+  dropzoneTitle: { fontSize: "15px", fontWeight: "600", color: "#f8fafc", margin: 0 },
+  dropzoneSubtitle: { fontSize: "13px", color: "#94a3b8", margin: 0 },
+
+  stagedFileBar: { display: "flex", justifyContent: "space-between", alignItems: "center", backgroundColor: "rgba(56,189,248,0.08)", border: "1px solid rgba(56,189,248,0.3)", borderRadius: "8px", padding: "12px 16px", marginBottom: "16px", flexWrap: "wrap", gap: "12px" },
+  stagedFileInfo: { display: "flex", alignItems: "center", gap: "10px" },
+  stagedFileName: { fontSize: "14px", fontWeight: "600", color: "#f8fafc" },
+  stagedFileSize: { fontSize: "12px", color: "#94a3b8" },
+  stagedActions: { display: "flex", alignItems: "center", gap: "10px" },
+  clearFileBtn: { display: "flex", alignItems: "center", gap: "4px", backgroundColor: "transparent", border: "1px solid #334155", borderRadius: "6px", color: "#94a3b8", padding: "8px 12px", fontSize: "12px", cursor: "pointer" },
+
+  syncTypeTag: { fontSize: "11px", fontWeight: "600", padding: "2px 8px", borderRadius: "4px", backgroundColor: "#1e293b", color: "#cbd5e1" },
 };

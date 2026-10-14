@@ -19,6 +19,7 @@ from app.api.about import router as about_router
 from app.api.map import router as map_router
 from app.api.economic_metrics import router as economic_metrics_router
 from app.database import init_db, SessionLocal
+from app.services.sync_service import sync_service
 from app.utils.auth import seed_default_users
 from app.utils.logger import logger
 
@@ -35,8 +36,13 @@ async def lifespan(app: FastAPI):
     finally:
         db.close()
 
+    # Start automated UN Comtrade background sync scheduler
+    sync_service.start_scheduler()
+
     logger.info("Application startup complete.")
     yield
+    # Stop background sync scheduler cleanly
+    sync_service.stop_scheduler()
     logger.info("Application shutdown.")
 
 app = FastAPI(

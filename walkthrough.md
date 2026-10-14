@@ -609,8 +609,64 @@ The system now features specialized macroeconomic trade indices across all 190 s
 ![Cross-Country Synchronization Matrix UI](docs/screenshots/economic_metrics_matrix_ui.png)
 *Figure 7: Interactive Pearson Trade Cycle Synchronization Matrix ($K \times K$) displaying pairwise economic co-movement and counter-cyclical trade buffers among major trading nations.*
 
+---
 
+## Phase 15: Live UN Comtrade API Ingestion & Auto-Sync (Completed)
 
+### 1. Architectural Overview & Services
+Transitioned the platform from an offline historical archive into an **automated, living data ecosystem**:
+- **UN Comtrade v1 REST API Client ([comtrade_client.py](backend/app/services/comtrade_client.py))**:
+  - Resilient asynchronous client connecting to `https://comtradeapi.un.org/public/v1/preview/C/A/HS` and authenticated endpoints.
+  - Rate-limiting throttle (1.2s intervals for unauthenticated preview) and exponential backoff retry logic.
+  - Dynamically fetches and caches country reference metadata (`partnerAreas.json`), mapping M49 integer codes to ISO3 strings.
+  - Normalizes external JSON fields (`period`, `reporterCode`, `partnerCode`, `flowCode`, `cmdCode`, `primaryValue`, `qty`, `netWgt`) into internal trade records.
+- **Automated Sync Engine & Background Cron ([sync_service.py](backend/app/services/sync_service.py))**:
+  - Non-blocking asynchronous timer task integrated directly into FastAPI's `lifespan` handler.
+  - Configurable execution frequency (e.g. Daily every 24h, 12h, 48h, or toggleable off).
+  - Enforces zero-duplicate guarantees across the natural composite key `(year, reporter_id, partner_id, product_id, flow_code)`.
+  - Maintains `data_sync_logs` database table tracking every ingestion event (operation type, status, records processed, records inserted, duplicates skipped, duration).
+- **Administrative REST API Endpoints ([data_management.py](backend/app/api/data_management.py))**:
+  - `GET /api/admin/data/sync/status`: Real-time scheduler status, last execution metadata, and recent 10 audit logs.
+  - `POST /api/admin/data/sync/trigger`: On-demand manual live fetch against UN Comtrade API.
+  - `POST /api/admin/data/sync/config`: Adjust scheduler active state and interval hours dynamically.
 
+---
 
+### 2. Frontend UI Upgrades ([DataManagementPage.jsx](frontend/src/pages/DataManagementPage.jsx))
+- **Live UN Comtrade Auto-Sync Card**:
+  - Real-time connection status pill with pulsing indicator (`CONNECTED TO UN COMTRADE API`).
+  - Action button: `⚡ Sync Latest Data Now` with live loading spinner.
+  - Scheduler interval selector (`Every 24 Hours (Daily)`, `12h`, `48h`, or `Pause`).
+  - Scorecard tracking last execution time, last records inserted, and duplicate rows skipped.
+- **Modern Drag-and-Drop Ingestion Portal**:
+  - Glassmorphic dropzone with visual dragover state highlights (`isDragging`).
+  - Staged file preview bar displaying filename, formatted size badge, and a `Remove` button.
+  - Client-side validation enforcing `.csv` extension and $< 50\text{ MB}$ size limits.
+  - Detailed insertion scorecard and collapsible rejection breakdown table.
+- **Chronological Audit Trail Table**:
+  - Tabular historical log of all sync events (`API_PULL`, `SCHEDULED_CRON`, `CSV_UPLOAD`).
+  - Displays UTC timestamp, source name, status badge, records processed, new insertions, duplicate skips, and duration.
 
+---
+
+### 3. Automated Test Suite Results (145/145 Tests Passing)
+
+| Test Category | Command / Scope | Status | Notes |
+| :--- | :--- | :--- | :--- |
+| **Sync Engine Unit Tests** | `pytest tests/test_sync.py` | **7 Passed** | Auth enforcement (401/403), normalization, composite deduplication, config updates, mocked API sync |
+| **Full Backend Suite** | `pytest -v` (15 test modules) | **145 Passed, 0 Failures** | Zero regressions across auth, dashboard, map, prediction, reports, economic metrics, and data sync |
+| **Frontend Production Build** | `npm run build` | **Clean Build (2.72s)** | 2537 modules transformed with 0 errors |
+| **Playwright E2E Automation** | Headless browser verification | **Passed (0 Console Errors)** | Verified Live Sync panel, Drag-and-Drop dropzone, and Audit Trail rendering |
+
+---
+
+### 4. Visual Proof & Screenshots
+
+![Live UN Comtrade Sync Panel](docs/screenshots/live_sync_panel.png)
+*Figure 8: UN Comtrade v1 Live Synchronization panel with API connection status, last execution metrics, background scheduler interval selector, and on-demand fetch action button.*
+
+![Drag & Drop Ingestion Portal](docs/screenshots/drag_drop_upload_panel.png)
+*Figure 9: Modern Drag-and-Drop Customs Data Ingestion portal with schema requirements and visual dropzone.*
+
+![Sync & Ingestion Audit Trail](docs/screenshots/audit_trail_panel.png)
+*Figure 10: Chronological Data Synchronization and Ingestion Audit Trail tracking automated API pulls, cron schedules, and CSV uploads.*

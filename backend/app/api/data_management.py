@@ -21,7 +21,7 @@ from sqlalchemy.orm import Session
 from app.config import REQUIRED_COLUMNS, NUMERIC_COLUMNS
 from app.database import get_db
 from app.dependencies import require_admin
-from app.models import TradeRecord, User, Country, Product, TradeRecordV2
+from app.models import TradeRecord, User, Country, Product, TradeRecordV2, DataSyncLog
 from app.schemas import (
     DataOverviewResponse,
     DataQualitySummary,
@@ -29,7 +29,13 @@ from app.schemas import (
     RejectionDetail,
     UploadResponse,
     YearRange,
+    SyncStatusResponse,
+    SyncTriggerRequest,
+    SyncTriggerResponse,
+    SyncConfigRequest,
+    DataSyncLogItem,
 )
+from app.services.sync_service import sync_service
 from app.utils.logger import logger
 
 router = APIRouter(prefix="/admin/data", tags=["Admin Data Management"])
@@ -814,6 +820,25 @@ async def upload_csv(
         f"{invalid_count} rejected (validation)."
     )
 
+    # Persist audit record in data_sync_logs
+    try:
+        csv_log = DataSyncLog(
+            sync_type="CSV_UPLOAD",
+            status="SUCCESS",
+            started_at=datetime.now(timezone.utc),
+            completed_at=datetime.now(timezone.utc),
+            records_processed=records_read,
+            records_inserted=inserted_count,
+            records_skipped=skipped_count,
+            records_rejected=invalid_count,
+            source_name=filename,
+            details=f"Admin: {admin.username}, Target: {target or 'auto'}",
+        )
+        db.add(csv_log)
+        db.commit()
+    except Exception as log_err:
+        logger.warning(f"Could not record sync log for CSV upload: {log_err}")
+
     return UploadResponse(
         filename=filename,
         records_read=records_read,
@@ -824,3 +849,87 @@ async def upload_csv(
         success=True,
         message=msg,
     )
+
+
+# ── Live UN Comtrade Sync Endpoints ──────────────────────────────────────────
+
+@router.get("/sync/status", response_model=SyncStatusResponse)
+async def get_sync_status(
+    db: Session = Depends(get_db),
+    admin: User = Depends(require_admin),
+) -> SyncStatusResponse:
+    """
+    Returns the real-time status of the UN Comtrade API sync engine,
+    including scheduler status, last execution, and recent audit logs.
+    """
+    status_data = sync_service.get_status(db)
+    return SyncStatusResponse(**status_data)
+
+
+@router.post("/sync/trigger", response_model=SyncTriggerResponse)
+async def trigger_sync(
+    payload: Optional[SyncTriggerRequest] = None,
+    admin: User = Depends(require_admin),
+) -> SyncTriggerResponse:
+    """
+    Triggers an immediate background fetch & synchronization against the
+    UN Comtrade v1 REST API for specified or default reporters and years.
+    """
+    if sync_service.is_running:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="A data synchronization task is already in progress.",
+        )
+
+    # Execute async API sync
+    reporters = payload.reporters if payload else None
+    years = payload.years if payload else None
+    flows = payload.flows if payload else None
+    commodities = payload.commodities if payload else None
+
+    logger.info(f"Admin '{admin.username}' triggered manual UN Comtrade API sync.")
+    result = await sync_service.execute_api_sync(
+        reporters=reporters,
+        years=years,
+        flows=flows,
+        commodities=commodities,
+        sync_type="API_PULL",
+    )
+
+    if not result.get("success"):
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=f"API Sync failed: {result.get('message', 'External UN Comtrade API error')}",
+        )
+
+    return SyncTriggerResponse(
+        success=True,
+        message=(
+            f"Sync completed successfully. Fetched {result.get('records_fetched', 0)} records: "
+            f"{result.get('records_inserted', 0)} inserted, {result.get('records_skipped', 0)} skipped."
+        ),
+        log_id=result.get("log_id"),
+        sync_type="API_PULL",
+    )
+
+
+@router.post("/sync/config", response_model=SyncStatusResponse)
+async def update_sync_config(
+    payload: SyncConfigRequest,
+    db: Session = Depends(get_db),
+    admin: User = Depends(require_admin),
+) -> SyncStatusResponse:
+    """
+    Updates the automated background cron scheduler settings
+    (enabling/disabling auto-sync and adjusting frequency interval).
+    """
+    logger.info(
+        f"Admin '{admin.username}' updated sync config: enabled={payload.scheduler_enabled}, "
+        f"interval={payload.sync_interval_hours}h"
+    )
+    sync_service.scheduler_enabled = payload.scheduler_enabled
+    sync_service.sync_interval_hours = payload.sync_interval_hours
+
+    status_data = sync_service.get_status(db)
+    return SyncStatusResponse(**status_data)
+

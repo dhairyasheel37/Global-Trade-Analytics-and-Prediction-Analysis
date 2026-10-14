@@ -129,6 +129,53 @@ class UploadResponse(BaseModel):
     success: bool
     message: str
 
+
+# --- Live UN Comtrade Sync Schemas ---
+
+class DataSyncLogItem(BaseModel):
+    id: int
+    sync_type: str
+    status: str
+    started_at: Optional[str] = None
+    completed_at: Optional[str] = None
+    duration_seconds: Optional[float] = None
+    records_processed: int = 0
+    records_inserted: int = 0
+    records_skipped: int = 0
+    records_rejected: int = 0
+    source_name: Optional[str] = None
+    error_message: Optional[str] = None
+    details: Optional[str] = None
+
+
+class SyncStatusResponse(BaseModel):
+    is_running: bool
+    status: str
+    last_sync: Optional[DataSyncLogItem] = None
+    scheduler_enabled: bool = True
+    sync_interval_hours: int = 24
+    recent_logs: List[DataSyncLogItem] = []
+
+
+class SyncTriggerRequest(BaseModel):
+    reporters: Optional[List[str]] = None
+    years: Optional[List[int]] = None
+    flows: Optional[List[str]] = None
+    commodities: Optional[List[str]] = None
+
+
+class SyncTriggerResponse(BaseModel):
+    success: bool
+    message: str
+    log_id: Optional[int] = None
+    sync_type: str = "API_PULL"
+
+
+class SyncConfigRequest(BaseModel):
+    scheduler_enabled: bool
+    sync_interval_hours: int = 24
+
+
 class TradeRecordSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 

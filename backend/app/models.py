@@ -194,3 +194,45 @@ class TradeRecordV2(Base):
             "legacy_estimation_flag": self.legacy_estimation_flag,
             "created_at": self.created_at.isoformat() if self.created_at else None,
         }
+
+
+class DataSyncLog(Base):
+    """
+    SQLAlchemy model tracking automated and manual trade data sync executions.
+    """
+    __tablename__ = "data_sync_logs"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    sync_type = Column(String(50), nullable=False)     # "API_PULL", "SCHEDULED_CRON", "CSV_UPLOAD"
+    status = Column(String(20), nullable=False)        # "RUNNING", "SUCCESS", "FAILED"
+    started_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    completed_at = Column(DateTime, nullable=True)
+    records_processed = Column(Integer, default=0, nullable=False)
+    records_inserted = Column(Integer, default=0, nullable=False)
+    records_skipped = Column(Integer, default=0, nullable=False)
+    records_rejected = Column(Integer, default=0, nullable=False)
+    source_name = Column(String(255), nullable=True)   # "UN_COMTRADE_API_V1", filename, etc.
+    error_message = Column(String(1000), nullable=True)
+    details = Column(String(2000), nullable=True)      # JSON formatted execution metadata
+
+    def to_dict(self) -> dict:
+        duration_sec = None
+        if self.started_at and self.completed_at:
+            duration_sec = round((self.completed_at - self.started_at).total_seconds(), 2)
+
+        return {
+            "id": self.id,
+            "sync_type": self.sync_type,
+            "status": self.status,
+            "started_at": self.started_at.isoformat() if self.started_at else None,
+            "completed_at": self.completed_at.isoformat() if self.completed_at else None,
+            "duration_seconds": duration_sec,
+            "records_processed": self.records_processed,
+            "records_inserted": self.records_inserted,
+            "records_skipped": self.records_skipped,
+            "records_rejected": self.records_rejected,
+            "source_name": self.source_name,
+            "error_message": self.error_message,
+            "details": self.details,
+        }
+
