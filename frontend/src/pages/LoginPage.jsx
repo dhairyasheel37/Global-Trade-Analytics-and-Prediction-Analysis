@@ -35,6 +35,20 @@ export const LoginPage = () => {
     }
   };
 
+  const handleQuickLogin = async (demoUser, demoPass) => {
+    setUsername(demoUser);
+    setPassword(demoPass);
+    setError("");
+    setLoading(true);
+    const result = await login(demoUser, demoPass);
+    setLoading(false);
+    if (result.success) {
+      navigate(from, { replace: true });
+    } else {
+      setError(result.error);
+    }
+  };
+
   const fillCredentials = (demoUser, demoPass) => {
     setUsername(demoUser);
     setPassword(demoPass);
@@ -54,7 +68,7 @@ export const LoginPage = () => {
 
         <div style={styles.card}>
           <h2 style={styles.cardTitle}>Sign In</h2>
-          <p style={styles.cardSubtitle}>Enter your credentials to access the trade system</p>
+          <p style={styles.cardSubtitle}>Enter your credentials or use 1-click demo login</p>
 
           {error && (
             <div style={styles.errorAlert}>
@@ -108,21 +122,27 @@ export const LoginPage = () => {
           </form>
 
           <div style={styles.demoSection}>
-            <p style={styles.demoTitle}>Quick Demo Credentials:</p>
+            <p style={styles.demoTitle}>⚡ 1-Click Instant Demo Login:</p>
             <div style={styles.demoButtons}>
               <button
                 type="button"
-                onClick={() => fillCredentials("admin", "Admin@Trade2026!")}
+                onClick={() => handleQuickLogin("admin", "Admin@Trade2026!")}
+                disabled={loading}
                 style={styles.demoBtnAdmin}
+                title="Click to sign in immediately as Administrator"
               >
-                <strong>Admin Demo:</strong> admin
+                <div style={styles.demoRole}>System Admin</div>
+                <div style={styles.demoDetails}>admin • Admin@Trade2026!</div>
               </button>
               <button
                 type="button"
-                onClick={() => fillCredentials("trader", "Trader@Trade2026!")}
+                onClick={() => handleQuickLogin("trader", "Trader@Trade2026!")}
+                disabled={loading}
                 style={styles.demoBtnUser}
+                title="Click to sign in immediately as Trade Analyst"
               >
-                <strong>User Demo:</strong> trader
+                <div style={styles.demoRole}>Trade Analyst</div>
+                <div style={styles.demoDetails}>trader • Trader@Trade2026!</div>
               </button>
             </div>
           </div>
@@ -275,24 +295,36 @@ const styles = {
   },
   demoBtnAdmin: {
     flex: 1,
-    backgroundColor: "#1e293b",
-    border: "1px solid #334155",
-    borderRadius: "6px",
-    padding: "8px",
+    backgroundColor: "rgba(37, 99, 235, 0.12)",
+    border: "1px solid rgba(59, 130, 246, 0.4)",
+    borderRadius: "8px",
+    padding: "10px 8px",
     color: "#e2e8f0",
-    fontSize: "12px",
     cursor: "pointer",
     textAlign: "center",
+    transition: "all 0.2s ease",
   },
   demoBtnUser: {
     flex: 1,
-    backgroundColor: "#1e293b",
-    border: "1px solid #334155",
-    borderRadius: "6px",
-    padding: "8px",
+    backgroundColor: "rgba(16, 185, 129, 0.12)",
+    border: "1px solid rgba(16, 185, 129, 0.4)",
+    borderRadius: "8px",
+    padding: "10px 8px",
     color: "#e2e8f0",
-    fontSize: "12px",
     cursor: "pointer",
     textAlign: "center",
+    transition: "all 0.2s ease",
+  },
+  demoRole: {
+    fontSize: "13px",
+    fontWeight: "700",
+    color: "#ffffff",
+    marginBottom: "3px",
+  },
+  demoDetails: {
+    fontSize: "10px",
+    color: "#94a3b8",
+    fontFamily: "monospace",
+    letterSpacing: "-0.01em",
   },
 };
