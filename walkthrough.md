@@ -670,3 +670,78 @@ Transitioned the platform from an offline historical archive into an **automated
 
 ![Sync & Ingestion Audit Trail](docs/screenshots/audit_trail_panel.png)
 *Figure 10: Chronological Data Synchronization and Ingestion Audit Trail tracking automated API pulls, cron schedules, and CSV uploads.*
+
+---
+
+## Phase 16: Scenario Simulator & Tariff Impact Engine ("What-If" Analysis)
+
+### 1. Econometric Modeling & Backend Architecture
+- **Armington Demand Elasticity Model**:
+  - Implemented in [backend/app/services/simulation_engine.py](backend/app/services/simulation_engine.py).
+  - Models quantity response: $\% \Delta Q = \epsilon_d \times \tau$, with bounded logarithmic formulations preventing negative trade flows under prohibitive tariffs ($\tau > 25\%$).
+  - Supports empirical sector-specific default price elasticities:
+    - `TOTAL`: $-1.20$ (Macroeconomic aggregate)
+    - `30` (Pharmaceuticals): $-0.65$ (Inelastic, essential healthcare demand)
+    - `84` (Machinery): $-1.35$ (Elastic capital goods)
+    - `85` (Electrical Machinery & Electronics): $-1.50$ (Highly elastic consumer technology)
+    - `87` (Vehicles & Parts): $-1.40$ (Elastic durable goods)
+- **Customs Duty & Tariff Revenue**:
+  - Computes annual revenue yields on post-shock import volumes: $\text{Tariff Revenue} = \tau \times V_{\text{simulated}}$.
+- **Bilateral Trade Diversion (Substitution to 3rd Nations)**:
+  - Computes displaced trade volume $V_{\text{lost}} = V_{\text{baseline}} - V_{\text{simulated}}$ and redirects a configurable diversion fraction (default $40\%$) to top alternative global suppliers based on empirical baseline market shares.
+- **Multi-Year Trajectory Projections**:
+  - Combines historical trade data (2018–2023) with forward trajectory projections (2024–2028), overlaying baseline CAGR trends with post-shock simulated paths.
+- **Laffer-Style Sensitivity Curve**:
+  - Evaluates tariff rates from $0\%$ to $50\%$ to map out the customs revenue peak against escalating import volume contraction.
+- **REST Endpoints** in [backend/app/api/simulator.py](backend/app/api/simulator.py):
+  - `POST /api/simulator/run`: Executes what-if simulations with user-defined parameters.
+  - `GET /api/simulator/presets`: Returns curated geopolitical policy presets.
+  - `GET /api/simulator/elasticities`: Returns sector price and substitution elasticities reference table.
+
+---
+
+### 2. Frontend UI Implementation ([ScenarioSimulatorPage.jsx](frontend/src/pages/ScenarioSimulatorPage.jsx))
+- **Curated Policy Presets Carousel**:
+  - *US-China Section 301 Tariff Hike (+25%)*
+  - *Global Tech Demand Contraction (-15%)*
+  - *EU Carbon Border Equalization (+12%)*
+  - *India-US Trade Liberalization (-10%)*
+- **Interactive Simulation Controls**:
+  - Dropdown selectors for Importer, Target Exporter, and Commodity Category.
+  - Ad-Valorem Tariff Slider ($-30\%$ to $+75\%$) with real-time colored badge indicator.
+  - Macro Demand Shift Slider ($-40\%$ to $+40\%$).
+  - Collapsible Advanced Economic Assumptions drawer (price elasticity slider, diversion rate slider, forward projection horizon).
+- **Executive Impact KPI Scorecards**:
+  - Projected Imports with dollar delta and percentage shift.
+  - Annual Customs Revenue yield.
+  - Trade Balance Shift with deficit expansion/contraction indicator.
+  - Diverted Trade Flow Volume.
+- **Dynamic Recharts Visualizations**:
+  - **Multi-Year Trajectory Chart**: Baseline Imports vs. Simulated Post-Shock Imports with shaded delta area and annual customs revenue line.
+  - **Trade Diversion Bar Chart**: Horizontal bar visualization showing top third-party substitute supplier nations and diverted dollar gains.
+  - **Tariff vs. Revenue Sensitivity Curve**: Dual-axis line chart illustrating the Laffer-style revenue peak versus import volume loss percentage.
+- **Automated Policy Executive Briefing Card**:
+  - Synthesizes key economic findings, consumer price pass-through pressures, fiscal revenue yields, and geopolitical diversion winners in natural language.
+  - One-click actions to **Download Scenario CSV Report** and **Copy JSON Specification**.
+
+---
+
+### 3. Automated Test Suite Results (153/153 Tests Passing)
+
+| Test Module | Tests | Status | Highlights |
+| :--- | :--- | :--- | :--- |
+| `tests/test_simulator.py` | **8 Passed** | **100% Pass** | Auth enforcement, presets, elasticities, tariff hike, zero shock, trade liberalization, prohibitive boundary, trajectory & sensitivity curves |
+| Full Test Suite (16 modules) | **153 Passed** | **100% Pass** | 0 regressions across all analytics, authentication, sync, and simulation modules |
+| Frontend Production Build | `npm run build` | **Clean Build (1.80s)** | 2538 modules transformed with 0 errors |
+| Playwright E2E Automation | Headless browser verification | **Passed (0 Console Errors)** | Verified presets, controls, KPI updates, Recharts rendering, and automated briefings |
+
+---
+
+### 4. Visual Proof & Screenshots
+
+![Scenario Simulator Overview](docs/screenshots/scenario_simulator_overview.png)
+*Figure 11: Scenario Simulator & Tariff Impact Analysis portal featuring curated policy presets, interactive shock sliders, impact KPI scorecards, and multi-year trajectory charts.*
+
+![Scenario Simulator Sensitivity & Policy Briefing](docs/screenshots/scenario_simulator_sensitivity_and_briefing.png)
+*Figure 12: Tariff vs. Revenue Sensitivity Curve (Laffer Peak) and Automated Policy Executive Briefing card with CSV export and JSON copy capabilities.*
+

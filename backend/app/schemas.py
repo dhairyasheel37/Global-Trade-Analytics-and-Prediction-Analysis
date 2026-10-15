@@ -703,3 +703,112 @@ class BilateralMatrixResponse(BaseModel):
     pairs: List[BilateralDirectedFlow]
 
 
+# --- Scenario Simulator & Tariff Impact Engine Schemas ---
+
+class SimulationRequest(BaseModel):
+    reporter_iso: str = "USA"
+    partner_iso: Optional[str] = "CHN"  # specific partner ISO, "W00" or None for all/world
+    product_code: str = "TOTAL"         # "TOTAL", "85", "84", "30", "87"
+    tariff_pct: float = 15.0            # e.g., 15.0 for +15% tariff
+    demand_shock_pct: float = 0.0       # e.g., -10.0 for -10% demand contraction
+    price_elasticity: Optional[float] = None  # user override or None for sector default
+    diversion_rate: float = 0.40        # fraction of lost imports diverted to alternative suppliers (0.0 to 1.0)
+    baseline_year: Optional[int] = None # baseline reference year, defaults to latest available (e.g. 2023)
+    projection_horizon_years: int = 4   # 1 to 5 years forward projection
+
+
+class SimulationBaselineMetrics(BaseModel):
+    year: int
+    reporter_iso: str
+    reporter_name: str
+    partner_iso: str
+    partner_name: str
+    product_code: str
+    product_name: str
+    baseline_imports: float
+    baseline_exports: float
+    baseline_trade_balance: float
+    baseline_total_trade: float
+
+
+class SimulationShockMetrics(BaseModel):
+    tariff_pct: float
+    demand_shock_pct: float
+    effective_elasticity: float
+    simulated_imports: float
+    import_delta_value: float
+    import_delta_pct: float
+    simulated_exports: float
+    export_delta_value: float
+    export_delta_pct: float
+    simulated_trade_balance: float
+    trade_balance_delta: float
+    annual_tariff_revenue: float
+    trade_volume_lost: float
+    total_diverted_volume: float
+
+
+class DivertedPartnerItem(BaseModel):
+    partner_iso: str
+    partner_name: str
+    baseline_share_pct: float
+    diverted_value: float
+    projected_new_value: float
+
+
+class TrajectoryPoint(BaseModel):
+    year: int
+    baseline_value: float
+    simulated_value: float
+    tariff_revenue: float
+    delta_value: float
+    is_projection: bool
+
+
+class SensitivityPoint(BaseModel):
+    tariff_pct: float
+    projected_imports: float
+    tariff_revenue: float
+    volume_loss_pct: float
+
+
+class SimulationExecutiveSummary(BaseModel):
+    headline: str
+    key_findings: List[str]
+    consumer_price_impact: str
+    revenue_assessment: str
+    diversion_assessment: str
+
+
+class SimulationResult(BaseModel):
+    baseline: SimulationBaselineMetrics
+    shock_impact: SimulationShockMetrics
+    trade_diversion: List[DivertedPartnerItem]
+    trajectory: List[TrajectoryPoint]
+    sensitivity_curve: List[SensitivityPoint]
+    executive_summary: SimulationExecutiveSummary
+
+
+class PresetScenario(BaseModel):
+    id: str
+    title: str
+    description: str
+    badge: str
+    reporter_iso: str
+    partner_iso: Optional[str]
+    product_code: str
+    tariff_pct: float
+    demand_shock_pct: float
+    suggested_elasticity: float
+    policy_context: str
+
+
+class SectorElasticityItem(BaseModel):
+    product_code: str
+    product_name: str
+    default_elasticity: float
+    substitution_elasticity: float
+    category_description: str
+
+
+

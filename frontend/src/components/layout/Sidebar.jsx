@@ -11,6 +11,7 @@ import {
   Scale,
   BrainCircuit,
   Layers,
+  SlidersHorizontal,
   Database,
   FileText,
   Info,
@@ -32,6 +33,7 @@ export const Sidebar = () => {
     { name: "Trade Balance", path: "/trade-balance", icon: Scale },
     { name: "Economic Metrics", path: "/economic-metrics", icon: Layers },
     { name: "Prediction", path: "/prediction", icon: BrainCircuit },
+    { name: "Scenario Simulator", path: "/scenario-simulator", icon: SlidersHorizontal },
   ];
 
   // Admin-only nav item (rendered conditionally based on role from /api/auth/me)

@@ -18,6 +18,7 @@ import { ReportsPage } from "./pages/ReportsPage";
 import { AboutPage } from "./pages/AboutPage";
 import { GlobalMapPage } from "./pages/GlobalMapPage";
 import { EconomicMetricsPage } from "./pages/EconomicMetricsPage";
+import { ScenarioSimulatorPage } from "./pages/ScenarioSimulatorPage";
 
 function App() {
   return (
@@ -61,6 +62,9 @@ function App() {
 
             {/* Phase 8 Machine Learning Trade Prediction Engine */}
             <Route path="/prediction" element={<PredictionPage />} />
+
+            {/* Scenario Simulator & Tariff Impact Engine */}
+            <Route path="/scenario-simulator" element={<ScenarioSimulatorPage />} />
 
             {/* Admin Console Route */}
             <Route

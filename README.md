@@ -5,9 +5,9 @@
 [![React](https://img.shields.io/badge/React-19.2+-61DAFB?style=flat&logo=react&logoColor=black)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-6.0+-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![SQLite](https://img.shields.io/badge/SQLite-3-003B57?style=flat&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
-[![Tests](https://img.shields.io/badge/Tests-145%20Passed-10b981?style=flat&logo=pytest&logoColor=white)](backend/tests/)
+[![Tests](https://img.shields.io/badge/Tests-153%20Passed-10b981?style=flat&logo=pytest&logoColor=white)](backend/tests/)
 
-An enterprise-grade macroeconomic merchandise trade analytics and predictive intelligence platform built with **FastAPI**, **React 19**, and **UN Comtrade data**. Features formalized international trade indices, geospatial choropleth vector mapping, machine learning trade forecasting (2026–2030), executive PDF/Excel reporting engines, and automated UN Comtrade live API synchronization.
+An enterprise-grade macroeconomic merchandise trade analytics and predictive intelligence platform built with **FastAPI**, **React 19**, and **UN Comtrade data**. Features formalized international trade indices, geospatial choropleth vector mapping, machine learning trade forecasting (2026–2030), executive PDF/Excel reporting engines, automated UN Comtrade live API synchronization, and econometric what-if scenario simulations.
 
 ---
 
@@ -57,6 +57,13 @@ An enterprise-grade macroeconomic merchandise trade analytics and predictive int
 - **Automated Data Fetcher**: Resilient client querying UN Comtrade v1 REST API with rate-limiting and dynamic M49 reference metadata caching.
 - **Scheduled Background Cron**: Asynchronous background worker in FastAPI lifespan executing validation, cleaning, deduplication, and database indexing.
 - **Drag-and-Drop Ingestion Portal**: Glassmorphic drag-and-drop dropzone on `/data-management` with instant schema checking and historical audit trail logging.
+
+### 10. Scenario Simulator & Tariff Impact Engine ("What-If" Analysis)
+- **Armington Elasticity Model**: Models price pass-through and quantity demand responses ($\% \Delta Q = \epsilon_d \times \tau$) with bounded logarithmic safeguards.
+- **Curated Geopolitical Presets**: 1-click policy scenarios including US-China Section 301 (+25%), Global Tech Slump (-15%), EU Carbon Border Levy (+12%), and Indo-US Liberalization (-10%).
+- **Interactive Shock Controls**: Real-time ad-valorem tariff sliders ($-30\%$ to $+75\%$), macro demand shift sliders, and customizable sector price elasticities.
+- **Dynamic Recharts Visualizations**: Multi-year baseline vs. shock trajectory projections, third-party trade diversion beneficiary rankings, and Laffer-style tariff vs. revenue sensitivity curves.
+- **Automated Policy Briefings**: Real-time narrative synthesis explaining consumer cost absorption, fiscal customs yields, and trade balance shifts with 1-click CSV/JSON export.
 
 ---
 
