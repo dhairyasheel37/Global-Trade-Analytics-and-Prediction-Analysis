@@ -91,7 +91,8 @@ class TestReportComposition:
         pred = report["prediction"]
         assert pred is not None
         assert pred["success"] is True
-        assert pred["best_model"] == "random_forest"
+        assert pred["best_model"] in ("arima", "random_forest", "linear_regression", "holt_winters")
+        assert pred["best_model"] in pred["models"]
         assert len(pred["historical_series"]) >= 8
 
         # Verbatim warning check

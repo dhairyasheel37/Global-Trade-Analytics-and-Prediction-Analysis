@@ -16,6 +16,13 @@ import {
   Calendar,
   DollarSign,
   Percent,
+  Award,
+  Sliders,
+  Cpu,
+  GitCompare,
+  Activity,
+  ArrowUpRight,
+  Check,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -31,7 +38,7 @@ import {
 
 // Formatter for large currency values
 const formatCurrency = (val) => {
-  if (val === null || val === undefined) return "$0.00";
+  if (val === null || val === undefined || isNaN(val)) return "$0.00";
   const abs = Math.abs(val);
   const sign = val < 0 ? "-" : "";
   if (abs >= 1e12) return `${sign}$${(abs / 1e12).toFixed(2)} T`;
@@ -41,13 +48,18 @@ const formatCurrency = (val) => {
   return `${sign}$${abs.toFixed(2)}`;
 };
 
+const formatNumber = (val, decimals = 1) => {
+  if (val === null || val === undefined || isNaN(val)) return "—";
+  return Number(val).toFixed(decimals);
+};
+
 export const PredictionPage = () => {
   // Filters and Selectors
   const [reportersList, setReportersList] = useState([]);
   const [selectedReporter, setSelectedReporter] = useState("USA");
   const [selectedFlow, setSelectedFlow] = useState("X");
   const [forecastHorizon, setForecastHorizon] = useState(3);
-  const [activeModelKey, setActiveModelKey] = useState("best"); // 'best', 'linear_regression', 'random_forest', 'both'
+  const [activeModelKey, setActiveModelKey] = useState("best"); // 'best', 'linear_regression', 'random_forest', 'arima', 'holt_winters', 'compare_all'
 
   // Applied State
   const [appliedParams, setAppliedParams] = useState({
@@ -113,12 +125,60 @@ export const PredictionPage = () => {
     });
   };
 
-  // Determine which model to visualize
+  // Determine models configuration and primary active model
   const bestModelKey = predictionData?.best_model || "linear_regression";
+  const isCompareAll = activeModelKey === "compare_all";
   const primaryModelKey = activeModelKey === "best" ? bestModelKey : activeModelKey;
-  const activeModel = predictionData?.models?.[primaryModelKey] || predictionData?.models?.["linear_regression"];
+  const activeModel =
+    predictionData?.models?.[primaryModelKey] || predictionData?.models?.["linear_regression"];
+
   const lrModel = predictionData?.models?.["linear_regression"];
   const rfModel = predictionData?.models?.["random_forest"];
+  const arimaModel = predictionData?.models?.["arima"];
+  const hwModel = predictionData?.models?.["holt_winters"];
+
+  const candidateModels = [
+    {
+      key: "linear_regression",
+      name: "Linear Regression",
+      family: "Machine Learning (OLS)",
+      familyBadge: "ML / OLS",
+      badgeColor: "#3b82f6",
+      order: lrModel?.model_order || "Degree 1 OLS",
+      model: lrModel,
+      color: "#3b82f6",
+    },
+    {
+      key: "random_forest",
+      name: "Random Forest",
+      family: "Machine Learning (Ensemble)",
+      familyBadge: "ML / RF",
+      badgeColor: "#f59e0b",
+      order: rfModel?.model_order || "50 Trees (Depth 3)",
+      model: rfModel,
+      color: "#f59e0b",
+    },
+    {
+      key: "arima",
+      name: "ARIMA Time-Series",
+      family: "Time-Series (Autoregressive)",
+      familyBadge: "TS / ARIMA",
+      badgeColor: "#a855f7",
+      order: arimaModel?.model_order || "ARIMA(p,d,q)",
+      model: arimaModel,
+      color: "#a855f7",
+    },
+    {
+      key: "holt_winters",
+      name: "Holt-Winters ETS",
+      family: "Time-Series (State Space ETS)",
+      familyBadge: "TS / ETS",
+      badgeColor: "#06b6d4",
+      order: hwModel?.model_order || "ETS(add, damped)",
+      model: hwModel,
+      color: "#06b6d4",
+    },
+  ];
 
   // Prepare unified time-series chart data points
   const chartData = [];
@@ -128,42 +188,72 @@ export const PredictionPage = () => {
       histMap[p.year] = { year: p.year, actual: p.actual };
     });
 
-    // Add backtest predictions
-    if (activeModel?.backtest_series) {
-      activeModel.backtest_series.forEach((b) => {
-        if (!histMap[b.year]) histMap[b.year] = { year: b.year };
-        histMap[b.year].backtest = b.predicted;
-      });
-    }
+    const lastHistYear =
+      predictionData.historical_series[predictionData.historical_series.length - 1]?.year;
+    const lastHistVal =
+      predictionData.historical_series[predictionData.historical_series.length - 1]?.actual;
 
-    // Bridge point: Connect last actual observation to the forecast line
-    const lastHistYear = predictionData.historical_series[predictionData.historical_series.length - 1]?.year;
-    const lastHistVal = predictionData.historical_series[predictionData.historical_series.length - 1]?.actual;
+    if (isCompareAll) {
+      // Connect all 4 model projections to the last observed historical year
+      if (lastHistYear && histMap[lastHistYear]) {
+        histMap[lastHistYear].forecast_lr = lastHistVal;
+        histMap[lastHistYear].forecast_rf = lastHistVal;
+        histMap[lastHistYear].forecast_arima = lastHistVal;
+        histMap[lastHistYear].forecast_hw = lastHistVal;
+      }
 
-    if (lastHistYear && histMap[lastHistYear]) {
-      histMap[lastHistYear].forecast = lastHistVal;
-      histMap[lastHistYear].lower_bound = lastHistVal;
-      histMap[lastHistYear].upper_bound = lastHistVal;
-      histMap[lastHistYear].ci_range = [lastHistVal, lastHistVal];
-    }
+      // Add projections from all 4 models
+      const attachForecastSeries = (mObj, key) => {
+        if (!mObj?.forecast_series) return;
+        mObj.forecast_series.forEach((f) => {
+          if (!histMap[f.year]) histMap[f.year] = { year: f.year };
+          histMap[f.year][key] = f.predicted;
+        });
+      };
 
-    // Add future forecast points
-    if (activeModel?.forecast_series) {
-      activeModel.forecast_series.forEach((f) => {
-        histMap[f.year] = {
-          year: f.year,
-          forecast: f.predicted,
-          lower_bound: f.lower_bound,
-          upper_bound: f.upper_bound,
-          ci_range: [f.lower_bound, f.upper_bound],
-        };
-      });
+      attachForecastSeries(lrModel, "forecast_lr");
+      attachForecastSeries(rfModel, "forecast_rf");
+      attachForecastSeries(arimaModel, "forecast_arima");
+      attachForecastSeries(hwModel, "forecast_hw");
+    } else {
+      // Single model view (or auto best)
+      if (activeModel?.backtest_series) {
+        activeModel.backtest_series.forEach((b) => {
+          if (!histMap[b.year]) histMap[b.year] = { year: b.year };
+          histMap[b.year].backtest = b.predicted;
+        });
+      }
+
+      if (lastHistYear && histMap[lastHistYear]) {
+        histMap[lastHistYear].forecast = lastHistVal;
+        histMap[lastHistYear].lower_bound = lastHistVal;
+        histMap[lastHistYear].upper_bound = lastHistVal;
+        histMap[lastHistYear].ci_range = [lastHistVal, lastHistVal];
+      }
+
+      if (activeModel?.forecast_series) {
+        activeModel.forecast_series.forEach((f) => {
+          histMap[f.year] = {
+            year: f.year,
+            forecast: f.predicted,
+            lower_bound: f.lower_bound,
+            upper_bound: f.upper_bound,
+            ci_range: [f.lower_bound, f.upper_bound],
+          };
+        });
+      }
     }
 
     Object.keys(histMap)
       .sort((a, b) => Number(a) - Number(b))
       .forEach((y) => chartData.push(histMap[y]));
   }
+
+  // Multi-model future comparison list
+  const futureYearsList =
+    lrModel?.forecast_series?.map((pt) => pt.year) ||
+    activeModel?.forecast_series?.map((pt) => pt.year) ||
+    [];
 
   return (
     <div style={styles.container}>
@@ -172,7 +262,7 @@ export const PredictionPage = () => {
         <div>
           <h1 style={styles.pageTitle}>Machine Learning Trade Prediction Engine</h1>
           <p style={styles.pageSubtitle}>
-            Leakage-free time-series modeling, chronological backtesting, and recursive multi-step forecasting
+            Leakage-free time-series modeling, chronological backtesting, and multi-model forecast arena
           </p>
         </div>
       </div>
@@ -181,7 +271,11 @@ export const PredictionPage = () => {
       <div style={styles.noticeBanner}>
         <Info size={20} color="#38bdf8" style={{ flexShrink: 0 }} />
         <span style={styles.noticeText}>
-          <strong>Small-Data & Model Reliability Notice:</strong> Time-series models are trained on at most 12 annual observations (2014–2025). With 3-year lag feature engineering, models train on ~7 historical years and test on the final 2–3 years. Forecasts represent baseline statistical trend projections with 95% confidence intervals and must be interpreted with caution alongside domain context.
+          <strong>Small-Data & Model Reliability Notice:</strong> Time-series models are trained on at
+          most 12 annual observations (2014–2025). With 3-year lag feature engineering, models train
+          on ~7 historical years and test on the final 2–3 years. Forecasts represent baseline
+          econometric projections with 95% confidence intervals and must be interpreted with caution
+          alongside domain macroeconomic context.
         </span>
       </div>
 
@@ -262,7 +356,7 @@ export const PredictionPage = () => {
         <div style={styles.loadingBox}>
           <div style={styles.spinner}></div>
           <p style={styles.loadingText}>
-            Engineering lag features, performing chronological split, and training prediction models...
+            Engineering lag features, fitting 4 time-series models, and calculating information criteria...
           </p>
         </div>
       ) : predictionData && !predictionData.success ? (
@@ -275,7 +369,8 @@ export const PredictionPage = () => {
           <p style={styles.emptySubtitle}>
             {predictionData.error_message}
             <br />
-            <strong>Available observations after feature engineering:</strong> {predictionData.usable_observations} (Minimum required: {predictionData.required_observations}).
+            <strong>Available observations after feature engineering:</strong>{" "}
+            {predictionData.usable_observations} (Minimum required: {predictionData.required_observations}).
           </p>
         </div>
       ) : predictionData ? (
@@ -292,22 +387,193 @@ export const PredictionPage = () => {
             </div>
           )}
 
+          {/* MODEL COMPARISON ARENA */}
+          <div style={styles.arenaCard}>
+            <div style={styles.arenaHeader}>
+              <div style={styles.arenaTitleGroup}>
+                <Award size={20} color="#c084fc" />
+                <div>
+                  <h2 style={styles.arenaTitle}>Model Comparison Arena</h2>
+                  <p style={styles.arenaSubtitle}>
+                    Side-by-side metric matrix comparing out-of-sample forecast accuracy (MAE, RMSE, MAPE, R²)
+                    and statistical parsimony criteria (AIC, BIC)
+                  </p>
+                </div>
+              </div>
+              <div style={styles.arenaBadge}>
+                <Layers size={13} color="#a855f7" />
+                <span>4 Models + Naive Benchmark</span>
+              </div>
+            </div>
+
+            {/* Winner Announcement Banner */}
+            <div style={styles.winnerBanner}>
+              <Sparkles size={16} color="#c084fc" style={{ flexShrink: 0 }} />
+              <span>
+                <strong>Consensus Best Performer:</strong>{" "}
+                <span style={{ color: "#ffffff", fontWeight: "700" }}>
+                  {predictionData.models?.[bestModelKey]?.display_name || bestModelKey}
+                </span>{" "}
+                achieved the lowest out-of-sample test MAE (
+                {formatCurrency(predictionData.models?.[bestModelKey]?.metrics?.mae)}). Click any model's
+                "Deploy to Chart" button or use the tabs below to toggle chart drivers.
+              </span>
+            </div>
+
+            {/* Benchmarking Matrix Table */}
+            <div style={styles.tableWrapper}>
+              <table style={styles.arenaTable}>
+                <thead>
+                  <tr>
+                    <th style={styles.th}>Model Architecture & Family</th>
+                    <th style={styles.th}>Specification / Order</th>
+                    <th style={styles.thRight}>Test MAE</th>
+                    <th style={styles.thRight}>Test RMSE</th>
+                    <th style={styles.thRight}>Test MAPE</th>
+                    <th style={styles.thRight}>Test R² Score</th>
+                    <th style={styles.thRight}>AIC (Akaike)</th>
+                    <th style={styles.thRight}>BIC (Bayesian)</th>
+                    <th style={{ ...styles.th, textAlign: "center" }}>Chart Driver</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {/* Naive Mean Baseline Row */}
+                  <tr style={styles.trBenchmark}>
+                    <td style={styles.tdModel}>
+                      <div style={styles.modelNameCol}>
+                        <span style={styles.benchmarkTitle}>Naive Mean Baseline</span>
+                        <span style={styles.benchmarkSub}>Benchmark Reference</span>
+                      </div>
+                    </td>
+                    <td style={styles.tdSpec}>
+                      <span style={styles.specCode}>y_train_mean (Zero-Variance)</span>
+                    </td>
+                    <td style={styles.tdNumber}>
+                      <span style={styles.metricVal}>{formatCurrency(predictionData.baseline_mae)}</span>
+                    </td>
+                    <td style={styles.tdNumber}>—</td>
+                    <td style={styles.tdNumber}>—</td>
+                    <td style={styles.tdNumber}>
+                      <span style={styles.r2Neutral}>0.000</span>
+                    </td>
+                    <td style={styles.tdNumber}>—</td>
+                    <td style={styles.tdNumber}>—</td>
+                    <td style={{ ...styles.td, textAlign: "center" }}>
+                      <span style={styles.benchmarkPill}>Reference Baseline</span>
+                    </td>
+                  </tr>
+
+                  {/* 4 Candidate Models Rows */}
+                  {candidateModels.map((m) => {
+                    const isBest = m.key === bestModelKey;
+                    const isActive =
+                      !isCompareAll &&
+                      (activeModelKey === m.key || (activeModelKey === "best" && isBest));
+
+                    return (
+                      <tr key={m.key} style={isBest ? styles.trBest : styles.tr}>
+                        <td style={styles.tdModel}>
+                          <div style={styles.modelNameCol}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                              <span style={styles.modelNameText}>{m.name}</span>
+                              <span
+                                style={{
+                                  ...styles.familyBadge,
+                                  borderColor: m.badgeColor,
+                                  color: m.badgeColor,
+                                }}
+                              >
+                                {m.familyBadge}
+                              </span>
+                            </div>
+                            <span style={styles.modelSubtext}>{m.family}</span>
+                          </div>
+                        </td>
+                        <td style={styles.tdSpec}>
+                          <span style={styles.specCode}>{m.order}</span>
+                        </td>
+                        <td style={styles.tdNumber}>
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "flex-end",
+                              gap: "6px",
+                            }}
+                          >
+                            <span style={{ ...styles.metricVal, color: isBest ? "#34d399" : "#f8fafc" }}>
+                              {formatCurrency(m.model?.metrics?.mae)}
+                            </span>
+                            {isBest && (
+                              <span style={styles.bestPill} title="Lowest out-of-sample MAE">
+                                <Award size={10} /> Best
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                        <td style={styles.tdNumber}>
+                          <span style={styles.metricVal}>{formatCurrency(m.model?.metrics?.rmse)}</span>
+                        </td>
+                        <td style={styles.tdNumber}>
+                          <span style={styles.metricVal}>{m.model?.metrics?.mape ?? "—"}%</span>
+                        </td>
+                        <td style={styles.tdNumber}>
+                          <span
+                            style={
+                              m.model?.metrics?.r2 >= 0 ? styles.r2Positive : styles.r2Negative
+                            }
+                          >
+                            {m.model?.metrics?.r2 !== undefined ? m.model.metrics.r2 : "—"}
+                          </span>
+                        </td>
+                        <td style={styles.tdNumber}>
+                          <span style={styles.metricMuted}>{formatNumber(m.model?.metrics?.aic, 1)}</span>
+                        </td>
+                        <td style={styles.tdNumber}>
+                          <span style={styles.metricMuted}>{formatNumber(m.model?.metrics?.bic, 1)}</span>
+                        </td>
+                        <td style={{ ...styles.td, textAlign: "center" }}>
+                          {isActive ? (
+                            <span style={styles.activePill}>
+                              <Check size={12} /> Active Driver
+                            </span>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => setActiveModelKey(m.key)}
+                              style={styles.deployBtn}
+                            >
+                              <span>Deploy to Chart</span>
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
           {/* Model Selection Tabs */}
           <div style={styles.modelTabBar}>
-            <span style={styles.modelTabLabel}>Model View:</span>
+            <span style={styles.modelTabLabel}>Forecast Driver:</span>
             <button
               type="button"
               onClick={() => setActiveModelKey("best")}
               style={activeModelKey === "best" ? styles.tabBtnActive : styles.tabBtn}
             >
               <Sparkles size={14} color={activeModelKey === "best" ? "#ffffff" : "#60a5fa"} />
-              <span>Auto-Selected Best Model ({bestModelKey === "linear_regression" ? "Linear Regression" : "Random Forest"})</span>
+              <span>
+                Auto Best ({predictionData.models?.[bestModelKey]?.display_name || "Optimal"})
+              </span>
             </button>
             <button
               type="button"
               onClick={() => setActiveModelKey("linear_regression")}
               style={activeModelKey === "linear_regression" ? styles.tabBtnActive : styles.tabBtn}
             >
+              <span style={{ color: "#3b82f6" }}>●</span>
               <span>Linear Regression</span>
             </button>
             <button
@@ -315,106 +581,36 @@ export const PredictionPage = () => {
               onClick={() => setActiveModelKey("random_forest")}
               style={activeModelKey === "random_forest" ? styles.tabBtnActive : styles.tabBtn}
             >
+              <span style={{ color: "#f59e0b" }}>●</span>
               <span>Random Forest</span>
             </button>
-          </div>
-
-          {/* Model Performance Comparison Cards */}
-          <div style={styles.modelGrid}>
-            {/* Baseline Benchmark Card */}
-            <div style={styles.modelCardBenchmark}>
-              <div style={styles.modelCardHeader}>
-                <div>
-                  <h3 style={styles.modelName}>Naive Mean Baseline</h3>
-                  <span style={styles.modelType}>Benchmark Reference</span>
-                </div>
-                <div style={styles.benchmarkTag}>Benchmark</div>
-              </div>
-
-              <div style={styles.metricRow}>
-                <div style={styles.metricItem}>
-                  <span style={styles.metricLabel}>Baseline Test MAE</span>
-                  <span style={styles.metricVal}>{formatCurrency(predictionData.baseline_mae)}</span>
-                </div>
-              </div>
-              <div style={styles.modelCardFooter}>
-                Predicts test years as the training set historical mean ($y_{`train\\_mean`}$).
-              </div>
-            </div>
-
-            {/* Linear Regression Card */}
-            <div style={bestModelKey === "linear_regression" ? styles.modelCardBest : styles.modelCard}>
-              <div style={styles.modelCardHeader}>
-                <div>
-                  <h3 style={styles.modelName}>Linear Regression</h3>
-                  <span style={styles.modelType}>Parametric Trend Baseline</span>
-                </div>
-                {bestModelKey === "linear_regression" && (
-                  <div style={styles.bestBadge}>
-                    <CheckCircle2 size={12} />
-                    <span>Best Performer</span>
-                  </div>
-                )}
-              </div>
-
-              <div style={styles.metricRow}>
-                <div style={styles.metricItem}>
-                  <span style={styles.metricLabel}>MAE</span>
-                  <span style={styles.metricVal}>{formatCurrency(lrModel?.metrics.mae)}</span>
-                </div>
-                <div style={styles.metricItem}>
-                  <span style={styles.metricLabel}>RMSE</span>
-                  <span style={styles.metricVal}>{formatCurrency(lrModel?.metrics.rmse)}</span>
-                </div>
-                <div style={styles.metricItem}>
-                  <span style={styles.metricLabel}>R² Score</span>
-                  <span style={lrModel?.metrics.r2 >= 0 ? styles.r2Positive : styles.r2Negative}>
-                    {lrModel?.metrics.r2}
-                  </span>
-                </div>
-                <div style={styles.metricItem}>
-                  <span style={styles.metricLabel}>MAPE</span>
-                  <span style={styles.metricVal}>{lrModel?.metrics.mape}%</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Random Forest Card */}
-            <div style={bestModelKey === "random_forest" ? styles.modelCardBest : styles.modelCard}>
-              <div style={styles.modelCardHeader}>
-                <div>
-                  <h3 style={styles.modelName}>Random Forest</h3>
-                  <span style={styles.modelType}>50 Trees, Non-Linear Ensemble</span>
-                </div>
-                {bestModelKey === "random_forest" && (
-                  <div style={styles.bestBadge}>
-                    <CheckCircle2 size={12} />
-                    <span>Best Performer</span>
-                  </div>
-                )}
-              </div>
-
-              <div style={styles.metricRow}>
-                <div style={styles.metricItem}>
-                  <span style={styles.metricLabel}>MAE</span>
-                  <span style={styles.metricVal}>{formatCurrency(rfModel?.metrics.mae)}</span>
-                </div>
-                <div style={styles.metricItem}>
-                  <span style={styles.metricLabel}>RMSE</span>
-                  <span style={styles.metricVal}>{formatCurrency(rfModel?.metrics.rmse)}</span>
-                </div>
-                <div style={styles.metricItem}>
-                  <span style={styles.metricLabel}>R² Score</span>
-                  <span style={rfModel?.metrics.r2 >= 0 ? styles.r2Positive : styles.r2Negative}>
-                    {rfModel?.metrics.r2}
-                  </span>
-                </div>
-                <div style={styles.metricItem}>
-                  <span style={styles.metricLabel}>MAPE</span>
-                  <span style={styles.metricVal}>{rfModel?.metrics.mape}%</span>
-                </div>
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => setActiveModelKey("arima")}
+              style={activeModelKey === "arima" ? styles.tabBtnActive : styles.tabBtn}
+            >
+              <span style={{ color: "#a855f7" }}>●</span>
+              <span>ARIMA Time-Series</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveModelKey("holt_winters")}
+              style={activeModelKey === "holt_winters" ? styles.tabBtnActive : styles.tabBtn}
+            >
+              <span style={{ color: "#06b6d4" }}>●</span>
+              <span>Holt-Winters ETS</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveModelKey("compare_all")}
+              style={activeModelKey === "compare_all" ? styles.tabBtnActivePurple : styles.tabBtn}
+            >
+              <Layers
+                size={14}
+                color={activeModelKey === "compare_all" ? "#ffffff" : "#c084fc"}
+              />
+              <span>Compare All Projections (Overlay)</span>
+            </button>
           </div>
 
           {/* Interactive Prediction Chart */}
@@ -423,16 +619,18 @@ export const PredictionPage = () => {
               <div style={styles.chartTitleGroup}>
                 <TrendingUp size={18} color="#a855f7" />
                 <span style={styles.chartTitle}>
-                  {predictionData.reporter_name} ({predictionData.flow_desc}): Historical & Multi-Year Projection
+                  {predictionData.reporter_name} ({predictionData.flow_desc}): Historical & Multi-Year Projections
                 </span>
               </div>
               <span style={styles.chartTag}>
-                Visualizing: {activeModel?.display_name}
+                {isCompareAll
+                  ? "Multi-Model Forecast Overlay (All 4 Models)"
+                  : `Visualizing: ${activeModel?.display_name || "Active Model"}`}
               </span>
             </div>
 
             <div style={styles.chartWrapper}>
-              <ResponsiveContainer width="100%" height={340}>
+              <ResponsiveContainer width="100%" height={360}>
                 <ComposedChart data={chartData} margin={{ top: 10, right: 30, left: 10, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
                   <XAxis dataKey="year" stroke="#64748b" tick={{ fill: "#94a3b8", fontSize: 12 }} />
@@ -445,11 +643,19 @@ export const PredictionPage = () => {
                     formatter={(v, name) => [
                       formatCurrency(Array.isArray(v) ? v[1] : v),
                       name === "actual"
-                        ? "Historical Actual"
+                        ? "Observed Historical Actual"
                         : name === "backtest"
-                        ? "Backtest Prediction"
+                        ? "Chronological Test Backtest"
                         : name === "forecast"
-                        ? "Future Forecast"
+                        ? `${activeModel?.display_name || "Active Model"} Forecast`
+                        : name === "forecast_lr"
+                        ? "Linear Regression Forecast"
+                        : name === "forecast_rf"
+                        ? "Random Forest Forecast"
+                        : name === "forecast_arima"
+                        ? "ARIMA Forecast"
+                        : name === "forecast_hw"
+                        ? "Holt-Winters ETS Forecast"
                         : name,
                     ]}
                     contentStyle={styles.customTooltip}
@@ -461,20 +667,22 @@ export const PredictionPage = () => {
                         : name === "backtest"
                         ? "Chronological Test Backtest"
                         : name === "forecast"
-                        ? "Model Forecast (2026–2030)"
+                        ? `${activeModel?.display_name || "Active Model"} Forecast (2026–2030)`
+                        : name === "forecast_lr"
+                        ? "Linear Regression (OLS)"
+                        : name === "forecast_rf"
+                        ? "Random Forest (50 Trees)"
+                        : name === "forecast_arima"
+                        ? `ARIMA (${arimaModel?.model_order || "Auto"})`
+                        : name === "forecast_hw"
+                        ? `Holt-Winters ETS (${hwModel?.model_order || "ETS"})`
                         : name === "ci_range"
                         ? "95% Confidence Interval"
                         : name
                     }
-                    wrapperStyle={{ fontSize: 12, paddingTop: 6 }}
+                    wrapperStyle={{ fontSize: 12, paddingTop: 8 }}
                   />
-                  {/* Shaded 95% Confidence Interval Area */}
-                  <Area
-                    type="monotone"
-                    dataKey="ci_range"
-                    stroke="none"
-                    fill="rgba(168, 85, 247, 0.15)"
-                  />
+
                   {/* Historical Solid Line */}
                   <Line
                     type="monotone"
@@ -484,110 +692,274 @@ export const PredictionPage = () => {
                     dot={{ r: 4, fill: "#10b981" }}
                     activeDot={{ r: 6 }}
                   />
-                  {/* Backtest Dashed Line */}
-                  <Line
-                    type="monotone"
-                    dataKey="backtest"
-                    stroke="#f59e0b"
-                    strokeWidth={2}
-                    strokeDasharray="4 4"
-                    dot={{ r: 4, fill: "#f59e0b" }}
-                  />
-                  {/* Future Forecast Line */}
-                  <Line
-                    type="monotone"
-                    dataKey="forecast"
-                    stroke="#a855f7"
-                    strokeWidth={3}
-                    strokeDasharray="5 5"
-                    dot={{ r: 5, fill: "#a855f7" }}
-                  />
+
+                  {isCompareAll ? (
+                    <>
+                      {/* Multi-Model Projections Overlay */}
+                      <Line
+                        type="monotone"
+                        dataKey="forecast_lr"
+                        stroke="#3b82f6"
+                        strokeWidth={2.5}
+                        strokeDasharray="4 4"
+                        dot={{ r: 4, fill: "#3b82f6" }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="forecast_rf"
+                        stroke="#f59e0b"
+                        strokeWidth={2.5}
+                        strokeDasharray="4 4"
+                        dot={{ r: 4, fill: "#f59e0b" }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="forecast_arima"
+                        stroke="#a855f7"
+                        strokeWidth={2.5}
+                        strokeDasharray="5 5"
+                        dot={{ r: 4, fill: "#a855f7" }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="forecast_hw"
+                        stroke="#06b6d4"
+                        strokeWidth={2.5}
+                        strokeDasharray="4 4"
+                        dot={{ r: 4, fill: "#06b6d4" }}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      {/* Single Model View with 95% Confidence Band */}
+                      <Area
+                        type="monotone"
+                        dataKey="ci_range"
+                        stroke="none"
+                        fill="rgba(168, 85, 247, 0.15)"
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="backtest"
+                        stroke="#f59e0b"
+                        strokeWidth={2}
+                        strokeDasharray="4 4"
+                        dot={{ r: 4, fill: "#f59e0b" }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="forecast"
+                        stroke="#a855f7"
+                        strokeWidth={3}
+                        strokeDasharray="5 5"
+                        dot={{ r: 5, fill: "#a855f7" }}
+                      />
+                    </>
+                  )}
                 </ComposedChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          {/* Two-Column Grid: Projections Table & Feature Importance */}
+          {/* Two-Column Grid: Projections Table & Feature / Parameter Breakdown */}
           <div style={styles.gridTwo}>
-            {/* Projections Table */}
+            {/* Projections Table Panel */}
             <div style={styles.detailCard}>
               <div style={styles.detailHeader}>
                 <div style={styles.detailTitleGroup}>
                   <Calendar size={18} color="#38bdf8" />
-                  <h3 style={styles.detailTitle}>Future Forecast Projections</h3>
+                  <h3 style={styles.detailTitle}>
+                    {isCompareAll
+                      ? "Multi-Model Forecast Consensus Matrix"
+                      : `Future Forecast Projections (${activeModel?.display_name})`}
+                  </h3>
                 </div>
-                <span style={styles.chartTag}>{activeModel?.forecast_series?.length} Projected Years</span>
+                <span style={styles.chartTag}>
+                  {activeModel?.forecast_series?.length || 3} Projected Years
+                </span>
               </div>
 
               <div style={styles.tableWrapper}>
-                <table style={styles.table}>
-                  <thead>
-                    <tr>
-                      <th style={styles.th}>Year</th>
-                      <th style={styles.thRight}>Forecast Value</th>
-                      <th style={styles.thRight}>95% Range (Lower – Upper)</th>
-                      <th style={styles.thRight}>Projected YoY Growth</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {activeModel?.forecast_series?.map((pt) => (
-                      <tr key={pt.year} style={styles.tr}>
-                        <td style={styles.tdYear}>{pt.year}</td>
-                        <td style={styles.tdForecast}>{formatCurrency(pt.predicted)}</td>
-                        <td style={styles.tdRange}>
-                          {formatCurrency(pt.lower_bound)} – {formatCurrency(pt.upper_bound)}
-                        </td>
-                        <td style={styles.tdGrowth}>
-                          {pt.growth_pct !== null ? (
-                            <span style={pt.growth_pct >= 0 ? styles.growthPositive : styles.growthNegative}>
-                              {pt.growth_pct >= 0 ? `+${pt.growth_pct}%` : `${pt.growth_pct}%`}
-                            </span>
-                          ) : (
-                            "—"
-                          )}
-                        </td>
+                {isCompareAll ? (
+                  <table style={styles.table}>
+                    <thead>
+                      <tr>
+                        <th style={styles.th}>Year</th>
+                        <th style={styles.thRight}>Linear Reg</th>
+                        <th style={styles.thRight}>Random Forest</th>
+                        <th style={styles.thRight}>ARIMA</th>
+                        <th style={styles.thRight}>Holt-Winters</th>
+                        <th style={styles.thRight}>Consensus Mean</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {futureYearsList.map((yr, idx) => {
+                        const valLr = lrModel?.forecast_series?.[idx]?.predicted;
+                        const valRf = rfModel?.forecast_series?.[idx]?.predicted;
+                        const valArima = arimaModel?.forecast_series?.[idx]?.predicted;
+                        const valHw = hwModel?.forecast_series?.[idx]?.predicted;
+                        const vals = [valLr, valRf, valArima, valHw].filter(
+                          (v) => v !== undefined && v !== null
+                        );
+                        const meanVal = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
+
+                        return (
+                          <tr key={yr} style={styles.tr}>
+                            <td style={styles.tdYear}>{yr}</td>
+                            <td style={styles.tdNumber}>{formatCurrency(valLr)}</td>
+                            <td style={styles.tdNumber}>{formatCurrency(valRf)}</td>
+                            <td style={styles.tdNumber}>{formatCurrency(valArima)}</td>
+                            <td style={styles.tdNumber}>{formatCurrency(valHw)}</td>
+                            <td style={styles.tdForecast}>{formatCurrency(meanVal)}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                ) : (
+                  <table style={styles.table}>
+                    <thead>
+                      <tr>
+                        <th style={styles.th}>Year</th>
+                        <th style={styles.thRight}>Forecast Value</th>
+                        <th style={styles.thRight}>95% Range (Lower – Upper)</th>
+                        <th style={styles.thRight}>Projected YoY Growth</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {activeModel?.forecast_series?.map((pt) => (
+                        <tr key={pt.year} style={styles.tr}>
+                          <td style={styles.tdYear}>{pt.year}</td>
+                          <td style={styles.tdForecast}>{formatCurrency(pt.predicted)}</td>
+                          <td style={styles.tdRange}>
+                            {formatCurrency(pt.lower_bound)} – {formatCurrency(pt.upper_bound)}
+                          </td>
+                          <td style={styles.tdGrowth}>
+                            {pt.growth_pct !== null ? (
+                              <span
+                                style={
+                                  pt.growth_pct >= 0 ? styles.growthPositive : styles.growthNegative
+                                }
+                              >
+                                {pt.growth_pct >= 0 ? `+${pt.growth_pct}%` : `${pt.growth_pct}%`}
+                              </span>
+                            ) : (
+                              "—"
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
               </div>
             </div>
 
-            {/* Feature Weighting / Importance Breakdown */}
+            {/* Feature Weighting / Diagnostics Panel */}
             <div style={styles.detailCard}>
               <div style={styles.detailHeader}>
                 <div style={styles.detailTitleGroup}>
                   <BarChart2 size={18} color="#f59e0b" />
-                  <h3 style={styles.detailTitle}>Feature Weightings & Lag Importance</h3>
+                  <h3 style={styles.detailTitle}>
+                    {isCompareAll
+                      ? "Forecasting Methodology Reference"
+                      : primaryModelKey === "arima"
+                      ? "ARIMA Diagnostics & Parameters"
+                      : primaryModelKey === "holt_winters"
+                      ? "Holt-Winters Smoothing Parameters"
+                      : "Feature Weightings & Lag Importance"}
+                  </h3>
                 </div>
-                <span style={styles.chartTag}>Leakage-Free Features</span>
+                <span style={styles.chartTag}>
+                  {isCompareAll
+                    ? "Econometric Architectures"
+                    : primaryModelKey === "arima"
+                    ? arimaModel?.model_order || "ARIMA(p,d,q)"
+                    : primaryModelKey === "holt_winters"
+                    ? hwModel?.model_order || "ETS"
+                    : "Leakage-Free Features"}
+                </span>
               </div>
 
-              <div style={styles.featureList}>
-                {activeModel?.feature_importance?.map((f) => (
-                  <div key={f.feature_name} style={styles.featureRow}>
-                    <div style={styles.featureMeta}>
-                      <span style={styles.featureName}>
-                        {f.feature_name === "lag_1"
-                          ? "Prior Year Value (Lag 1)"
-                          : f.feature_name === "lag_2"
-                          ? "Two Years Prior (Lag 2)"
-                          : f.feature_name === "lag_3"
-                          ? "Three Years Prior (Lag 3)"
-                          : f.feature_name === "rolling_mean_3"
-                          ? "3-Year Past Rolling Mean"
-                          : f.feature_name === "pct_change_1"
-                          ? "Past YoY Growth Velocity"
-                          : "Linear Year Trend"}
+              {isCompareAll ? (
+                <div style={styles.featureList}>
+                  <div style={styles.methodCard}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <span style={{ ...styles.familyBadge, borderColor: "#3b82f6", color: "#3b82f6" }}>
+                        ML / OLS
                       </span>
-                      <span style={styles.featureCode}>Feature: {f.feature_name}</span>
+                      <strong style={{ color: "#ffffff", fontSize: "13px" }}>Linear Regression</strong>
                     </div>
-                    <div style={styles.featureScore}>
-                      <span style={styles.scoreVal}>{f.importance_score}</span>
-                    </div>
+                    <p style={styles.methodDesc}>
+                      Fits parametric ordinary least squares regression across lag_1, lag_2, lag_3, 3-year rolling mean, and linear time trend.
+                    </p>
                   </div>
-                ))}
-              </div>
+
+                  <div style={styles.methodCard}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <span style={{ ...styles.familyBadge, borderColor: "#f59e0b", color: "#f59e0b" }}>
+                        ML / RF
+                      </span>
+                      <strong style={{ color: "#ffffff", fontSize: "13px" }}>Random Forest Regressor</strong>
+                    </div>
+                    <p style={styles.methodDesc}>
+                      Non-linear ensemble of 50 shallow decision trees (max_depth=3) using bootstrap aggregation to mitigate overfitting on short horizons.
+                    </p>
+                  </div>
+
+                  <div style={styles.methodCard}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <span style={{ ...styles.familyBadge, borderColor: "#a855f7", color: "#a855f7" }}>
+                        TS / ARIMA
+                      </span>
+                      <strong style={{ color: "#ffffff", fontSize: "13px" }}>ARIMA Time-Series</strong>
+                    </div>
+                    <p style={styles.methodDesc}>
+                      Box-Jenkins autoregressive integrated moving average with automated order search minimizing Akaike Information Criterion (AIC).
+                    </p>
+                  </div>
+
+                  <div style={styles.methodCard}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <span style={{ ...styles.familyBadge, borderColor: "#06b6d4", color: "#06b6d4" }}>
+                        TS / ETS
+                      </span>
+                      <strong style={{ color: "#ffffff", fontSize: "13px" }}>Holt-Winters Exponential Smoothing</strong>
+                    </div>
+                    <p style={styles.methodDesc}>
+                      State space ETS model with additive damped trend, level smoothing parameter (α), and trend decay parameter (φ).
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div style={styles.featureList}>
+                  {activeModel?.feature_importance?.map((f) => (
+                    <div key={f.feature_name} style={styles.featureRow}>
+                      <div style={styles.featureMeta}>
+                        <span style={styles.featureName}>
+                          {f.feature_name === "lag_1"
+                            ? "Prior Year Value (Lag 1)"
+                            : f.feature_name === "lag_2"
+                            ? "Two Years Prior (Lag 2)"
+                            : f.feature_name === "lag_3"
+                            ? "Three Years Prior (Lag 3)"
+                            : f.feature_name === "rolling_mean_3"
+                            ? "3-Year Past Rolling Mean"
+                            : f.feature_name === "pct_change_1"
+                            ? "Past YoY Growth Velocity"
+                            : f.feature_name === "year_trend"
+                            ? "Linear Year Trend"
+                            : f.feature_name}
+                        </span>
+                        <span style={styles.featureCode}>Parameter / Feature: {f.feature_name}</span>
+                      </div>
+                      <div style={styles.featureScore}>
+                        <span style={styles.scoreVal}>{f.importance_score}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -774,6 +1146,151 @@ const styles = {
     flexDirection: "column",
     gap: "24px",
   },
+  arenaCard: {
+    backgroundColor: "#111827",
+    border: "1px solid #1f2937",
+    borderRadius: "14px",
+    padding: "22px 24px",
+  },
+  arenaHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "14px",
+    flexWrap: "wrap",
+    gap: "10px",
+  },
+  arenaTitleGroup: {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+  },
+  arenaTitle: {
+    fontSize: "18px",
+    fontWeight: "700",
+    color: "#ffffff",
+    margin: "0 0 3px 0",
+    letterSpacing: "-0.01em",
+  },
+  arenaSubtitle: {
+    fontSize: "13px",
+    color: "#94a3b8",
+    margin: 0,
+  },
+  arenaBadge: {
+    display: "flex",
+    alignItems: "center",
+    gap: "6px",
+    backgroundColor: "rgba(168, 85, 247, 0.1)",
+    border: "1px solid rgba(168, 85, 247, 0.3)",
+    borderRadius: "6px",
+    padding: "4px 10px",
+    fontSize: "11px",
+    color: "#c084fc",
+    fontWeight: "600",
+  },
+  winnerBanner: {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    backgroundColor: "rgba(168, 85, 247, 0.12)",
+    border: "1px solid rgba(168, 85, 247, 0.3)",
+    borderRadius: "8px",
+    padding: "10px 14px",
+    fontSize: "13px",
+    color: "#e9d5ff",
+    marginBottom: "16px",
+  },
+  arenaTable: {
+    width: "100%",
+    borderCollapse: "collapse",
+    fontSize: "13px",
+  },
+  modelNameCol: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "2px",
+  },
+  modelNameText: {
+    fontSize: "13px",
+    fontWeight: "700",
+    color: "#ffffff",
+  },
+  modelSubtext: {
+    fontSize: "11px",
+    color: "#64748b",
+  },
+  familyBadge: {
+    fontSize: "10px",
+    fontWeight: "700",
+    border: "1px solid",
+    borderRadius: "4px",
+    padding: "1px 5px",
+    textTransform: "uppercase",
+    letterSpacing: "0.03em",
+  },
+  benchmarkTitle: {
+    fontSize: "13px",
+    fontWeight: "600",
+    color: "#94a3b8",
+  },
+  benchmarkSub: {
+    fontSize: "11px",
+    color: "#64748b",
+  },
+  specCode: {
+    fontSize: "12px",
+    color: "#cbd5e1",
+    fontFamily: "monospace",
+    backgroundColor: "#0b1120",
+    padding: "3px 7px",
+    borderRadius: "4px",
+    border: "1px solid #1e293b",
+  },
+  bestPill: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "3px",
+    fontSize: "10px",
+    fontWeight: "700",
+    color: "#34d399",
+    backgroundColor: "rgba(16, 185, 129, 0.15)",
+    border: "1px solid rgba(16, 185, 129, 0.4)",
+    padding: "2px 6px",
+    borderRadius: "4px",
+    textTransform: "uppercase",
+  },
+  benchmarkPill: {
+    fontSize: "11px",
+    color: "#64748b",
+    backgroundColor: "#1e293b",
+    padding: "3px 8px",
+    borderRadius: "4px",
+    fontWeight: "600",
+  },
+  activePill: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "4px",
+    fontSize: "11px",
+    fontWeight: "600",
+    color: "#34d399",
+    backgroundColor: "rgba(16, 185, 129, 0.15)",
+    border: "1px solid rgba(16, 185, 129, 0.3)",
+    padding: "4px 10px",
+    borderRadius: "6px",
+  },
+  deployBtn: {
+    backgroundColor: "#2563eb",
+    border: "none",
+    borderRadius: "6px",
+    color: "#ffffff",
+    padding: "5px 12px",
+    fontSize: "11px",
+    fontWeight: "600",
+    cursor: "pointer",
+    transition: "background-color 0.15s ease",
+  },
   modelTabBar: {
     display: "flex",
     alignItems: "center",
@@ -812,109 +1329,18 @@ const styles = {
     fontWeight: "600",
     cursor: "pointer",
   },
-  modelGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-    gap: "16px",
-  },
-  modelCardBenchmark: {
-    backgroundColor: "#0b1120",
-    border: "1px dashed #334155",
-    borderRadius: "12px",
-    padding: "18px 20px",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-  },
-  modelCard: {
-    backgroundColor: "#111827",
-    border: "1px solid #1f2937",
-    borderRadius: "12px",
-    padding: "18px 20px",
-    display: "flex",
-    flexDirection: "column",
-  },
-  modelCardBest: {
-    backgroundColor: "#111827",
-    border: "1px solid rgba(168, 85, 247, 0.6)",
-    borderRadius: "12px",
-    padding: "18px 20px",
-    display: "flex",
-    flexDirection: "column",
-    boxShadow: "0 0 15px rgba(168, 85, 247, 0.1)",
-  },
-  modelCardHeader: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginBottom: "14px",
-  },
-  modelName: {
-    fontSize: "15px",
-    fontWeight: "700",
-    color: "#ffffff",
-    margin: "0 0 2px 0",
-  },
-  modelType: {
-    fontSize: "11px",
-    color: "#64748b",
-  },
-  benchmarkTag: {
-    fontSize: "11px",
-    fontWeight: "600",
-    color: "#94a3b8",
-    backgroundColor: "#1e293b",
-    padding: "2px 8px",
-    borderRadius: "4px",
-  },
-  bestBadge: {
+  tabBtnActivePurple: {
     display: "flex",
     alignItems: "center",
-    gap: "4px",
-    fontSize: "11px",
+    gap: "6px",
+    backgroundColor: "#7c3aed",
+    border: "1px solid #8b5cf6",
+    borderRadius: "6px",
+    padding: "6px 12px",
+    color: "#ffffff",
+    fontSize: "12px",
     fontWeight: "600",
-    color: "#c084fc",
-    backgroundColor: "rgba(168, 85, 247, 0.15)",
-    padding: "2px 8px",
-    borderRadius: "4px",
-    border: "1px solid rgba(168, 85, 247, 0.3)",
-  },
-  metricRow: {
-    display: "grid",
-    gridTemplateColumns: "repeat(2, 1fr)",
-    gap: "10px",
-  },
-  metricItem: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "2px",
-  },
-  metricLabel: {
-    fontSize: "11px",
-    color: "#64748b",
-    fontWeight: "600",
-    textTransform: "uppercase",
-  },
-  metricVal: {
-    fontSize: "14px",
-    fontWeight: "700",
-    color: "#f8fafc",
-  },
-  r2Positive: {
-    fontSize: "14px",
-    fontWeight: "700",
-    color: "#34d399",
-  },
-  r2Negative: {
-    fontSize: "14px",
-    fontWeight: "700",
-    color: "#f87171",
-  },
-  modelCardFooter: {
-    fontSize: "11px",
-    color: "#64748b",
-    marginTop: "12px",
-    lineHeight: "1.4",
+    cursor: "pointer",
   },
   chartCard: {
     backgroundColor: "#111827",
@@ -960,7 +1386,7 @@ const styles = {
   },
   gridTwo: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(380px, 1fr))",
+    gridTemplateColumns: "repeat(auto-fit, minmax(420px, 1fr))",
     gap: "20px",
   },
   detailCard: {
@@ -1013,6 +1439,31 @@ const styles = {
   tr: {
     borderBottom: "1px solid #1e293b",
   },
+  trBest: {
+    borderBottom: "1px solid rgba(168, 85, 247, 0.3)",
+    backgroundColor: "rgba(168, 85, 247, 0.05)",
+  },
+  trBenchmark: {
+    borderBottom: "1px dashed #334155",
+    backgroundColor: "rgba(15, 23, 42, 0.5)",
+  },
+  td: {
+    padding: "10px",
+  },
+  tdModel: {
+    padding: "10px",
+    color: "#ffffff",
+  },
+  tdSpec: {
+    padding: "10px",
+    color: "#94a3b8",
+  },
+  tdNumber: {
+    padding: "10px",
+    textAlign: "right",
+    color: "#cbd5e1",
+    fontSize: "13px",
+  },
   tdYear: {
     padding: "10px",
     color: "#ffffff",
@@ -1040,6 +1491,25 @@ const styles = {
   },
   growthNegative: {
     color: "#f87171",
+  },
+  metricVal: {
+    fontWeight: "700",
+    color: "#f8fafc",
+  },
+  metricMuted: {
+    color: "#94a3b8",
+  },
+  r2Positive: {
+    fontWeight: "700",
+    color: "#34d399",
+  },
+  r2Negative: {
+    fontWeight: "700",
+    color: "#f87171",
+  },
+  r2Neutral: {
+    fontWeight: "600",
+    color: "#94a3b8",
   },
   featureList: {
     display: "flex",
@@ -1078,5 +1548,20 @@ const styles = {
     fontSize: "12px",
     fontWeight: "700",
     color: "#f59e0b",
+  },
+  methodCard: {
+    backgroundColor: "#0b1120",
+    border: "1px solid #1e293b",
+    borderRadius: "8px",
+    padding: "12px 14px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "6px",
+  },
+  methodDesc: {
+    fontSize: "12px",
+    color: "#94a3b8",
+    margin: 0,
+    lineHeight: "1.5",
   },
 };

@@ -5,7 +5,7 @@
 [![React](https://img.shields.io/badge/React-19.2+-61DAFB?style=flat&logo=react&logoColor=black)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-6.0+-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![SQLite](https://img.shields.io/badge/SQLite-3-003B57?style=flat&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
-[![Tests](https://img.shields.io/badge/Tests-153%20Passed-10b981?style=flat&logo=pytest&logoColor=white)](backend/tests/)
+[![Tests](https://img.shields.io/badge/Tests-154%20Passed-10b981?style=flat&logo=pytest&logoColor=white)](backend/tests/)
 
 An enterprise-grade macroeconomic merchandise trade analytics and predictive intelligence platform built with **FastAPI**, **React 19**, and **UN Comtrade data**. Features formalized international trade indices, geospatial choropleth vector mapping, machine learning trade forecasting (2026–2030), executive PDF/Excel reporting engines, automated UN Comtrade live API synchronization, and econometric what-if scenario simulations.
 
@@ -35,11 +35,14 @@ An enterprise-grade macroeconomic merchandise trade analytics and predictive int
 - In-depth commodity analysis across Harmonized System (HS) chapters.
 - Sectoral export/import market share distribution and leading commodity supplier rankings.
 
-### 6. Machine Learning Forecasting Engine
-- **Recursive Multi-Step Forecasting** projecting bilateral trade turnover for 1–5 future years (2026–2030).
-- Leakage-free lag feature engineering (`lag_1`, `lag_2`, `lag_3`, rolling averages).
-- Dual model evaluation: **Linear Regression** (Parametric Trend) and **Random Forest Regressor** (50-tree ensemble).
-- Automatic model selection with 95% parametric confidence interval bounds ($\hat{y} \pm 1.96 \cdot \text{SE} \cdot \sqrt{h}$) and baseline MAE benchmark guards.
+### 6. Machine Learning Forecasting Engine & Model Comparison Arena
+- **Four Integrated Forecasting Architectures**:
+  - **Linear Regression (OLS)**: Parametric baseline with 3-year autoregressive lag features and deterministic trend.
+  - **Random Forest Regressor**: Non-linear ensemble of 50 shallow decision trees mitigating overfitting via bootstrap aggregation.
+  - **ARIMA Time-Series**: Dedicated univariate Box-Jenkins modeling with automated $(p,d,q)$ order search minimizing Akaike Information Criterion (AIC).
+  - **Holt-Winters Exponential Smoothing (ETS)**: State-space ETS formulation with additive damped trend and level decay.
+- **Model Comparison Arena**: Side-by-side benchmarking matrix comparing out-of-sample forecast accuracy (MAE, RMSE, MAPE, $R^2$) and statistical parsimony criteria (AIC & BIC) against a Naive Historical Mean Baseline.
+- **Interactive Multi-Model Projections**: 1-click 'Deploy to Chart' model switching, multi-model forecast curve overlay, consensus mean aggregation, and 95% confidence intervals.
 
 ### 7. Specialized Trade Economic Indices
 - **Lafay Trade Balance Index (TBI)**: Normalized scale-invariant trade balance measure $[-100, +100]$.

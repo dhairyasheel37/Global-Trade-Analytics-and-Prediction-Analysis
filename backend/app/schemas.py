@@ -423,6 +423,8 @@ class ModelMetrics(BaseModel):
     rmse: float
     r2: float
     mape: float
+    aic: Optional[float] = None
+    bic: Optional[float] = None
 
 class HistoricalPoint(BaseModel):
     year: int
@@ -447,10 +449,13 @@ class FeatureImportance(BaseModel):
 class ModelResult(BaseModel):
     model_name: str
     display_name: str
+    model_family: str = "MACHINE_LEARNING"  # "MACHINE_LEARNING" | "TIME_SERIES"
+    model_order: Optional[str] = None       # e.g., "ARIMA(1,1,0)", "ETS(A,Ad,N)"
     metrics: ModelMetrics
     backtest_series: List[BacktestPoint]
     forecast_series: List[ForecastPoint]
-    feature_importance: List[FeatureImportance]
+    feature_importance: List[FeatureImportance] = []
+    is_best: bool = False
 
 class PredictionRequest(BaseModel):
     reporter: str = "USA"

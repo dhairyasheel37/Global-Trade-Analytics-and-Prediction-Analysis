@@ -745,3 +745,76 @@ Transitioned the platform from an offline historical archive into an **automated
 ![Scenario Simulator Sensitivity & Policy Briefing](docs/screenshots/scenario_simulator_sensitivity_and_briefing.png)
 *Figure 12: Tariff vs. Revenue Sensitivity Curve (Laffer Peak) and Automated Policy Executive Briefing card with CSV export and JSON copy capabilities.*
 
+---
+
+## Advanced Machine Learning Upgrades: 4-Model Suite & Comparison Arena
+
+### 1. Architectural Enhancements & Econometric Modeling
+The forecasting layer has been enhanced with dedicated univariate time-series modeling algorithms alongside existing regression models, evaluated against a naive historical-mean benchmark reference:
+
+1. **ARIMA $(p, d, q)$ Box-Jenkins Time-Series**:
+   - Automated grid search across candidate orders (`(1,1,0)`, `(0,1,1)`, `(1,1,1)`, `(2,1,0)`, `(0,1,0)`) minimizing Akaike Information Criterion (AIC).
+   - Dynamic order selection, stationarity differencing ($d=1$), and autoregressive/moving average coefficient estimation.
+   - Analytical multi-step variance propagation yielding expanding 95% confidence intervals ($\hat{y} \pm 1.96 \cdot \text{SE}$).
+2. **Holt-Winters Exponential Smoothing (ETS)**:
+   - State-space formulation with additive damped trend (`ETS(A, Ad, N)`).
+   - Joint optimization of level smoothing parameter ($\alpha$), trend smoothing parameter ($\beta$), and trend decay damping factor ($\phi$).
+   - Forecast variance expansion accounting for compounding multi-step horizon uncertainty.
+3. **Linear Regression (OLS)**:
+   - Parametric ordinary least squares regression across 3 autoregressive lags (`lag_1`, `lag_2`, `lag_3`), 3-year past rolling mean, past YoY velocity, and linear time trend.
+4. **Random Forest Regressor**:
+   - Non-linear ensemble of 50 decision trees (`max_depth=3`) with bootstrap aggregation to mitigate overfitting on short macro time horizons.
+5. **Information Criteria & Parsimony Benchmarking**:
+   - Residual Gaussian log-likelihood computation providing exact AIC and BIC metrics:
+     $$\text{AIC} = 2k - 2\ln(\hat{L}), \quad \text{BIC} = k\ln(n) - 2\ln(\hat{L})$$
+6. **Naive Historical Mean Benchmark Reference**:
+   - Predicts test years as the historical training set mean ($\bar{y}_{\text{train}}$) to enforce zero-variance benchmark comparison and provide a baseline for $R^2$ evaluation.
+
+---
+
+### 2. Frontend Implementation ([PredictionPage.jsx](frontend/src/pages/PredictionPage.jsx))
+- **Model Comparison Arena**:
+  - Interactive benchmarking table comparing all 4 models and the Naive Mean Baseline side-by-side.
+  - Columns: Model Architecture & Family, Specification / Order, Out-of-Sample Test MAE (highlighted with "Best Performer" badge), Test RMSE, Test MAPE, Test $R^2$, AIC (Akaike), BIC (Bayesian), and Chart Driver Action.
+  - Winner announcement banner synthesizing the optimal model and its test MAE.
+- **Model Switching & 1-Click Deployment**:
+  - "Deploy to Chart" action buttons in the arena matrix and tab bar buttons to dynamically switch which model drives the master forecast trajectory.
+  - Tabs for `Auto-Selected Best`, `Linear Regression`, `Random Forest`, `ARIMA Time-Series`, `Holt-Winters ETS`, and `Compare All Projections (Overlay)`.
+- **Multi-Model Forecast Curve Overlay**:
+  - Visualizes projections from all 4 models simultaneously branching out from the last observed historical year (2025) across the forecast horizon (2026–2030).
+  - Distinct color-coded trajectories: Solid Emerald for Historical Actuals, Blue for Linear Regression, Amber for Random Forest, Purple for ARIMA, and Cyan for Holt-Winters ETS.
+- **Projections & Diagnostics Dual-Panel Grid**:
+  - Single-model view: Displays Future Forecast Projections table (Forecast, 95% Range, YoY Growth) and model-specific parameter diagnostics (ARIMA order/coefficients, Holt-Winters smoothing weights $\alpha, \beta, \phi$, or ML lag importances).
+  - Multi-model view: Displays Multi-Model Forecast Consensus Matrix comparing predictions side-by-side with Consensus Mean and model spread, accompanied by the Forecasting Methodology Reference.
+
+---
+
+### 3. Automated Verification & Test Results (154/154 Tests Passing)
+
+| Test Module | Tests | Status | Highlights |
+| :--- | :--- | :--- | :--- |
+| `tests/test_prediction.py` | **8 Passed** | **100% Pass** | ARIMA order search, Holt-Winters damping, AIC/BIC computation, multi-model selection, 95% CI expansion, low-confidence alert |
+| `tests/test_reports.py` | **6 Passed** | **100% Pass** | Dynamic best model reporting across report types, verbatim warnings and disclaimers |
+| Full Test Suite (16 modules) | **154 Passed** | **100% Pass** | 0 regressions across all backend endpoints, authentication, and reporting |
+| Frontend Production Build | `npm run build` | **Clean Build (6.89s)** | 2538 modules transformed with 0 errors |
+| Playwright E2E Automation | Headless Edge verification | **Passed (0 Console Errors)** | Verified Model Comparison Arena, multi-model overlay curves, model switching, and bottom consensus panels |
+
+---
+
+### 4. Visual Proof & Screenshots
+
+![Model Comparison Arena Overview](docs/screenshots/ml_comparison_arena_overview.png)
+*Figure 13: Model Comparison Arena benchmarking 4 models against the Naive Mean Baseline with out-of-sample metrics (MAE, RMSE, MAPE, $R^2$, AIC, BIC), winner announcement banner, and active driver controls.*
+
+![Multi-Model Forecast Overlay](docs/screenshots/ml_multi_model_overlay.png)
+*Figure 14: Multi-Model Forecast Overlay rendering all 4 model projections simultaneously (Linear Regression, Random Forest, ARIMA, Holt-Winters ETS) branching out from historical actuals.*
+
+![ARIMA Diagnostics & Projections](docs/screenshots/ml_arima_diagnostics_view.png)
+*Figure 15: ARIMA single-model forecast trajectory with expanding 95% confidence interval envelope and chronological test backtest line.*
+
+![Bottom Projections & Diagnostics Panels](docs/screenshots/ml_projections_and_diagnostics_panels.png)
+*Figure 16: Future Forecast Projections table and ARIMA parameter diagnostics panel.*
+
+![Multi-Model Forecast Consensus Matrix](docs/screenshots/ml_consensus_matrix_panels.png)
+*Figure 17: Multi-Model Forecast Consensus Matrix comparing projections side-by-side with consensus mean and architectural methodology reference cards.*
+

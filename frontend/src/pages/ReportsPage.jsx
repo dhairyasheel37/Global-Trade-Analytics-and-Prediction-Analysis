@@ -657,7 +657,7 @@ export const ReportsPage = () => {
                         Predictive Trade Projections ({pred.reporter_name} &bull; {pred.flow_desc})
                       </h3>
                       <span style={styles.sectionSubtitle}>
-                        Model: {pred.best_model === "linear_regression" ? "Linear Regression" : "Random Forest Regressor"} &bull; Horizon: {pred.models?.[pred.best_model]?.forecast_series?.length || 0} Years
+                        Model: {pred.models?.[pred.best_model]?.display_name || pred.best_model?.replace("_", " ").toUpperCase()} &bull; Horizon: {pred.models?.[pred.best_model]?.forecast_series?.length || 0} Years
                       </span>
                     </div>
                   </div>

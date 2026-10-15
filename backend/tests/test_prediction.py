@@ -201,3 +201,45 @@ def test_prediction_api_get_and_post_usa_exports(client, auth_headers):
     data_post = res_post.json()
     assert data_post["reporter"] == "USA"
     assert data_post["usable_observations"] == data_get["usable_observations"]
+
+
+def test_four_models_and_information_criteria(client, auth_headers):
+    """
+    Verifies that all 4 forecasting models (Linear Regression, Random Forest,
+    ARIMA, and Holt-Winters) are trained, evaluated, and returned with AIC & BIC.
+    """
+    res = client.get("/api/prediction/predict?reporter=USA&flow=X&forecast_years=3", headers=auth_headers)
+    assert res.status_code == 200
+    data = res.json()
+
+    models = data["models"]
+    assert "linear_regression" in models
+    assert "random_forest" in models
+    assert "arima" in models
+    assert "holt_winters" in models
+
+    # Exactly 1 best model flagged
+    best_flags = [m["is_best"] for m in models.values()]
+    assert sum(best_flags) == 1
+    assert data["best_model"] in models
+
+    # Check metrics for each model
+    for model_key, model_data in models.items():
+        metrics = model_data["metrics"]
+        assert metrics["mae"] >= 0
+        assert metrics["rmse"] >= 0
+        assert "mape" in metrics
+        assert "r2" in metrics
+        assert metrics["aic"] is not None and not np.isnan(metrics["aic"])
+        assert metrics["bic"] is not None and not np.isnan(metrics["bic"])
+        assert "model_family" in model_data
+        assert "model_order" in model_data
+
+        # Verify forecasts
+        forecast = model_data["forecast_series"]
+        assert len(forecast) == 3
+        for pt in forecast:
+            assert pt["predicted"] >= 0
+            assert pt["lower_bound"] >= 0
+            assert pt["upper_bound"] >= pt["lower_bound"]
+
