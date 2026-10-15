@@ -24,7 +24,10 @@ from ..schemas import (
     EmailOutboxResponse,
     TestEmailRequest,
     AlertsSummaryStats,
+    SmtpConfigResponse,
+    SmtpConfigUpdate,
 )
+from ..config import update_smtp_config
 from ..dependencies import get_current_user
 from ..services.email_service import email_service
 from ..services.alert_engine import evaluate_all_rules
@@ -359,6 +362,68 @@ def download_outbox_briefing_pdf(
     )
 
 
+def mask_email(email_str: str) -> str:
+    if not email_str:
+        return ""
+    if "@" in email_str:
+        parts = email_str.split("@")
+        name = parts[0]
+        masked = name[:2] + "***" if len(name) > 2 else name + "***"
+        return f"{masked}@{parts[1]}"
+    return email_str[:2] + "***"
+
+
+# --- SMTP Configuration & Health Check ---
+@router.get("/smtp-config", response_model=SmtpConfigResponse)
+def get_smtp_status(current_user: User = Depends(get_current_user)):
+    """Returns the current SMTP setup status and configuration parameters."""
+    cfg = email_service.config
+    return SmtpConfigResponse(
+        is_configured=cfg["is_configured"],
+        mode="LIVE_SMTP" if cfg["is_configured"] else "SIMULATED_DEV_OUTBOX",
+        host=cfg["host"],
+        port=cfg["port"],
+        user_masked=mask_email(cfg["user"]),
+        from_email=cfg["from_email"],
+        use_tls=cfg["use_tls"],
+    )
+
+
+@router.post("/smtp-config")
+def set_smtp_configuration(
+    payload: SmtpConfigUpdate,
+    current_user: User = Depends(get_current_user),
+):
+    """Updates and persists SMTP credentials in environment and .env."""
+    update_smtp_config(
+        host=payload.host,
+        port=payload.port,
+        user=payload.user,
+        password=payload.password,
+        from_email=payload.from_email,
+        use_tls=payload.use_tls,
+    )
+    # Test connection right after saving
+    test_res = email_service.test_smtp_connection()
+    return {
+        "success": test_res["success"],
+        "message": f"SMTP credentials saved. Connection test: {test_res['message']}",
+        "is_configured": email_service.is_configured,
+        "mode": "LIVE_SMTP" if email_service.is_configured else "SIMULATED_DEV_OUTBOX",
+        "host": payload.host,
+        "port": payload.port,
+        "user_masked": mask_email(payload.user),
+        "from_email": payload.from_email,
+        "use_tls": payload.use_tls,
+    }
+
+
+@router.post("/smtp-config/test")
+def test_smtp_server(current_user: User = Depends(get_current_user)):
+    """Tests current SMTP connection credentials without dispatching an email."""
+    return email_service.test_smtp_connection()
+
+
 @router.post("/test-email")
 def send_test_email(
     payload: TestEmailRequest,
@@ -408,8 +473,18 @@ def send_test_email(
             email_type="TEST",
         )
 
+    if res["status"] == "SENT":
+        message = f"Live email successfully delivered via SMTP ({email_service.host}) to {payload.recipient}!"
+        is_success = True
+    elif res["status"] == "FAILED":
+        message = f"SMTP delivery failed: {res.get('error_message')}. Saved to In-App Outbox."
+        is_success = False
+    else:
+        message = f"SMTP not configured (Simulation Mode). Email logged to In-App Outbox tab for {payload.recipient}."
+        is_success = True
+
     return {
-        "success": True,
-        "message": f"Test email dispatched ({res['status']}) to {payload.recipient}.",
+        "success": is_success,
+        "message": message,
         "outbox_log": res,
     }

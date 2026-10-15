@@ -929,5 +929,24 @@ class AlertsSummaryStats(BaseModel):
     total_outbox_sent: int
 
 
+class SmtpConfigResponse(BaseModel):
+    is_configured: bool
+    mode: str  # "LIVE_SMTP" or "SIMULATED_DEV_OUTBOX"
+    host: str
+    port: int
+    user_masked: str
+    from_email: str
+    use_tls: bool
+
+
+class SmtpConfigUpdate(BaseModel):
+    host: str = Field(default="")
+    port: int = Field(default=587, ge=1, le=65535)
+    user: str = Field(default="")
+    password: str = Field(default="")
+    from_email: str = Field(default="briefings@globaltrade.analytics")
+    use_tls: bool = True
+
+
 
 

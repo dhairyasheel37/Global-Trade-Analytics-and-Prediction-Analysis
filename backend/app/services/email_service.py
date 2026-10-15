@@ -8,21 +8,13 @@ from typing import Optional, List, Dict, Any
 
 from sqlalchemy.orm import Session
 from ..models import EmailOutboxLog
-from ..config import DB_PATH
+from ..config import DB_PATH, get_smtp_config
 from ..utils.logger import logger
 
 # Directory for storing generated briefing PDFs locally
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 BRIEFINGS_DIR = os.path.join(BASE_DIR, "data", "briefings")
 os.makedirs(BRIEFINGS_DIR, exist_ok=True)
-
-# SMTP Environment Configuration
-SMTP_HOST = os.getenv("SMTP_HOST", "")
-SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
-SMTP_USER = os.getenv("SMTP_USER", "")
-SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
-SMTP_FROM = os.getenv("SMTP_FROM", "briefings@globaltrade.analytics")
-SMTP_USE_TLS = os.getenv("SMTP_USE_TLS", "true").lower() in ("true", "1", "yes")
 
 
 class EmailService:
@@ -31,13 +23,62 @@ class EmailService:
     Logs all dispatches and stores generated executive briefing attachments.
     """
 
-    def __init__(self):
-        self.host = SMTP_HOST
-        self.port = SMTP_PORT
-        self.user = SMTP_USER
-        self.password = SMTP_PASSWORD
-        self.from_email = SMTP_FROM
-        self.use_tls = SMTP_USE_TLS
+    @property
+    def config(self) -> Dict[str, Any]:
+        return get_smtp_config()
+
+    @property
+    def host(self) -> str:
+        return self.config["host"]
+
+    @property
+    def port(self) -> int:
+        return self.config["port"]
+
+    @property
+    def user(self) -> str:
+        return self.config["user"]
+
+    @property
+    def password(self) -> str:
+        return self.config["password"]
+
+    @property
+    def from_email(self) -> str:
+        return self.config["from_email"]
+
+    @property
+    def use_tls(self) -> bool:
+        return self.config["use_tls"]
+
+    @property
+    def is_configured(self) -> bool:
+        return self.config["is_configured"]
+
+    def test_smtp_connection(self) -> Dict[str, Any]:
+        """Tests the configured SMTP server connection."""
+        if not self.is_configured:
+            return {
+                "success": False,
+                "message": "SMTP host is not configured. Real emails cannot be sent.",
+            }
+        try:
+            server = smtplib.SMTP(self.host, self.port, timeout=10)
+            if self.use_tls:
+                server.starttls()
+            if self.user and self.password:
+                server.login(self.user, self.password)
+            server.quit()
+            return {
+                "success": True,
+                "message": f"Successfully connected to SMTP server ({self.host}:{self.port})!",
+            }
+        except Exception as e:
+            logger.error(f"SMTP connection test failed: {e}")
+            return {
+                "success": False,
+                "message": f"SMTP connection error: {str(e)}",
+            }
 
     def compose_briefing_html(
         self,
@@ -218,7 +259,7 @@ class EmailService:
                 logger.error(f"Failed to save briefing PDF to disk: {e}")
 
         # 2. Attempt Live SMTP if configured
-        if self.host:
+        if self.is_configured:
             try:
                 msg = MIMEMultipart("mixed")
                 msg["Subject"] = subject
@@ -248,10 +289,12 @@ class EmailService:
                 status = "SENT"
                 logger.info(f"Email successfully delivered via SMTP to: {recipients}")
             except Exception as e:
-                logger.warning(f"SMTP delivery failed, falling back to Development Outbox: {e}")
-                status = "SIMULATED_DEV_OUTBOX"
-                error_msg = f"SMTP dispatch fallback: {str(e)}"
+                logger.warning(f"SMTP delivery failed: {e}")
+                status = "FAILED" if email_type == "TEST" else "SIMULATED_DEV_OUTBOX"
+                error_msg = f"SMTP dispatch error: {str(e)}"
         else:
+            status = "SIMULATED_DEV_OUTBOX"
+            error_msg = "SMTP not configured. Email saved to Development Outbox."
             logger.info(f"SMTP not configured. Email logged to Development Outbox: '{subject}' -> {recipients}")
 
         # 3. Record in EmailOutboxLog

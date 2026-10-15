@@ -45,3 +45,5 @@ scratch/
 scan_keywords.py
 data/briefings/
 backend/data/
+.env
+*.env

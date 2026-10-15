@@ -273,3 +273,50 @@ class TestOutboxAndDownloads:
         assert dl_res.status_code == 200
         assert dl_res.headers["content-type"] == "application/pdf"
         assert len(dl_res.content) > 1000  # Non-empty PDF
+
+    def test_smtp_config_endpoints(self, trader_headers):
+        # 1. GET smtp-config
+        get_res = client.get("/api/alerts/smtp-config", headers=trader_headers)
+        assert get_res.status_code == 200
+        cfg = get_res.json()
+        assert "is_configured" in cfg
+        assert "mode" in cfg
+        assert "port" in cfg
+
+        # 2. POST smtp-config (update config)
+        post_res = client.post(
+            "/api/alerts/smtp-config",
+            headers=trader_headers,
+            json={
+                "host": "smtp.testserver.local",
+                "port": 587,
+                "user": "analyst@macrotrade.org",
+                "password": "testpassword",
+                "from_email": "alerts@macrotrade.org",
+                "use_tls": True,
+            },
+        )
+        assert post_res.status_code == 200
+        post_data = post_res.json()
+        assert post_data["host"] == "smtp.testserver.local"
+        assert post_data["is_configured"] is True
+
+        # 3. POST smtp-config/test (attempt test connection)
+        test_res = client.post("/api/alerts/smtp-config/test", headers=trader_headers)
+        assert test_res.status_code == 200
+        assert "success" in test_res.json()
+        assert "message" in test_res.json()
+
+        # 4. Clean up / reset to empty host
+        client.post(
+            "/api/alerts/smtp-config",
+            headers=trader_headers,
+            json={
+                "host": "",
+                "port": 587,
+                "user": "",
+                "password": "",
+                "from_email": "briefings@globaltrade.analytics",
+                "use_tls": True,
+            },
+        )

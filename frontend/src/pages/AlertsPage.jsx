@@ -24,6 +24,9 @@ import {
   Activity,
   Layers,
   Info,
+  Server,
+  Settings,
+  Key,
 } from "lucide-react";
 
 export const AlertsPage = () => {
@@ -37,6 +40,28 @@ export const AlertsPage = () => {
     unresolved_alerts: 0,
     total_outbox_sent: 0,
   });
+
+  // SMTP Configuration State
+  const [smtpConfig, setSmtpConfig] = useState({
+    is_configured: false,
+    mode: "SIMULATED_DEV_OUTBOX",
+    host: "",
+    port: 587,
+    user_masked: "",
+    from_email: "briefings@globaltrade.analytics",
+    use_tls: true,
+  });
+  const [showSmtpModal, setShowSmtpModal] = useState(false);
+  const [smtpForm, setSmtpForm] = useState({
+    host: "",
+    port: 587,
+    user: "",
+    password: "",
+    from_email: "briefings@globaltrade.analytics",
+    use_tls: true,
+  });
+  const [smtpTesting, setSmtpTesting] = useState(false);
+  const [smtpStatusMessage, setSmtpStatusMessage] = useState(null);
 
   // Country options
   const [reportersList, setReportersList] = useState([]);
@@ -107,8 +132,14 @@ export const AlertsPage = () => {
   const refreshData = useCallback(async () => {
     setLoading(true);
     try {
-      const statsRes = await api.get("/alerts/summary-stats");
+      const [statsRes, smtpRes] = await Promise.all([
+        api.get("/alerts/summary-stats"),
+        api.get("/alerts/smtp-config").catch(() => ({ data: null })),
+      ]);
       setSummaryStats(statsRes.data);
+      if (smtpRes && smtpRes.data) {
+        setSmtpConfig(smtpRes.data);
+      }
 
       if (activeTab === "briefings") {
         const res = await api.get("/alerts/briefings");
@@ -314,6 +345,66 @@ export const AlertsPage = () => {
     }
   };
 
+  // 5. SMTP Configuration Handlers
+  const openSmtpModal = () => {
+    setSmtpForm({
+      host: smtpConfig.host || "",
+      port: smtpConfig.port || 587,
+      user: "",
+      password: "",
+      from_email: smtpConfig.from_email || "briefings@globaltrade.analytics",
+      use_tls: smtpConfig.use_tls !== undefined ? smtpConfig.use_tls : true,
+    });
+    setSmtpStatusMessage(null);
+    setShowSmtpModal(true);
+  };
+
+  const handleSaveSmtp = async (e) => {
+    e.preventDefault();
+    setActionLoading(true);
+    setSmtpStatusMessage(null);
+    try {
+      const res = await api.post("/alerts/smtp-config", smtpForm);
+      setSmtpConfig({
+        is_configured: res.data.is_configured,
+        mode: res.data.mode,
+        host: res.data.host,
+        port: res.data.port,
+        user_masked: res.data.user_masked,
+        from_email: res.data.from_email,
+        use_tls: res.data.use_tls,
+      });
+      showBanner(res.data.message, !res.data.success);
+      if (res.data.success) {
+        setShowSmtpModal(false);
+      } else {
+        setSmtpStatusMessage({ success: false, message: res.data.message });
+      }
+    } catch (err) {
+      const msg = err.response?.data?.detail || "Failed to save SMTP configuration.";
+      showBanner(msg, true);
+      setSmtpStatusMessage({ success: false, message: msg });
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleTestSmtpConnection = async () => {
+    setSmtpTesting(true);
+    setSmtpStatusMessage(null);
+    try {
+      const res = await api.post("/alerts/smtp-config/test");
+      setSmtpStatusMessage({ success: res.data.success, message: res.data.message });
+    } catch (err) {
+      setSmtpStatusMessage({
+        success: false,
+        message: err.response?.data?.detail || "SMTP connection test failed.",
+      });
+    } finally {
+      setSmtpTesting(false);
+    }
+  };
+
   return (
     <div style={styles.container}>
       {/* Header */}
@@ -329,6 +420,24 @@ export const AlertsPage = () => {
         </div>
 
         <div style={styles.headerActions}>
+          <button
+            type="button"
+            onClick={openSmtpModal}
+            style={{
+              ...styles.actionBtnOutline,
+              borderColor: smtpConfig.is_configured ? "#10b981" : "#f59e0b",
+              color: smtpConfig.is_configured ? "#34d399" : "#fbbf24",
+              backgroundColor: smtpConfig.is_configured ? "rgba(16, 185, 129, 0.1)" : "rgba(245, 158, 11, 0.1)",
+            }}
+            title="Configure SMTP Server or inspect connection"
+          >
+            <Server size={14} />
+            <span>
+              {smtpConfig.is_configured
+                ? `SMTP: ${smtpConfig.host}:${smtpConfig.port}`
+                : "SMTP: Dev Outbox (Configure)"}
+            </span>
+          </button>
           <button
             type="button"
             onClick={handleEvaluateRulesNow}
@@ -1375,12 +1484,74 @@ export const AlertsPage = () => {
                 </div>
               </div>
 
-              <div style={styles.noticeSmall}>
-                <Info size={14} color="#38bdf8" />
-                <span>
-                  Dispatches via configured SMTP or safely logs into the in-app Development Outbox for instant inspection.
-                </span>
-              </div>
+              {!smtpConfig.is_configured ? (
+                <div
+                  style={{
+                    backgroundColor: "rgba(245, 158, 11, 0.12)",
+                    border: "1px solid #f59e0b",
+                    borderRadius: "8px",
+                    padding: "12px 14px",
+                    fontSize: "12px",
+                    color: "#fef3c7",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "6px",
+                    margin: "12px 0",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", fontWeight: "700", color: "#fbbf24" }}>
+                    <AlertTriangle size={15} />
+                    <span>Live SMTP is Not Configured (Simulation Mode)</span>
+                  </div>
+                  <span style={{ color: "#cbd5e1", lineHeight: "1.4" }}>
+                    This test email will be safely simulated and recorded in the <strong>Outbox &amp; Sent Briefings</strong> tab below where you can view it and download the PDF.
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowTestModal(false);
+                      openSmtpModal();
+                    }}
+                    style={{
+                      marginTop: "4px",
+                      backgroundColor: "#f59e0b",
+                      color: "#0f172a",
+                      border: "none",
+                      borderRadius: "6px",
+                      padding: "6px 12px",
+                      fontWeight: "700",
+                      cursor: "pointer",
+                      width: "fit-content",
+                      fontSize: "11px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "6px",
+                    }}
+                  >
+                    <Server size={12} /> Configure Real SMTP Delivery
+                  </button>
+                </div>
+              ) : (
+                <div
+                  style={{
+                    backgroundColor: "rgba(16, 185, 129, 0.1)",
+                    border: "1px solid #10b981",
+                    borderRadius: "8px",
+                    padding: "10px 14px",
+                    fontSize: "12px",
+                    color: "#6ee7b7",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    margin: "12px 0",
+                  }}
+                >
+                  <CheckCircle2 size={15} color="#34d399" />
+                  <span>
+                    Delivering live via SMTP server: <strong>{smtpConfig.host}:{smtpConfig.port}</strong> (from {smtpConfig.from_email})
+                  </span>
+                </div>
+              )}
 
               <div style={styles.modalActions}>
                 <button
@@ -1393,6 +1564,159 @@ export const AlertsPage = () => {
                 <button type="submit" disabled={actionLoading} style={styles.submitBtn}>
                   {actionLoading ? "Sending..." : "Dispatch Test Email"}
                 </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: SMTP SERVER DELIVERY CONFIGURATION */}
+      {showSmtpModal && (
+        <div style={styles.modalOverlay}>
+          <div style={{ ...styles.modalCard, maxWidth: "560px" }}>
+            <div style={styles.modalHeader}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <Server size={18} color="#38bdf8" />
+                <h3 style={styles.modalTitle}>SMTP Server Delivery Configuration</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowSmtpModal(false)}
+                style={styles.closeBtn}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveSmtp} style={styles.modalForm}>
+              <div
+                style={{
+                  backgroundColor: "rgba(59, 130, 246, 0.1)",
+                  border: "1px solid #3b82f6",
+                  borderRadius: "8px",
+                  padding: "12px",
+                  fontSize: "12px",
+                  color: "#93c5fd",
+                  lineHeight: "1.4",
+                }}
+              >
+                <strong>Configure SMTP to dispatch real emails to external inboxes:</strong>
+                <ul style={{ margin: "6px 0 0 16px", padding: 0 }}>
+                  <li><strong>Gmail:</strong> Host: <code>smtp.gmail.com</code> | Port: <code>587</code> | Requires a 16-character <strong>App Password</strong> from Google Account &gt; Security &gt; App Passwords.</li>
+                  <li><strong>Outlook / Office365:</strong> Host: <code>smtp.office365.com</code> | Port: <code>587</code>.</li>
+                  <li><strong>Custom SMTP:</strong> Enter your host, port, credentials, and sender address.</li>
+                </ul>
+              </div>
+
+              {smtpStatusMessage && (
+                <div
+                  style={{
+                    padding: "10px 14px",
+                    borderRadius: "8px",
+                    fontSize: "12px",
+                    backgroundColor: smtpStatusMessage.success ? "rgba(16, 185, 129, 0.15)" : "rgba(239, 68, 68, 0.15)",
+                    border: `1px solid ${smtpStatusMessage.success ? "#10b981" : "#ef4444"}`,
+                    color: smtpStatusMessage.success ? "#6ee7b7" : "#fca5a5",
+                  }}
+                >
+                  {smtpStatusMessage.message}
+                </div>
+              )}
+
+              <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "12px" }}>
+                <div style={styles.formGroup}>
+                  <label style={styles.formLabel}>SMTP Host *</label>
+                  <input
+                    type="text"
+                    required
+                    value={smtpForm.host}
+                    onChange={(e) => setSmtpForm({ ...smtpForm, host: e.target.value })}
+                    style={styles.input}
+                    placeholder="e.g. smtp.gmail.com"
+                  />
+                </div>
+                <div style={styles.formGroup}>
+                  <label style={styles.formLabel}>Port *</label>
+                  <input
+                    type="number"
+                    required
+                    value={smtpForm.port}
+                    onChange={(e) => setSmtpForm({ ...smtpForm, port: parseInt(e.target.value) || 587 })}
+                    style={styles.input}
+                    placeholder="587"
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+                <div style={styles.formGroup}>
+                  <label style={styles.formLabel}>Username / Email</label>
+                  <input
+                    type="text"
+                    value={smtpForm.user}
+                    onChange={(e) => setSmtpForm({ ...smtpForm, user: e.target.value })}
+                    style={styles.input}
+                    placeholder="your-email@gmail.com"
+                  />
+                </div>
+                <div style={styles.formGroup}>
+                  <label style={styles.formLabel}>Password / App Password</label>
+                  <input
+                    type="password"
+                    value={smtpForm.password}
+                    onChange={(e) => setSmtpForm({ ...smtpForm, password: e.target.value })}
+                    style={styles.input}
+                    placeholder="16-character Google App Password"
+                  />
+                </div>
+              </div>
+
+              <div style={styles.formGroup}>
+                <label style={styles.formLabel}>Sender "From" Email</label>
+                <input
+                  type="email"
+                  value={smtpForm.from_email}
+                  onChange={(e) => setSmtpForm({ ...smtpForm, from_email: e.target.value })}
+                  style={styles.input}
+                  placeholder="briefings@globaltrade.analytics"
+                />
+              </div>
+
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <input
+                  type="checkbox"
+                  id="smtp_tls"
+                  checked={smtpForm.use_tls}
+                  onChange={(e) => setSmtpForm({ ...smtpForm, use_tls: e.target.checked })}
+                  style={{ accentColor: "#3b82f6", width: "16px", height: "16px" }}
+                />
+                <label htmlFor="smtp_tls" style={{ fontSize: "13px", color: "#cbd5e1", cursor: "pointer" }}>
+                  Enable STARTTLS Encryption (Recommended on port 587)
+                </label>
+              </div>
+
+              <div style={styles.modalActions}>
+                <button
+                  type="button"
+                  onClick={handleTestSmtpConnection}
+                  disabled={smtpTesting || !smtpForm.host}
+                  style={styles.actionBtnOutline}
+                >
+                  <RefreshCw size={14} className={smtpTesting ? "spin" : ""} />
+                  <span>{smtpTesting ? "Testing..." : "Test Connection"}</span>
+                </button>
+                <div style={{ display: "flex", gap: "8px" }}>
+                  <button
+                    type="button"
+                    onClick={() => setShowSmtpModal(false)}
+                    style={styles.cancelBtn}
+                  >
+                    Cancel
+                  </button>
+                  <button type="submit" disabled={actionLoading} style={styles.submitBtn}>
+                    {actionLoading ? "Connecting..." : "Save & Connect SMTP"}
+                  </button>
+                </div>
               </div>
             </form>
           </div>
