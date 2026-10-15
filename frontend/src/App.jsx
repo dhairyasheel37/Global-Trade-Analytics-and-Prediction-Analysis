@@ -19,6 +19,7 @@ import { AboutPage } from "./pages/AboutPage";
 import { GlobalMapPage } from "./pages/GlobalMapPage";
 import { EconomicMetricsPage } from "./pages/EconomicMetricsPage";
 import { ScenarioSimulatorPage } from "./pages/ScenarioSimulatorPage";
+import { AlertsPage } from "./pages/AlertsPage";
 
 function App() {
   return (
@@ -65,6 +66,9 @@ function App() {
 
             {/* Scenario Simulator & Tariff Impact Engine */}
             <Route path="/scenario-simulator" element={<ScenarioSimulatorPage />} />
+
+            {/* Automated Email Briefings & Alerts Engine */}
+            <Route path="/alerts" element={<AlertsPage />} />
 
             {/* Admin Console Route */}
             <Route

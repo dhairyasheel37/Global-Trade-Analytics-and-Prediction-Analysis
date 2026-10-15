@@ -19,6 +19,7 @@ from app.api.about import router as about_router
 from app.api.map import router as map_router
 from app.api.economic_metrics import router as economic_metrics_router
 from app.api.simulator import router as simulator_router
+from app.api.alerts import router as alerts_router
 from app.database import init_db, SessionLocal
 from app.services.sync_service import sync_service
 from app.utils.auth import seed_default_users
@@ -80,6 +81,7 @@ app.include_router(about_router, prefix="/api")
 app.include_router(map_router, prefix="/api")
 app.include_router(economic_metrics_router, prefix="/api")
 app.include_router(simulator_router, prefix="/api")
+app.include_router(alerts_router, prefix="/api")
 
 @app.get("/")
 def root():

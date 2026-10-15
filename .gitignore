@@ -43,3 +43,5 @@ desktop.ini
 # Temporary and local scratch files
 scratch/
 scan_keywords.py
+data/briefings/
+backend/data/

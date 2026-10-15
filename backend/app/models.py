@@ -8,6 +8,7 @@ from sqlalchemy import (
     DateTime,
     Index,
     ForeignKey,
+    Text,
 )
 from sqlalchemy.orm import declarative_base, relationship
 
@@ -235,4 +236,143 @@ class DataSyncLog(Base):
             "error_message": self.error_message,
             "details": self.details,
         }
+
+
+class BriefingSchedule(Base):
+    """
+    SQLAlchemy model representing a recurring automated executive PDF briefing subscription.
+    """
+    __tablename__ = "briefing_schedules"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(100), nullable=False)
+    frequency = Column(String(20), nullable=False, default="MONTHLY")  # "DAILY", "WEEKLY", "MONTHLY", "ON_SYNC"
+    reporter_iso = Column(String(10), nullable=True)  # None for Global, or "USA", etc.
+    flow_code = Column(String(10), nullable=True, default="TOTAL")
+    include_prediction = Column(Boolean, default=True, nullable=False)
+    forecast_years = Column(Integer, default=3, nullable=False)
+    recipients = Column(String(500), nullable=False)  # Comma-separated emails
+    is_active = Column(Boolean, default=True, nullable=False)
+    last_run_at = Column(DateTime, nullable=True)
+    next_run_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "name": self.name,
+            "frequency": self.frequency,
+            "reporter_iso": self.reporter_iso,
+            "flow_code": self.flow_code,
+            "include_prediction": self.include_prediction,
+            "forecast_years": self.forecast_years,
+            "recipients": self.recipients,
+            "is_active": self.is_active,
+            "last_run_at": self.last_run_at.isoformat() if self.last_run_at else None,
+            "next_run_at": self.next_run_at.isoformat() if self.next_run_at else None,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+        }
+
+
+class AlertRule(Base):
+    """
+    SQLAlchemy model representing an automated trade anomaly and risk alert rule.
+    """
+    __tablename__ = "alert_rules"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    title = Column(String(255), nullable=False)
+    rule_type = Column(String(50), nullable=False)  # "DEFICIT_EXPANSION_YOY", "EXPORT_CONTRACTION_YOY", "IMPORT_SURGE_YOY", "BALANCE_REVERSAL"
+    reporter_iso = Column(String(10), nullable=False, default="ALL")  # Country ISO or "ALL"
+    comparison_operator = Column(String(5), nullable=False, default=">")  # ">", "<", ">=", "<="
+    threshold_value = Column(Float, nullable=False)  # e.g. 20.0 for 20%
+    severity = Column(String(20), nullable=False, default="WARNING")  # "CRITICAL", "WARNING", "INFO"
+    recipients = Column(String(500), nullable=True)  # Comma-separated email addresses
+    is_active = Column(Boolean, default=True, nullable=False)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "title": self.title,
+            "rule_type": self.rule_type,
+            "reporter_iso": self.reporter_iso,
+            "comparison_operator": self.comparison_operator,
+            "threshold_value": self.threshold_value,
+            "severity": self.severity,
+            "recipients": self.recipients,
+            "is_active": self.is_active,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+        }
+
+
+class AlertNotification(Base):
+    """
+    SQLAlchemy model tracking triggered alert instances and their resolution lifecycle.
+    """
+    __tablename__ = "alert_notifications"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    rule_id = Column(Integer, ForeignKey("alert_rules.id", ondelete="CASCADE"), nullable=True)
+    reporter_iso = Column(String(10), nullable=False)
+    severity = Column(String(20), nullable=False)  # "CRITICAL", "WARNING", "INFO"
+    title = Column(String(255), nullable=False)
+    message = Column(Text, nullable=False)
+    observed_value = Column(Float, nullable=True)
+    baseline_value = Column(Float, nullable=True)
+    delta_pct = Column(Float, nullable=True)
+    status = Column(String(20), nullable=False, default="TRIGGERED")  # "TRIGGERED", "ACKNOWLEDGED", "RESOLVED"
+    triggered_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    resolved_at = Column(DateTime, nullable=True)
+
+    rule = relationship("AlertRule", backref="notifications")
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "rule_id": self.rule_id,
+            "reporter_iso": self.reporter_iso,
+            "severity": self.severity,
+            "title": self.title,
+            "message": self.message,
+            "observed_value": self.observed_value,
+            "baseline_value": self.baseline_value,
+            "delta_pct": self.delta_pct,
+            "status": self.status,
+            "triggered_at": self.triggered_at.isoformat() if self.triggered_at else None,
+            "resolved_at": self.resolved_at.isoformat() if self.resolved_at else None,
+        }
+
+
+class EmailOutboxLog(Base):
+    """
+    SQLAlchemy model logging all outgoing email dispatches and briefing attachments.
+    """
+    __tablename__ = "email_outbox_logs"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    email_type = Column(String(30), nullable=False)  # "BRIEFING", "ALERT", "TEST"
+    subject = Column(String(255), nullable=False)
+    recipients = Column(String(500), nullable=False)
+    status = Column(String(30), nullable=False)  # "SENT", "SIMULATED_DEV_OUTBOX", "FAILED"
+    has_attachment = Column(Boolean, default=False, nullable=False)
+    attachment_filename = Column(String(255), nullable=True)
+    attachment_path = Column(String(500), nullable=True)
+    error_message = Column(String(1000), nullable=True)
+    sent_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "email_type": self.email_type,
+            "subject": self.subject,
+            "recipients": self.recipients,
+            "status": self.status,
+            "has_attachment": self.has_attachment,
+            "attachment_filename": self.attachment_filename,
+            "attachment_path": self.attachment_path,
+            "error_message": self.error_message,
+            "sent_at": self.sent_at.isoformat() if self.sent_at else None,
+        }
+
 

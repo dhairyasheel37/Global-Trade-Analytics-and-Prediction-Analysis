@@ -1,6 +1,6 @@
 from typing import Optional, List, Dict, Union
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 # --- System & Health Schemas ---
 class HealthResponse(BaseModel):
@@ -814,6 +814,120 @@ class SectorElasticityItem(BaseModel):
     default_elasticity: float
     substitution_elasticity: float
     category_description: str
+
+
+# --- Automated Email Briefings & Alerts Schemas ---
+class BriefingScheduleCreate(BaseModel):
+    name: str = Field(..., min_length=2, max_length=100)
+    frequency: str = Field(default="MONTHLY")  # "DAILY", "WEEKLY", "MONTHLY", "ON_SYNC"
+    reporter_iso: Optional[str] = None
+    flow_code: Optional[str] = "TOTAL"
+    include_prediction: bool = True
+    forecast_years: int = Field(default=3, ge=1, le=5)
+    recipients: str = Field(..., min_length=3, max_length=500)
+    is_active: bool = True
+
+
+class BriefingScheduleUpdate(BaseModel):
+    name: Optional[str] = None
+    frequency: Optional[str] = None
+    reporter_iso: Optional[str] = None
+    flow_code: Optional[str] = None
+    include_prediction: Optional[bool] = None
+    forecast_years: Optional[int] = None
+    recipients: Optional[str] = None
+    is_active: Optional[bool] = None
+
+
+class BriefingScheduleResponse(BaseModel):
+    id: int
+    name: str
+    frequency: str
+    reporter_iso: Optional[str]
+    flow_code: Optional[str]
+    include_prediction: bool
+    forecast_years: int
+    recipients: str
+    is_active: bool
+    last_run_at: Optional[str] = None
+    next_run_at: Optional[str] = None
+    created_at: Optional[str] = None
+
+
+class AlertRuleCreate(BaseModel):
+    title: str = Field(..., min_length=2, max_length=255)
+    rule_type: str = Field(..., description="DEFICIT_EXPANSION_YOY, EXPORT_CONTRACTION_YOY, IMPORT_SURGE_YOY, BALANCE_REVERSAL")
+    reporter_iso: str = Field(default="ALL")
+    comparison_operator: str = Field(default=">")
+    threshold_value: float = Field(default=20.0)
+    severity: str = Field(default="WARNING")  # "CRITICAL", "WARNING", "INFO"
+    recipients: Optional[str] = Field(default=None, max_length=500)
+    is_active: bool = True
+
+
+class AlertRuleUpdate(BaseModel):
+    title: Optional[str] = None
+    rule_type: Optional[str] = None
+    reporter_iso: Optional[str] = None
+    comparison_operator: Optional[str] = None
+    threshold_value: Optional[float] = None
+    severity: Optional[str] = None
+    recipients: Optional[str] = None
+    is_active: Optional[bool] = None
+
+
+class AlertRuleResponse(BaseModel):
+    id: int
+    title: str
+    rule_type: str
+    reporter_iso: str
+    comparison_operator: str
+    threshold_value: float
+    severity: str
+    recipients: Optional[str] = None
+    is_active: bool
+    created_at: Optional[str] = None
+
+
+class AlertNotificationResponse(BaseModel):
+    id: int
+    rule_id: Optional[int] = None
+    reporter_iso: str
+    severity: str
+    title: str
+    message: str
+    observed_value: Optional[float] = None
+    baseline_value: Optional[float] = None
+    delta_pct: Optional[float] = None
+    status: str  # "TRIGGERED", "ACKNOWLEDGED", "RESOLVED"
+    triggered_at: Optional[str] = None
+    resolved_at: Optional[str] = None
+
+
+class EmailOutboxResponse(BaseModel):
+    id: int
+    email_type: str
+    subject: str
+    recipients: str
+    status: str
+    has_attachment: bool
+    attachment_filename: Optional[str] = None
+    sent_at: Optional[str] = None
+    error_message: Optional[str] = None
+
+
+class TestEmailRequest(BaseModel):
+    recipient: str = Field(..., min_length=3, max_length=100)
+    email_type: str = Field(default="BRIEFING")  # "BRIEFING" or "ALERT"
+    reporter_iso: Optional[str] = "USA"
+
+
+class AlertsSummaryStats(BaseModel):
+    active_briefings: int
+    monitored_rules: int
+    unresolved_alerts: int
+    total_outbox_sent: int
+
 
 
 

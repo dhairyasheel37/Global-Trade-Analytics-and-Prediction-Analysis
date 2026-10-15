@@ -818,3 +818,67 @@ The forecasting layer has been enhanced with dedicated univariate time-series mo
 ![Multi-Model Forecast Consensus Matrix](docs/screenshots/ml_consensus_matrix_panels.png)
 *Figure 17: Multi-Model Forecast Consensus Matrix comparing projections side-by-side with consensus mean and architectural methodology reference cards.*
 
+---
+
+## Automated Email Briefings & Alerts Engine (Completed)
+
+### 1. Architectural Design & Database Schemas
+The platform features an enterprise alerting and automated briefing subsystem enabling leadership teams and analysts to receive scheduled executive reports and automated macroeconomic anomaly notifications.
+
+1. **Database Relational Models ([backend/app/models.py](backend/app/models.py))**:
+   - `BriefingSchedule`: Stores recurring PDF briefing configurations (title, frequency: `DAILY`, `WEEKLY`, `MONTHLY`, `ON_SYNC`, scope: reporter ISO & product code, recipient emails, forecast inclusion toggle, `is_active`, `last_run_at`, and `next_run_at`).
+   - `AlertRule`: Defines quantitative threshold rules for macroeconomic monitoring (title, rule type, target reporter ISO, comparison operator, threshold percentage, severity: `INFO`, `WARNING`, `CRITICAL`, notification email addresses, and active status).
+   - `AlertNotification`: Persistent incident tracking entity storing generated alerts, observed value, baseline prior-year value, percentage delta, incident status (`TRIGGERED`, `ACKNOWLEDGED`, `RESOLVED`), timestamp, and resolution notes.
+   - `EmailOutboxLog`: Full delivery audit trail recording email dispatches, message types (`BRIEFING`, `ALERT`, `TEST`), recipient lists, subject lines, delivery status (`SENT`, `SIMULATED_DEV_OUTBOX`, `FAILED`), and generated PDF artifact paths.
+
+2. **Rule Types & Anomaly Detection Logic ([backend/app/services/alert_engine.py](backend/app/services/alert_engine.py))**:
+   - `DEFICIT_EXPANSION_YOY`: Flags when a nation's trade deficit deepens by more than $T\%$ year-over-year.
+   - `EXPORT_CONTRACTION_YOY`: Monitors severe sovereign export declines exceeding $T\%$ YoY.
+   - `IMPORT_SURGE_YOY`: Detects sudden spikes in inbound merchandise purchases exceeding $T\%$ YoY.
+   - `BALANCE_REVERSAL`: Catches structural transitions where a historical surplus exporter flips into negative net trade territory.
+   - **Anti-Spam Deduplication Guard**: Enforces deduplication logic to ensure an active, unresolved breach for the same rule and reporter is not redundantly re-triggered during repetitive audit cycles.
+
+3. **Enterprise Email Dispatcher & PDF Integration ([backend/app/services/email_service.py](backend/app/services/email_service.py))**:
+   - **Resilient Delivery**: Full SMTP client with STARTTLS support and credentials configuration via environment variables (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`).
+   - **Simulated Development Outbox Fallback**: In development or offline environments where SMTP credentials are not configured, dispatches gracefully fall back to `SIMULATED_DEV_OUTBOX`, logging the full HTML body and headers to `EmailOutboxLog` without raising exceptions.
+   - **PDF Briefing Generation**: Integrates ReportLab executive PDF generator ([pdf_report_generator.py](backend/app/services/pdf_report_generator.py)) to compile high-resolution, multi-page dossiers with 2026–2030 predictions, saving them under `data/briefings/` for instant in-portal browser downloading.
+
+---
+
+### 2. Frontend Interface ([AlertsPage.jsx](frontend/src/pages/AlertsPage.jsx))
+- **Executive Navigation & KPI Summary**:
+  - 4 Header Scorecards: Active Briefings Count, Monitored Anomaly Rules, Unresolved Risk Breaches, and Total Outbox Dispatches.
+  - Quick action buttons: **Audit Thresholds Now** (immediate system-wide rule evaluation) and **Send Test Email**.
+- **Interactive 4-Tab Workspace**:
+  - **Tab 1: Scheduled Executive Briefings**: Card grid showing active subscriptions, cadence tags, next dispatch run times, recipient lists, and 1-click **Trigger Dispatch Now** buttons.
+  - **Tab 2: Alert Rules & Thresholds**: Configuration console with curated 1-click preset cards (US Deficit Expansion > 20% YoY, Major Export Contraction > 15% YoY, Surplus-to-Deficit Reversal), custom rule builder modal, status toggle switches, and immediate audit triggers.
+  - **Tab 3: Triggered Alerts Feed**: Incident response log showing breached rules with observed vs. baseline dollar comparisons, percentage deltas, severity badges (`CRITICAL`, `WARNING`, `INFO`), and workflow actions (**Acknowledge**, **Mark Resolved**).
+  - **Tab 4: Outbox & Sent Briefings**: Complete delivery audit log displaying message types, recipient distribution, timestamp, dispatch status, and direct **Download PDF** buttons for archived executive briefing dossiers.
+
+---
+
+### 3. Automated Verification & Test Results (167/167 Tests Passing)
+
+| Test Module | Tests | Status | Highlights |
+| :--- | :--- | :--- | :--- |
+| `tests/test_alerts.py` | **13 Passed** | **100% Pass** | Auth enforcement, briefing schedules CRUD, immediate dispatch, PDF attachment, rule evaluation, incident lifecycle, outbox downloads |
+| Full Test Suite (17 modules) | **167 Passed** | **100% Pass** | 0 regressions across all backend endpoints, authentication, simulation, and forecasting |
+| Frontend Production Build | `npm run build` | **Clean Build (1.15s)** | 2539 modules transformed with 0 errors |
+| Playwright E2E Automation | Headless Edge verification | **Passed (0 Console Errors)** | Verified all 4 tabs, rule creation, real-time audit evaluation, incident acknowledge workflow, and outbox PDF generation |
+
+---
+
+### 4. Visual Proof & Screenshots
+
+![Scheduled Executive Briefings Tab](docs/screenshots/alerts_briefings_tab.png)
+*Figure 18: Scheduled Executive Briefings workspace showing active briefing dossiers, delivery schedules, scope definitions, and immediate dispatch triggers.*
+
+![Alert Rules & Thresholds Tab](docs/screenshots/alerts_rules_tab.png)
+*Figure 19: Alert Rules & Thresholds console featuring curated 1-click macro risk presets, active threshold monitors, and real-time audit controls.*
+
+![Triggered Alerts Feed Tab](docs/screenshots/alerts_feed_tab.png)
+*Figure 20: Triggered Alerts Feed showing detected macroeconomic anomalies with baseline comparisons, percentage deltas, and incident workflow management.*
+
+![Email Outbox & Delivery Audit Trail](docs/screenshots/alerts_outbox_tab.png)
+*Figure 21: Email Outbox & Delivery Audit Trail tracking generated briefings, development outbox logs, and direct in-portal executive PDF downloads.*
+

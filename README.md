@@ -5,9 +5,9 @@
 [![React](https://img.shields.io/badge/React-19.2+-61DAFB?style=flat&logo=react&logoColor=black)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-6.0+-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![SQLite](https://img.shields.io/badge/SQLite-3-003B57?style=flat&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
-[![Tests](https://img.shields.io/badge/Tests-154%20Passed-10b981?style=flat&logo=pytest&logoColor=white)](backend/tests/)
+[![Tests](https://img.shields.io/badge/Tests-167%20Passed-10b981?style=flat&logo=pytest&logoColor=white)](backend/tests/)
 
-An enterprise-grade macroeconomic merchandise trade analytics and predictive intelligence platform built with **FastAPI**, **React 19**, and **UN Comtrade data**. Features formalized international trade indices, geospatial choropleth vector mapping, machine learning trade forecasting (2026–2030), executive PDF/Excel reporting engines, automated UN Comtrade live API synchronization, and econometric what-if scenario simulations.
+An enterprise-grade macroeconomic merchandise trade analytics and predictive intelligence platform built with **FastAPI**, **React 19**, and **UN Comtrade data**. Features formalized international trade indices, geospatial choropleth vector mapping, machine learning trade forecasting (2026–2030), executive PDF/Excel reporting engines, automated UN Comtrade live API synchronization, econometric what-if scenario simulations, and automated executive email briefings with macroeconomic anomaly alerts.
 
 ---
 
@@ -67,6 +67,13 @@ An enterprise-grade macroeconomic merchandise trade analytics and predictive int
 - **Interactive Shock Controls**: Real-time ad-valorem tariff sliders ($-30\%$ to $+75\%$), macro demand shift sliders, and customizable sector price elasticities.
 - **Dynamic Recharts Visualizations**: Multi-year baseline vs. shock trajectory projections, third-party trade diversion beneficiary rankings, and Laffer-style tariff vs. revenue sensitivity curves.
 - **Automated Policy Briefings**: Real-time narrative synthesis explaining consumer cost absorption, fiscal customs yields, and trade balance shifts with 1-click CSV/JSON export.
+
+### 11. Automated Email Briefings & Risk Alerts Engine
+- **Scheduled Executive PDF Briefings**: Automated compilation and dispatch of high-resolution executive trade dossiers (Daily, Weekly, Monthly, On-Sync) directly to leadership distribution lists.
+- **Macroeconomic Anomaly Threshold Rules**: Configurable rule engine monitoring trade deficit expansion YoY, severe export contractions, import surges, and structural balance reversals.
+- **Automated Threshold Auditing**: Real-time evaluation against latest empirical trade records with deduplication guards to prevent alert fatigue.
+- **Incident Lifecycle Management**: Full operational tracking (`TRIGGERED` $\to$ `ACKNOWLEDGED` $\to$ `RESOLVED`) with historical baseline metrics, observed values, and YoY percentage deltas.
+- **Enterprise Email Dispatcher**: Resilient SMTP client with TLS support, automatic development outbox fallback (`SIMULATED_DEV_OUTBOX`), local PDF caching, and in-portal downloads.
 
 ---
 
@@ -170,14 +177,14 @@ The web application will be live at:
 
 ## 🧪 Running the Test Suite
 
-The backend includes a comprehensive 145-test verification suite covering authentication, API endpoints, data pipelines, regression guards, ML prediction models, economic indices, and UN Comtrade live synchronization.
+The backend includes a comprehensive 167-test verification suite covering authentication, API endpoints, data pipelines, regression guards, ML prediction models, economic indices, UN Comtrade live synchronization, and automated email briefings & alert threshold engines.
 
 ```bash
 cd backend
 python -m pytest -v
 ```
 
-**Result:** `145 passed in ~35s (100% pass rate)`
+**Result:** `167 passed in ~50s (100% pass rate)`
 
 ---
 
