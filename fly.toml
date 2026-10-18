@@ -1,0 +1,35 @@
+# fly.toml app configuration file generated for global-trade-backend
+app = "global-trade-backend"
+primary_region = "iad"
+
+[build]
+  dockerfile = "backend/Dockerfile"
+
+[env]
+  PORT = "8000"
+  DATA_DIR = "/app/data"
+  DATABASE_URL = "sqlite:////app/data/trade_data.db"
+  ACCESS_TOKEN_EXPIRE_MINUTES = "60"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ["app"]
+
+[[http_service.checks]]
+  grace_period = "15s"
+  interval = "30s"
+  method = "GET"
+  timeout = "5s"
+  path = "/api/health"
+
+[mounts]
+  source = "trade_data"
+  destination = "/app/data"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "1gb"

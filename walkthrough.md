@@ -882,3 +882,52 @@ The platform features an enterprise alerting and automated briefing subsystem en
 ![Email Outbox & Delivery Audit Trail](docs/screenshots/alerts_outbox_tab.png)
 *Figure 21: Email Outbox & Delivery Audit Trail tracking generated briefings, development outbox logs, and direct in-portal executive PDF downloads.*
 
+---
+
+## Dockerization & 1-Command Deployment (Completed)
+
+### 1. Multi-Tier Container Architecture
+The platform features an enterprise containerization architecture allowing any evaluator or engineer to deploy the complete multi-tier system with a single command: `docker compose up --build`.
+
+1. **Production Backend Container ([backend/Dockerfile](backend/Dockerfile))**:
+   - **Base Image**: `python:3.12-slim-bookworm` with minimal system dependencies (`curl`, `gcc`).
+   - **Security**: Dedicated non-root execution user `appuser` (UID 1000) mitigating privilege escalation risks.
+   - **Layer Caching**: `requirements.txt` dependency installation isolated into early cached Docker layer.
+   - **Config Flexibility**: Dynamic `DATA_DIR` and `DATABASE_URL` resolution in [backend/app/config.py](backend/app/config.py) supporting both local paths and container mounts.
+   - **Healthcheck**: Periodic polling of `/api/health` via `curl -f` with 15s interval, 5s timeout, and 3 retries.
+   - **Entrypoint**: Production Uvicorn server (`uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 2`).
+
+2. **Multi-Stage Frontend Container ([frontend/Dockerfile](frontend/Dockerfile) & [frontend/nginx.conf](frontend/nginx.conf))**:
+   - **Stage 1 (Builder)**: `node:20-alpine` compiling React 19 source bundles with build argument `ARG VITE_API_BASE_URL=/api`.
+   - **Stage 2 (Runtime)**: `nginx:1.27-alpine-slim` serving static assets with sub-30 MB image footprint.
+   - **SPA Routing Fallback**: `try_files $uri $uri/ /index.html;` ensures client-side routes (`/alerts`, `/map`, `/prediction`, `/scenario-simulator`) resolve seamlessly on browser reload.
+   - **Reverse Proxy**: Reverse proxies `/api/` to `http://backend:8000/api/` with forwarded client IP and proto headers, eliminating CORS cross-domain issues.
+   - **API Documentation Proxy**: Proxies `/docs` and `/openapi.json` to FastAPI for instant Swagger UI access.
+   - **Performance & Security**: Gzip compression for static assets, 1-year immutable caching for `/assets/`, `client_max_body_size 50M` for CSV uploads, and HTTP security headers (`X-Frame-Options`, `X-Content-Type-Options`, `X-XSS-Protection`).
+   - **Healthcheck**: Lightweight endpoint `/health` polled via `wget -qO-`.
+
+3. **Unified Multi-Container Orchestration ([docker-compose.yml](docker-compose.yml))**:
+   - Orchestrates `backend` and `frontend` services over dedicated `trade-network` bridge network.
+   - **Persistent Storage**: Mounts `./data:/app/data`, ensuring SQLite relational records, uploaded CSV datasets, and generated PDF briefing dossiers survive container teardowns.
+   - **Health Dependency Ordering**: Frontend startup waits for `backend` container to report `service_healthy`.
+   - **Port Bindings**: Backend exposed at `:8000`, Frontend exposed at both `:80` and `:5173`.
+
+4. **1-Click Launchers & Cloud Infrastructure Blueprints**:
+   - **Windows**: [deploy.ps1](deploy.ps1) — PowerShell script checking Docker daemon, validating environment files, and launching multi-container services with live health feedback.
+   - **Linux / macOS**: [deploy.sh](deploy.sh) — Shell script providing `--build`, `--down`, `--logs`, and `--status` management.
+   - **Cloud Blueprints**: [render.yaml](render.yaml) (Render Infrastructure as Code blueprint) and [fly.toml](fly.toml) (Fly.io persistent volume deployment).
+   - **Environment Template**: [.env.example](.env.example) detailing all runtime variables (JWT secrets, SMTP credentials, port mappings).
+
+---
+
+### 2. Verification & Test Results (168/168 Tests Passing)
+
+| Verification Step | Command / Target | Status | Highlights |
+| :--- | :--- | :--- | :--- |
+| **Backend Test Suite** | `python -m pytest backend/tests/ -q` | **168 Passed (100%)** | 0 regressions across all 18 test modules in 64.89s |
+| **Dynamic Configuration** | `app.config.DATA_DIR` & `DATABASE_URL` | **Verified** | Verified fallback to local paths and runtime override via `os.environ` |
+| **Frontend Production Build** | `npm run build` | **Clean Build (10.58s)** | 2539 modules transformed into optimized production bundle |
+| **Nginx Reverse Proxy Config** | [frontend/nginx.conf](frontend/nginx.conf) | **Verified** | SPA fallback, reverse proxy `/api/`, `/docs`, `/openapi.json`, security headers |
+| **Docker Compose Config** | [docker-compose.yml](docker-compose.yml) | **Verified** | Valid syntax, health dependencies, volume mounting, port bindings |
+
+

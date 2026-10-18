@@ -3,9 +3,10 @@
 [![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![React](https://img.shields.io/badge/React-19.2+-61DAFB?style=flat&logo=react&logoColor=black)](https://react.dev/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat&logo=docker&logoColor=white)](docker-compose.yml)
 [![Vite](https://img.shields.io/badge/Vite-6.0+-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
 [![SQLite](https://img.shields.io/badge/SQLite-3-003B57?style=flat&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
-[![Tests](https://img.shields.io/badge/Tests-167%20Passed-10b981?style=flat&logo=pytest&logoColor=white)](backend/tests/)
+[![Tests](https://img.shields.io/badge/Tests-168%20Passed-10b981?style=flat&logo=pytest&logoColor=white)](backend/tests/)
 
 An enterprise-grade macroeconomic merchandise trade analytics and predictive intelligence platform built with **FastAPI**, **React 19**, and **UN Comtrade data**. Features formalized international trade indices, geospatial choropleth vector mapping, machine learning trade forecasting (2026–2030), executive PDF/Excel reporting engines, automated UN Comtrade live API synchronization, econometric what-if scenario simulations, and automated executive email briefings with macroeconomic anomaly alerts.
 
@@ -91,8 +92,10 @@ trade-system/
 │   │   ├── utils/          # Authentication (bcrypt + JWT), logging, formatters
 │   │   ├── config.py       # Application configurations
 │   │   └── main.py         # FastAPI application factory & middleware
-│   ├── tests/              # 138 Pytest unit & integration tests
+│   ├── tests/              # 168 Pytest unit & integration tests
 │   ├── requirements.txt    # Python dependencies
+│   ├── Dockerfile          # Production Python 3.12 non-root container
+│   ├── .dockerignore       # Backend build exclusions
 │   └── run.py              # Server launcher CLI
 ├── frontend/
 │   ├── src/
@@ -103,18 +106,69 @@ trade-system/
 │   │   ├── App.jsx         # Client-side routing with role-based protection
 │   │   └── main.jsx        # React root entrypoint
 │   ├── package.json        # Frontend dependencies (React 19, Recharts, Lucide)
-│   └── vite.config.js      # Vite build configuration
+│   ├── vite.config.js      # Vite build configuration
+│   ├── Dockerfile          # Multi-stage build (Node 20 -> Nginx Alpine)
+│   ├── nginx.conf          # Nginx reverse proxy, SPA fallback, gzip & security
+│   └── .dockerignore       # Frontend build exclusions
 ├── data/
 │   ├── raw/                # UN Comtrade raw CSV archives
 │   └── trade_data.db       # Primary SQLite relational database (4,877 verified records)
 ├── docs/
-│   └── screenshots/        # Verified platform interface screenshots
-└── walkthrough.md          # Comprehensive 14-phase development walkthrough
+│   ├── screenshots/        # Verified platform interface screenshots
+│   └── Global_Trade_Analytics_Presentation.pptx # Executive 16:9 presentation deck
+├── docker-compose.yml      # Multi-container unified orchestration
+├── .env.example            # Deployment environment variables template
+├── deploy.ps1              # 1-Click deployment script for Windows
+├── deploy.sh               # 1-Click deployment script for Linux/macOS
+├── render.yaml             # Render cloud infrastructure blueprint
+├── fly.toml                # Fly.io deployment manifest
+└── walkthrough.md          # Comprehensive development walkthrough
 ```
 
 ---
 
-## 🚀 Quick Start Guide
+## 🐳 1-Command Docker Deployment (Recommended)
+
+Run the entire multi-tier production system (FastAPI backend + React 19 Nginx frontend + SQLite persistence) with a single command:
+
+### Option A: 1-Click Scripts
+
+**Windows (PowerShell):**
+```powershell
+.\deploy.ps1 -Build
+```
+
+**Linux / macOS / Cloud VPS:**
+```bash
+chmod +x deploy.sh
+./deploy.sh --build
+```
+
+### Option B: Standard Docker Compose
+```bash
+docker compose up --build -d
+```
+
+Once running, access the platform at:
+- 🌐 **Web Interface**: [http://localhost](http://localhost) (or [http://localhost:5173](http://localhost:5173))
+- ⚡ **FastAPI Backend & Interactive API Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
+- 🩺 **Health Check**: [http://localhost:8000/api/health](http://localhost:8000/api/health)
+
+### Operational Commands
+```bash
+# View live streaming logs
+docker compose logs -f
+
+# Check container health status
+docker compose ps
+
+# Stop containers safely
+docker compose down
+```
+
+---
+
+## 🚀 Manual Local Setup (Without Docker)
 
 ### Prerequisites
 - **Python**: 3.12 or higher

@@ -1,0 +1,54 @@
+services:
+  # ==============================================================================
+  # Backend API Web Service
+  # ==============================================================================
+  - type: web
+    name: global-trade-backend
+    env: docker
+    dockerfilePath: backend/Dockerfile
+    dockerContext: backend
+    plan: starter
+    healthCheckPath: /api/health
+    disk:
+      name: trade-data-volume
+      mountPath: /app/data
+      sizeGB: 5
+    envVars:
+      - key: DATA_DIR
+        value: /app/data
+      - key: DATABASE_URL
+        value: sqlite:////app/data/trade_data.db
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 60
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        value: 587
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: SMTP_FROM
+        value: briefings@globaltrade.analytics
+      - key: SMTP_USE_TLS
+        value: true
+
+  # ==============================================================================
+  # Frontend Client Web Service
+  # ==============================================================================
+  - type: web
+    name: global-trade-frontend
+    env: docker
+    dockerfilePath: frontend/Dockerfile
+    dockerContext: frontend
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: VITE_API_BASE_URL
+        fromService:
+          type: web
+          name: global-trade-backend
+          envVarKey: RENDER_EXTERNAL_URL
+          property: host

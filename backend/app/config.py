@@ -5,14 +5,6 @@ from typing import Dict, Any
 # Base Paths
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 ENV_FILE = PROJECT_ROOT / ".env"
-DATA_DIR = PROJECT_ROOT / "data"
-RAW_DATA_DIR = DATA_DIR / "raw"
-DB_PATH = DATA_DIR / "trade_data.db"
-DEFAULT_CSV_PATH = RAW_DATA_DIR / "TradeData_8_20_2026_11_4_38.csv"
-
-# Ensure data directories exist
-DATA_DIR.mkdir(parents=True, exist_ok=True)
-RAW_DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def load_env_file():
@@ -32,6 +24,15 @@ def load_env_file():
 
 
 load_env_file()
+
+DATA_DIR = Path(os.getenv("DATA_DIR", PROJECT_ROOT / "data"))
+RAW_DATA_DIR = DATA_DIR / "raw"
+DB_PATH = Path(os.getenv("DB_PATH", DATA_DIR / "trade_data.db"))
+DEFAULT_CSV_PATH = RAW_DATA_DIR / "TradeData_8_20_2026_11_4_38.csv"
+
+# Ensure data directories exist
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+RAW_DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def get_smtp_config() -> Dict[str, Any]:
@@ -118,7 +119,7 @@ def update_smtp_config(
 
 
 # Database Configuration
-DATABASE_URL = f"sqlite:///{DB_PATH.as_posix()}"
+DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{DB_PATH.as_posix()}")
 
 # Authentication & Security Configuration
 SECRET_KEY = os.getenv("JWT_SECRET_KEY", "global_trade_system_super_secret_jwt_key_2026_secure")
