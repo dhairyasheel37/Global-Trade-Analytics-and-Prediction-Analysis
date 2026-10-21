@@ -1,5 +1,7 @@
 import os
 import smtplib
+import socket
+import ssl
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
@@ -55,23 +57,100 @@ class EmailService:
     def is_configured(self) -> bool:
         return self.config["is_configured"]
 
-    def test_smtp_connection(self) -> Dict[str, Any]:
-        """Tests the configured SMTP server connection."""
-        if not self.is_configured:
+    def test_smtp_connection(self, override_config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """
+        Tests the SMTP server connection.
+        Accepts optional override_config (from UI modal) to test active form inputs before saving to .env.
+        """
+        cfg = override_config if override_config is not None else self.config
+        host = (cfg.get("host") or "").strip()
+        try:
+            port = int(cfg.get("port") or 587)
+        except ValueError:
+            port = 587
+        user = (cfg.get("user") or "").strip()
+        password = (cfg.get("password") or "").strip()
+        use_tls = cfg.get("use_tls", True)
+
+        if not host:
             return {
                 "success": False,
                 "message": "SMTP host is not configured. Real emails cannot be sent.",
             }
+
+        # Validate host is not an email address
+        if "@" in host:
+            return {
+                "success": False,
+                "message": f"Invalid SMTP Host '{host}'. Hostname cannot be an email address. Use a server domain such as 'smtp.gmail.com'.",
+            }
+
+        # Step 1: Pre-verify DNS hostname resolution
         try:
-            server = smtplib.SMTP(self.host, self.port, timeout=10)
-            if self.use_tls:
-                server.starttls()
-            if self.user and self.password:
-                server.login(self.user, self.password)
+            socket.getaddrinfo(host, port)
+        except socket.gaierror as e:
+            logger.warning(f"SMTP DNS resolution failed for host '{host}': {e}")
+            return {
+                "success": False,
+                "message": f"Could not resolve SMTP host '{host}'. Please enter a valid mail server domain like 'smtp.gmail.com' (do not enter an email address).",
+            }
+        except Exception as e:
+            logger.warning(f"DNS lookup error for host '{host}': {e}")
+            return {
+                "success": False,
+                "message": f"DNS resolution error for host '{host}': {str(e)}",
+            }
+
+        # Step 2: Establish SMTP connection with TLS / SSL support
+        server = None
+        try:
+            if port == 465:
+                # SSL Direct (implicit TLS)
+                server = smtplib.SMTP_SSL(host, port, timeout=10)
+                server.ehlo()
+            else:
+                # Standard submission (port 587 / 25) with STARTTLS
+                server = smtplib.SMTP(host, port, timeout=10)
+                server.ehlo()
+                if use_tls:
+                    server.starttls()
+                    server.ehlo()
+
+            # Step 3: Authenticate if credentials provided
+            if user and password:
+                # Normalize Google App Password if spaced (e.g. 'abcd efgh ijkl mnop')
+                clean_pw = password.replace(" ", "") if len(password.replace(" ", "")) == 16 else password
+                server.login(user, clean_pw)
+
             server.quit()
+            auth_info = f" and authenticated as '{user}'" if (user and password) else ""
             return {
                 "success": True,
-                "message": f"Successfully connected to SMTP server ({self.host}:{self.port})!",
+                "message": f"Successfully connected to SMTP server ({host}:{port}){auth_info}!",
+            }
+        except smtplib.SMTPAuthenticationError as e:
+            logger.warning(f"SMTP authentication failed for user '{user}': {e}")
+            return {
+                "success": False,
+                "message": f"SMTP Authentication failed for user '{user}'. If using Gmail, verify you are using your full Gmail address and a 16-character Google App Password (not your standard Google password).",
+            }
+        except smtplib.SMTPServerDisconnected as e:
+            logger.warning(f"SMTP server unexpectedly disconnected: {e}")
+            return {
+                "success": False,
+                "message": f"Connection to SMTP server ({host}:{port}) was closed unexpectedly by the server. Verify your port and encryption settings.",
+            }
+        except (socket.timeout, TimeoutError):
+            logger.warning(f"SMTP connection timed out for {host}:{port}")
+            return {
+                "success": False,
+                "message": f"Connection to SMTP server '{host}:{port}' timed out after 10 seconds. Check network connectivity and port.",
+            }
+        except ssl.SSLError as e:
+            logger.warning(f"SMTP TLS/SSL handshake error: {e}")
+            return {
+                "success": False,
+                "message": f"TLS/SSL handshake failed with SMTP server '{host}:{port}': {str(e)}",
             }
         except Exception as e:
             logger.error(f"SMTP connection test failed: {e}")
@@ -79,6 +158,12 @@ class EmailService:
                 "success": False,
                 "message": f"SMTP connection error: {str(e)}",
             }
+        finally:
+            if server:
+                try:
+                    server.close()
+                except Exception:
+                    pass
 
     def compose_briefing_html(
         self,
@@ -276,12 +361,20 @@ class EmailService:
                     pdf_part.add_header("Content-Disposition", "attachment", filename=filename)
                     msg.attach(pdf_part)
 
-                # Send
-                server = smtplib.SMTP(self.host, self.port, timeout=10)
-                if self.use_tls:
-                    server.starttls()
+                # Send with Port 465 SSL or Port 587 STARTTLS
+                if self.port == 465:
+                    server = smtplib.SMTP_SSL(self.host, self.port, timeout=15)
+                    server.ehlo()
+                else:
+                    server = smtplib.SMTP(self.host, self.port, timeout=15)
+                    server.ehlo()
+                    if self.use_tls:
+                        server.starttls()
+                        server.ehlo()
+
                 if self.user and self.password:
-                    server.login(self.user, self.password)
+                    clean_pw = self.password.replace(" ", "") if len(self.password.replace(" ", "")) == 16 else self.password
+                    server.login(self.user, clean_pw)
 
                 recipient_list = [r.strip() for r in recipients.split(",") if r.strip()]
                 server.sendmail(self.from_email, recipient_list, msg.as_string())

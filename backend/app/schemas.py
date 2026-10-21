@@ -1,6 +1,6 @@
 from typing import Optional, List, Dict, Union
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 # --- System & Health Schemas ---
 class HealthResponse(BaseModel):
@@ -946,6 +946,24 @@ class SmtpConfigUpdate(BaseModel):
     password: str = Field(default="")
     from_email: str = Field(default="briefings@globaltrade.analytics")
     use_tls: bool = True
+
+    @field_validator("host")
+    @classmethod
+    def validate_host(cls, v: str) -> str:
+        v = v.strip()
+        if "@" in v:
+            raise ValueError("SMTP Host must be a server hostname (e.g., 'smtp.gmail.com'), not an email address.")
+        return v
+
+    @field_validator("password")
+    @classmethod
+    def normalize_password(cls, v: str) -> str:
+        v = v.strip()
+        # Automatically clean spaces from 16-character Google App Passwords (e.g. 'abcd efgh ijkl mnop')
+        no_spaces = v.replace(" ", "")
+        if len(no_spaces) == 16:
+            return no_spaces
+        return v
 
 
 

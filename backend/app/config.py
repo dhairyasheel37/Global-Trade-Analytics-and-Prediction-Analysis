@@ -68,11 +68,16 @@ def update_smtp_config(
     use_tls: bool = True,
 ):
     """Updates SMTP environment variables and persists them to .env file."""
+    clean_pass = (
+        password.strip().replace(" ", "")
+        if len(password.strip().replace(" ", "")) == 16
+        else password.strip()
+    )
     os.environ["SMTP_HOST"] = host.strip()
     os.environ["SMTP_PORT"] = str(port)
     os.environ["SMTP_USER"] = user.strip()
-    if password.strip():
-        os.environ["SMTP_PASSWORD"] = password.strip()
+    if clean_pass:
+        os.environ["SMTP_PASSWORD"] = clean_pass
     os.environ["SMTP_FROM"] = from_email.strip()
     os.environ["SMTP_USE_TLS"] = "true" if use_tls else "false"
 
@@ -91,8 +96,8 @@ def update_smtp_config(
         "SMTP_FROM": from_email.strip(),
         "SMTP_USE_TLS": "true" if use_tls else "false",
     }
-    if password.strip():
-        config_keys["SMTP_PASSWORD"] = password.strip()
+    if clean_pass:
+        config_keys["SMTP_PASSWORD"] = clean_pass
 
     new_lines = []
     seen = set()

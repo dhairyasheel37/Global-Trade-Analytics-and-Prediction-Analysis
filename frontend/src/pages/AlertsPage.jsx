@@ -361,6 +361,13 @@ export const AlertsPage = () => {
 
   const handleSaveSmtp = async (e) => {
     e.preventDefault();
+    if (smtpForm.host.includes("@")) {
+      setSmtpStatusMessage({
+        success: false,
+        message: "Invalid SMTP Host: Hostname cannot be an email address. Use a server address like 'smtp.gmail.com'.",
+      });
+      return;
+    }
     setActionLoading(true);
     setSmtpStatusMessage(null);
     try {
@@ -390,10 +397,25 @@ export const AlertsPage = () => {
   };
 
   const handleTestSmtpConnection = async () => {
+    if (!smtpForm.host || !smtpForm.host.trim()) {
+      setSmtpStatusMessage({
+        success: false,
+        message: "Please enter an SMTP Host before testing the connection.",
+      });
+      return;
+    }
+    if (smtpForm.host.includes("@")) {
+      setSmtpStatusMessage({
+        success: false,
+        message: "Invalid SMTP Host: Hostname cannot be an email address. Use a server address like 'smtp.gmail.com'.",
+      });
+      return;
+    }
     setSmtpTesting(true);
     setSmtpStatusMessage(null);
     try {
-      const res = await api.post("/alerts/smtp-config/test");
+      // Test current form inputs directly before saving
+      const res = await api.post("/alerts/smtp-config/test", smtpForm);
       setSmtpStatusMessage({ success: res.data.success, message: res.data.message });
     } catch (err) {
       setSmtpStatusMessage({
@@ -1623,6 +1645,54 @@ export const AlertsPage = () => {
                 </div>
               )}
 
+              {/* Quick Presets */}
+              <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
+                <span style={{ fontSize: "12px", color: "#94a3b8", fontWeight: "600" }}>Quick Presets:</span>
+                <button
+                  type="button"
+                  onClick={() => setSmtpForm({
+                    ...smtpForm,
+                    host: "smtp.gmail.com",
+                    port: 587,
+                    use_tls: true,
+                    from_email: smtpForm.user && smtpForm.user.includes("@") ? smtpForm.user : smtpForm.from_email,
+                  })}
+                  style={{
+                    fontSize: "11px",
+                    fontWeight: "600",
+                    padding: "3px 10px",
+                    borderRadius: "6px",
+                    border: "1px solid #38bdf8",
+                    background: "rgba(56, 189, 248, 0.15)",
+                    color: "#38bdf8",
+                    cursor: "pointer",
+                  }}
+                >
+                  ⚡ Gmail (smtp.gmail.com:587)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSmtpForm({
+                    ...smtpForm,
+                    host: "smtp.office365.com",
+                    port: 587,
+                    use_tls: true,
+                  })}
+                  style={{
+                    fontSize: "11px",
+                    fontWeight: "600",
+                    padding: "3px 10px",
+                    borderRadius: "6px",
+                    border: "1px solid #94a3b8",
+                    background: "rgba(148, 163, 184, 0.15)",
+                    color: "#cbd5e1",
+                    cursor: "pointer",
+                  }}
+                >
+                  Outlook / Office 365
+                </button>
+              </div>
+
               <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "12px" }}>
                 <div style={styles.formGroup}>
                   <label style={styles.formLabel}>SMTP Host *</label>
@@ -1631,9 +1701,17 @@ export const AlertsPage = () => {
                     required
                     value={smtpForm.host}
                     onChange={(e) => setSmtpForm({ ...smtpForm, host: e.target.value })}
-                    style={styles.input}
+                    style={{
+                      ...styles.input,
+                      borderColor: smtpForm.host.includes("@") ? "#ef4444" : undefined,
+                    }}
                     placeholder="e.g. smtp.gmail.com"
                   />
+                  {smtpForm.host.includes("@") && (
+                    <div style={{ marginTop: "4px", fontSize: "11px", color: "#fca5a5", display: "flex", alignItems: "center", gap: "4px" }}>
+                      <span>⚠️ SMTP Host must be a server domain (e.g. <strong>smtp.gmail.com</strong>), not an email address.</span>
+                    </div>
+                  )}
                 </div>
                 <div style={styles.formGroup}>
                   <label style={styles.formLabel}>Port *</label>
@@ -1647,6 +1725,22 @@ export const AlertsPage = () => {
                   />
                 </div>
               </div>
+
+              {smtpForm.host.toLowerCase().includes("gmail") && (
+                <div
+                  style={{
+                    padding: "8px 12px",
+                    borderRadius: "6px",
+                    backgroundColor: "rgba(168, 85, 247, 0.1)",
+                    border: "1px solid rgba(168, 85, 247, 0.3)",
+                    fontSize: "11px",
+                    color: "#d8b4fe",
+                    lineHeight: "1.4",
+                  }}
+                >
+                  💡 <strong>Gmail Configuration Tip:</strong> Enter your <strong>full Gmail address</strong> in Username/Email, and a 16-character <strong>Google App Password</strong> (from Google Account &gt; Security &gt; 2-Step Verification &gt; App Passwords). Your Sender "From" should also match your Gmail address.
+                </div>
+              )}
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
                 <div style={styles.formGroup}>
@@ -1699,7 +1793,7 @@ export const AlertsPage = () => {
                 <button
                   type="button"
                   onClick={handleTestSmtpConnection}
-                  disabled={smtpTesting || !smtpForm.host}
+                  disabled={smtpTesting || !smtpForm.host || smtpForm.host.includes("@")}
                   style={styles.actionBtnOutline}
                 >
                   <RefreshCw size={14} className={smtpTesting ? "spin" : ""} />
@@ -1713,7 +1807,11 @@ export const AlertsPage = () => {
                   >
                     Cancel
                   </button>
-                  <button type="submit" disabled={actionLoading} style={styles.submitBtn}>
+                  <button
+                    type="submit"
+                    disabled={actionLoading || smtpForm.host.includes("@")}
+                    style={styles.submitBtn}
+                  >
                     {actionLoading ? "Connecting..." : "Save & Connect SMTP"}
                   </button>
                 </div>

@@ -395,12 +395,25 @@ def set_smtp_configuration(
     current_user: User = Depends(get_current_user),
 ):
     """Updates and persists SMTP credentials in environment and .env."""
+    if "@" in payload.host.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid SMTP Host: Hostname cannot be an email address. Please use a server domain such as 'smtp.gmail.com'.",
+        )
+
+    # Normalize Google App Password if spaced (e.g. 'abcd efgh ijkl mnop' -> 'abcdefghijklmnop')
+    clean_password = (
+        payload.password.strip().replace(" ", "")
+        if len(payload.password.strip().replace(" ", "")) == 16
+        else payload.password.strip()
+    )
+
     update_smtp_config(
-        host=payload.host,
+        host=payload.host.strip(),
         port=payload.port,
-        user=payload.user,
-        password=payload.password,
-        from_email=payload.from_email,
+        user=payload.user.strip(),
+        password=clean_password,
+        from_email=payload.from_email.strip(),
         use_tls=payload.use_tls,
     )
     # Test connection right after saving
@@ -410,17 +423,33 @@ def set_smtp_configuration(
         "message": f"SMTP credentials saved. Connection test: {test_res['message']}",
         "is_configured": email_service.is_configured,
         "mode": "LIVE_SMTP" if email_service.is_configured else "SIMULATED_DEV_OUTBOX",
-        "host": payload.host,
+        "host": payload.host.strip(),
         "port": payload.port,
-        "user_masked": mask_email(payload.user),
-        "from_email": payload.from_email,
+        "user_masked": mask_email(payload.user.strip()),
+        "from_email": payload.from_email.strip(),
         "use_tls": payload.use_tls,
     }
 
 
 @router.post("/smtp-config/test")
-def test_smtp_server(current_user: User = Depends(get_current_user)):
-    """Tests current SMTP connection credentials without dispatching an email."""
+def test_smtp_server(
+    payload: Optional[SmtpConfigUpdate] = None,
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Tests SMTP connection credentials without dispatching an email.
+    If payload is provided, tests the form credentials directly; otherwise tests the saved environment setup.
+    """
+    if payload and payload.host:
+        override = {
+            "host": payload.host.strip(),
+            "port": payload.port,
+            "user": payload.user.strip(),
+            "password": payload.password.strip(),
+            "from_email": payload.from_email.strip(),
+            "use_tls": payload.use_tls,
+        }
+        return email_service.test_smtp_connection(override_config=override)
     return email_service.test_smtp_connection()
 
 
